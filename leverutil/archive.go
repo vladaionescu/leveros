@@ -173,7 +173,7 @@ func Untar(reader io.Reader, targetDir string) error {
 		if !strings.HasSuffix(header.Name, string(os.PathSeparator)) {
 			parent := filepath.Dir(header.Name)
 			parentPath := filepath.Join(targetDir, parent)
-			_, err := os.Lstat(parentPath)
+			_, err = os.Lstat(parentPath)
 			if err != nil && os.IsNotExist(err) {
 				err = os.MkdirAll(parentPath, 0777)
 				if err != nil {

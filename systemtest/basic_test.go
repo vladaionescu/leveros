@@ -54,7 +54,7 @@ func TestReqReplyStream(t *testing.T) {
 	assert.NoError(t, err)
 	messages := []string{"1", "2", "hello", "world", "test", "123"}
 	for _, msg := range messages {
-		err := stream.Send(msg)
+		err = stream.Send(msg)
 		assert.NoError(t, err)
 		var reply string
 		err = stream.Receive(&reply)

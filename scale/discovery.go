@@ -298,7 +298,8 @@ func DereferenceOrRegisterResource(
 	}
 	if res == nil {
 		// Not yet registered. Attempt to register.
-		res, success, err := RegisterResource(service, resource, ttl)
+		var success bool
+		res, success, err = RegisterResource(service, resource, ttl)
 		if err != nil {
 			return nil, false, err
 		}

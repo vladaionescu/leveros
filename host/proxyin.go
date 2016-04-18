@@ -60,7 +60,7 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 
 	destEnv := core.ProcessEnvAlias(headers["host"][0])
 	if !core.IsInternalEnvironment(destEnv) {
-		err := fmt.Errorf("Cannot route to dest env")
+		err = fmt.Errorf("Cannot route to dest env")
 		proxy.inLogger.WithFields("err", err, "leverEnv", destEnv).Error("")
 		stream.Write(&http2stream.MsgError{Err: err})
 		return
@@ -108,7 +108,7 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 	streamLogger := proxy.inLogger.WithFields("streamID", streamID)
 
 	if !core.IsInternalEnvironment(destEnv) {
-		err := fmt.Errorf("Environment not routable internally")
+		err = fmt.Errorf("Environment not routable internally")
 		streamLogger.WithFields("err", err, "leverEnv", destEnv).Error("")
 		stream.Write(&http2stream.MsgError{Err: err})
 		return

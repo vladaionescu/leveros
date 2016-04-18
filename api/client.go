@@ -194,7 +194,8 @@ func (client *Client) invoke(
 	}
 	if rpc.ArgsOneof == nil {
 		// Non-byte args case.
-		encdArgs, err := encodeArgs(args)
+		var encdArgs *core.JSONArray
+		encdArgs, err = encodeArgs(args)
 		if err != nil {
 			return err
 		}
@@ -276,7 +277,8 @@ func (client *Client) invokeChan(
 	}
 	if rpc.ArgsOneof == nil {
 		// Non-byte args case.
-		encdArgs, err := encodeArgs(args)
+		var encdArgs *core.JSONArray
+		encdArgs, err = encodeArgs(args)
 		if err != nil {
 			return nil, err
 		}

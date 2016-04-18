@@ -93,7 +93,7 @@ func (proxy *LeverProxy) handleExtOutStream(
 		destEnv = core.ProcessEnvAlias(destEnv)
 	}
 	if !core.IsInternalEnvironment(destEnv) {
-		err := fmt.Errorf("Cannot route to dest env")
+		err = fmt.Errorf("Cannot route to dest env")
 		streamLogger.WithFields("err", err, "leverEnv", destEnv).Error("")
 		stream.Write(&http2stream.MsgError{Err: err})
 		return

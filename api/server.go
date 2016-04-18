@@ -270,7 +270,8 @@ func callHandler(
 	}
 	switch args := rpc.GetArgsOneof().(type) {
 	case *core.RPC_Args:
-		values, err := decodeArgsAsValue(args.Args, entry, isStreaming)
+		var values []reflect.Value
+		values, err = decodeArgsAsValue(args.Args, entry, isStreaming)
 		if err != nil {
 			return nil, err
 		}
@@ -323,7 +324,8 @@ func callHandler(
 				// For error type, just use the string returned by Error().
 				v = theError.Error()
 			}
-			encodedErr, err := encodeArg(v)
+			var encodedErr *core.JSON
+			encodedErr, err = encodeArg(v)
 			if err != nil {
 				return nil, err
 			}

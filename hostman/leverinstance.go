@@ -108,7 +108,8 @@ func (instance *LeverInstance) KeepAlive(
 	if leverResource != "" {
 		resource, ok := instance.leverResources[leverResource]
 		if !ok {
-			resource, err := NewLeverResource(
+			var err error
+			resource, err = NewLeverResource(
 				instance.leverEnv, instance.leverService, instance.instanceID,
 				leverResource, leverResResourceID, leverResSessionID,
 				instance.instanceAddr, instance.conns, instance.onResourceClose)

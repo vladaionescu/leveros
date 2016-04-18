@@ -38,14 +38,14 @@ func DeployServiceDir(
 	bufReader := bufio.NewReader(pipeReader)
 	errCh := make(chan error)
 	go func() {
-		err := leverutil.Tar(pipeWriter, srcDir)
-		if err != nil {
-			errCh <- fmt.Errorf("Error trying to tar dir: %v", err)
+		tarErr := leverutil.Tar(pipeWriter, srcDir)
+		if tarErr != nil {
+			errCh <- fmt.Errorf("Error trying to tar dir: %v", tarErr)
 			return
 		}
-		err = pipeWriter.Close()
-		if err != nil {
-			errCh <- err
+		tarErr = pipeWriter.Close()
+		if tarErr != nil {
+			errCh <- tarErr
 		}
 		close(errCh)
 	}()
@@ -58,7 +58,8 @@ func DeployServiceDir(
 
 	chunk := make([]byte, 32*1024)
 	for {
-		size, err := bufReader.Read(chunk)
+		var size int
+		size, err = bufReader.Read(chunk)
 		if err == io.EOF {
 			break
 		}

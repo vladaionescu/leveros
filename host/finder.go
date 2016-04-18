@@ -173,7 +173,12 @@ func (finder *Finder) GetHost(env, service, resource string, fromExt bool) (
 	if resource == "" {
 		// Lever resource not mentioned. Just find an instance for the
 		// service.
-		levInstTarget, _, levInstResource, isNewInstance, err :=
+		var (
+			levInstTarget   *LevInstTarget
+			levInstResource *scale.Resource
+			isNewInstance   bool
+		)
+		levInstTarget, _, levInstResource, isNewInstance, err =
 			finder.getInstance(env, service, servingID, version)
 		if err != nil {
 			return nil, err

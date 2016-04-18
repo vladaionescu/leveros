@@ -284,7 +284,8 @@ func actionStream(ctx *cli.Context) {
 	if flagBytes {
 		chunk := make([]byte, 32*1024)
 		for {
-			size, err := stdin.Read(chunk)
+			var size int
+			size, err = stdin.Read(chunk)
 			if err == io.EOF {
 				break
 			}
@@ -299,7 +300,8 @@ func actionStream(ctx *cli.Context) {
 		}
 	} else {
 		for {
-			line, err := stdin.ReadString('\n')
+			var line string
+			line, err = stdin.ReadString('\n')
 			if err == io.EOF && line == "" {
 				break
 			}

@@ -63,8 +63,8 @@ func (admin *Admin) DeployServiceChan(
 	success := false
 	defer func() {
 		if !success {
-			err := os.RemoveAll(tmpDir)
-			if err != nil {
+			remErr := os.RemoveAll(tmpDir)
+			if remErr != nil {
 				logger.WithFields("err", err).Error(
 					"Error trying to remove tmp dir after failure to untar")
 			}
@@ -75,9 +75,9 @@ func (admin *Admin) DeployServiceChan(
 	bufReader := bufio.NewReader(pipeReader)
 	doneCh := make(chan error, 1)
 	go func() {
-		err := leverutil.Untar(bufReader, tmpDir)
-		if err != nil {
-			doneCh <- err
+		untarErr := leverutil.Untar(bufReader, tmpDir)
+		if untarErr != nil {
+			doneCh <- untarErr
 		}
 		close(doneCh)
 	}()
@@ -85,7 +85,7 @@ func (admin *Admin) DeployServiceChan(
 	totalSize := 0
 	for {
 		var chunk []byte
-		err := stream.Receive(&chunk)
+		err = stream.Receive(&chunk)
 		if err == io.EOF {
 			break
 		}
@@ -94,7 +94,8 @@ func (admin *Admin) DeployServiceChan(
 			return errInternal
 		}
 
-		chunkSize, err := pipeWriter.Write(chunk)
+		var chunkSize int
+		chunkSize, err = pipeWriter.Write(chunk)
 		if err != nil {
 			logger.WithFields("err", err).Error(
 				"Error forwarding chunk to untar")

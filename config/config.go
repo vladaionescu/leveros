@@ -372,7 +372,8 @@ func updateConsulFlags(byteData []byte) {
 
 		strValue, isStr := value.(string)
 		if !isStr {
-			strFormatted, err := json.Marshal(value)
+			var strFormatted []byte
+			strFormatted, err = json.Marshal(value)
 			if err != nil {
 				log.Fatalf("Unable to marshal value back to json\n")
 			}
