@@ -1,0 +1,161 @@
+{
+	"ImportPath": "github.com/leveros/leveros",
+	"GoVersion": "go1.5",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.9.0-17-ga26f435",
+			"Rev": "a26f43589d737684363ff856c5a0f9f24b946510"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go",
+			"Comment": "v1.9.0",
+			"Rev": "235a7cd675b4d6d0d77e68fb9a290cc4500ad1eb"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "1.2.0-219-ga294348",
+			"Rev": "a2943485b110df8842045ae0600047f88a3a56a1"
+		},
+		{
+			"ImportPath": "github.com/davecgh/go-spew/spew",
+			"Rev": "5215b55f46b2b919f50a1df0eaa5886afe4e3b3d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/containers",
+			"Rev": "e9ff08588bd5a1b8babc999227c6f7cb54e43ffc"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/lists",
+			"Rev": "e9ff08588bd5a1b8babc999227c6f7cb54e43ffc"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/maps",
+			"Rev": "e9ff08588bd5a1b8babc999227c6f7cb54e43ffc"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/stacks",
+			"Rev": "e9ff08588bd5a1b8babc999227c6f7cb54e43ffc"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/trees",
+			"Rev": "e9ff08588bd5a1b8babc999227c6f7cb54e43ffc"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/utils",
+			"Rev": "e9ff08588bd5a1b8babc999227c6f7cb54e43ffc"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient",
+			"Rev": "ac96e8d5742ae24e0fd2dce2f6c3cef4c057d11a"
+		},
+		{
+			"ImportPath": "github.com/golang/glog",
+			"Rev": "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
+		},
+		{
+			"ImportPath": "github.com/golang/protobuf/proto",
+			"Rev": "99511271042a09d1e01baea8781caa5210fec66e"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/consul/api",
+			"Comment": "v0.6.3-109-g13bfad9",
+			"Rev": "13bfad9e1b0fab40f5b2f5f2c7ac21cb3f0a8d6d"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/go-cleanhttp",
+			"Rev": "ce617e79981a8fff618bb643d155133a8f38db96"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/serf/coordinate",
+			"Comment": "v0.7.0-18-gc4c55f1",
+			"Rev": "c4c55f16bae1aed9b355ad655d3ebf0215734461"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-colorable",
+			"Rev": "9cbef7c35391cca05f15f8181dc0b18bc9736dbb"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-isatty",
+			"Rev": "56b76bdf51f7708750eac80fa38b952bb9f32639"
+		},
+		{
+			"ImportPath": "github.com/mgutz/ansi",
+			"Rev": "c286dcecd19ff979eeb73ea444e479b903f2cfcb"
+		},
+		{
+			"ImportPath": "github.com/miekg/dns",
+			"Rev": "83f7d658ac219335d42f7ec4397a76e35ca7f835"
+		},
+		{
+			"ImportPath": "github.com/pmezard/go-difflib/difflib",
+			"Rev": "792786c7400a136282c1664665ae0a8db921c6c2"
+		},
+		{
+			"ImportPath": "github.com/stretchr/testify/assert",
+			"Comment": "v1.1.3-6-g6fe211e",
+			"Rev": "6fe211e493929a8aac0469b93f28b1d0688a9a3a"
+		},
+		{
+			"ImportPath": "github.com/x-cray/logrus-prefixed-formatter",
+			"Rev": "19bfe61502ba35a3235b4970c10b9366a0aa9b61"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "6025851c7c2bf210daf74d22300c699b16541847"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "35b06af0720201bc2f326773a80767387544f8c4"
+		},
+		{
+			"ImportPath": "golang.org/x/net/http2",
+			"Rev": "35b06af0720201bc2f326773a80767387544f8c4"
+		},
+		{
+			"ImportPath": "golang.org/x/net/internal/timeseries",
+			"Rev": "35b06af0720201bc2f326773a80767387544f8c4"
+		},
+		{
+			"ImportPath": "golang.org/x/net/trace",
+			"Rev": "35b06af0720201bc2f326773a80767387544f8c4"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2",
+			"Rev": "045497edb6234273d67dbc25da3f2ddbc4c4cacf"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "50c6bc5e4292a1d4e65c6e9be5f53be28bcbe28e"
+		},
+		{
+			"ImportPath": "google.golang.org/appengine",
+			"Rev": "12d5545dc1cfa6047a286d5e853841b6471f4c19"
+		},
+		{
+			"ImportPath": "google.golang.org/cloud/compute/metadata",
+			"Rev": "5ff67fe23b1ba3ed2135491d9bb2ca087c84bfde"
+		},
+		{
+			"ImportPath": "google.golang.org/cloud/internal",
+			"Rev": "5ff67fe23b1ba3ed2135491d9bb2ca087c84bfde"
+		},
+		{
+			"ImportPath": "google.golang.org/grpc",
+			"Rev": "8c125810ce984b8cfb367120fa32ead15b4a0bd9"
+		},
+		{
+			"ImportPath": "gopkg.in/airbrake/gobrake.v2",
+			"Comment": "v2.0.3",
+			"Rev": "c9d51adc624b5cc4c1bf8de730a09af4878ffe2d"
+		},
+		{
+			"ImportPath": "gopkg.in/gemnasium/logrus-airbrake-hook.v2",
+			"Comment": "v2.0.0",
+			"Rev": "31e6fd4bd5a98d8ee7673d24bc54ec73c31810dd"
+		}
+	]
+}

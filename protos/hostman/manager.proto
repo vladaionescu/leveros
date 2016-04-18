@@ -1,0 +1,32 @@
+
+syntax = "proto3";
+
+package hostman;
+
+service Manager {
+    rpc InitializeInstance(InstanceInfo) returns (InitReply) {}
+    rpc StopInstance(InstanceKey) returns (StopReply) {}
+}
+
+message InstanceInfo {
+    string environment = 1;
+    string service = 2;
+    string instanceID = 3;
+    string containerID = 4;
+    string servingID = 5;
+    string levInstResourceID = 6;
+    string levInstSessionID = 7;
+}
+
+message InitReply {
+}
+
+message InstanceKey {
+    string environment = 1;
+    string service = 2;
+    string instanceID = 3;
+    string servingID = 4;
+}
+
+message StopReply {
+}

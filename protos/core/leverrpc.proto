@@ -1,0 +1,80 @@
+
+syntax = "proto3";
+
+option java_package = "com.leveros.core";
+
+package core;
+
+// LeverRPC handles Lever's RPC calls between Lever services.
+service LeverRPC {
+    rpc HandleRPC (RPC) returns (RPCReply) {}
+    rpc HandleStreamingRPC (stream StreamMessage) returns (
+        stream StreamMessage) {}
+}
+
+// RPC is the message used to invoke a Lever service's method.
+message RPC {
+    // method represents the RPC method to be invoked on the server.
+    string method = 1;
+    oneof args_oneof {
+        // args is a list of JSON values which will populate the arguments of
+        // the method being invoked.
+        JSONArray args = 2;
+        // byte_args is a single opaque field which can be used for custom
+        // encoding of args by applications.
+        bytes byte_args = 3;
+    }
+}
+
+// StreamMessage represents individual messages sent in a streaming RPC call.
+// These may be either sent or received.
+message StreamMessage {
+    // Note that the invokation details (rpc field) are part of the very first
+    // message sent by the client. It is an error for any other message to have
+    // that field set.
+    oneof message_oneof {
+        // First message, client-to-server only.
+        RPC rpc = 1;
+        // Other messages (all server-to-client and non-first client-to-server).
+        // These are passed to the Lever application's handlers.
+        JSON message = 2;
+        bytes byte_message = 3;
+        JSON error = 4;
+        bytes byte_error = 5;
+    }
+}
+
+// RPCReply is used as a return value for a Lever RPC method invokation.
+message RPCReply {
+    oneof result_oneof {
+        JSON result = 1;
+        bytes byte_result = 2;
+        JSON error = 3;
+        bytes byte_error = 4;
+    }
+}
+
+// JSON represents a JSON-like value, which is represented as a proto message.
+message JSON {
+    // Note: If none are set then the value is null.
+    oneof json_value_oneof {
+        string json_string = 1;
+        double json_number = 2;
+        bool json_bool = 3;
+        JSONObject json_object = 4;
+        JSONArray json_array = 5;
+    }
+}
+
+message JSONObject {
+    repeated JSONProperty property = 1;
+}
+
+message JSONArray {
+    repeated JSON element = 1;
+}
+
+message JSONProperty {
+    string name = 1;
+    JSON value = 2;
+}

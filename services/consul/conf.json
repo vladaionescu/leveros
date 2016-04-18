@@ -1,0 +1,5 @@
+{
+    "dns_config": {
+        "enable_truncate": true
+    }
+}

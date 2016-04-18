@@ -1,0 +1,6 @@
+*.pb.go
+/repo/
+/vendor/
+/services/leveroshost/leveroshost
+/systemtest/*/serve
+/build/

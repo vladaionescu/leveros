@@ -1,0 +1,28 @@
+
+syntax = "proto3";
+
+package fleettracker;
+
+// FleetTracker is the service that handles events about RPCs and keeps
+// track of service statistics.
+service FleetTracker {
+    rpc HandleOnRPC (RPCEvent) returns (HandleReply) {}
+}
+
+message RPCEvent {
+    // The sessionID of the resource.
+    string sessionID = 1;
+
+    //
+    // Information related to the RPC.
+
+    string environment = 2;
+    string service = 3;
+    string servingID = 4;
+    int64 codeVersion = 5;
+    bool isAdmin = 6;
+    uint64 rpcNanos = 7;
+}
+
+message HandleReply {
+}
