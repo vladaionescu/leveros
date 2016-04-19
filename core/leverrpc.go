@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"golang.org/x/net/context"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/metadata"
+	grpc "github.com/leveros/grpc-go"
+	"github.com/leveros/grpc-go/metadata"
 )
 
 // SendLeverRPC sends a Lever RPC to a certain resource within the service

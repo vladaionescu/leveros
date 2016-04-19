@@ -3,6 +3,7 @@ package main
 import (
 	"net"
 
+	grpc "github.com/leveros/grpc-go"
 	"github.com/leveros/leveros/cmd"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/fleettracker"
@@ -11,7 +12,6 @@ import (
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
 	"github.com/leveros/leveros/store"
-	"google.golang.org/grpc"
 )
 
 // PackageName is the name of this package.

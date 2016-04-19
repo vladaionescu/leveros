@@ -5,10 +5,10 @@ import (
 	"os"
 	"sync"
 
+	"github.com/leveros/grpc-go/metadata"
 	"github.com/leveros/leveros/core"
 	"github.com/leveros/leveros/scale"
 	"golang.org/x/net/context"
-	"google.golang.org/grpc/metadata"
 )
 
 var (

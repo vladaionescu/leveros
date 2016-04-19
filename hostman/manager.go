@@ -11,7 +11,7 @@ import (
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
 	"golang.org/x/net/context"
-	"google.golang.org/grpc"
+	grpc "github.com/leveros/grpc-go"
 )
 
 // ManagerService is the name of the host manager internal service.

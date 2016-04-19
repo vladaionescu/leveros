@@ -5,7 +5,7 @@ import (
 
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/leverutil"
-	"google.golang.org/grpc"
+	grpc "github.com/leveros/grpc-go"
 )
 
 var (

@@ -13,7 +13,7 @@ import (
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
 	"golang.org/x/net/context"
-	"google.golang.org/grpc"
+	grpc "github.com/leveros/grpc-go"
 )
 
 // PackageName is the name of this package.

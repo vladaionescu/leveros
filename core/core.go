@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/leveros/leveros/config"
-	"google.golang.org/grpc"
+	grpc "github.com/leveros/grpc-go"
 )
 
 // PackageName is the name of this package.
