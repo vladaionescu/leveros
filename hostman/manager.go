@@ -6,12 +6,12 @@ import (
 	"time"
 
 	dockerapi "github.com/fsouza/go-dockerclient"
+	grpc "github.com/leveros/grpc-go"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
 	"golang.org/x/net/context"
-	grpc "github.com/leveros/grpc-go"
 )
 
 // ManagerService is the name of the host manager internal service.

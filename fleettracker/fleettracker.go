@@ -7,13 +7,13 @@ import (
 
 	dockerapi "github.com/fsouza/go-dockerclient"
 	consulapi "github.com/hashicorp/consul/api"
+	grpc "github.com/leveros/grpc-go"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
 	"github.com/leveros/leveros/hostman"
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
 	"golang.org/x/net/context"
-	grpc "github.com/leveros/grpc-go"
 )
 
 // PackageName is the name of this package.

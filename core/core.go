@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/leveros/leveros/config"
 	grpc "github.com/leveros/grpc-go"
+	"github.com/leveros/leveros/config"
 )
 
 // PackageName is the name of this package.

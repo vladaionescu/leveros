@@ -3,9 +3,9 @@ package core
 import (
 	"fmt"
 
-	"golang.org/x/net/context"
 	grpc "github.com/leveros/grpc-go"
 	"github.com/leveros/grpc-go/metadata"
+	"golang.org/x/net/context"
 )
 
 // SendLeverRPC sends a Lever RPC to a certain resource within the service

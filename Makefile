@@ -58,7 +58,7 @@ cli: $(BIN_DIR)/lever
 cmd: $(CMD_TARGETS)
 
 .PHONY: test
-test: $(TEST_SERVICES_TARGETS)
+test: pretest $(TEST_SERVICES_TARGETS)
 	$(GO) test ./$(SYS_TEST_DIR)
 
 .PHONY: run
@@ -116,6 +116,31 @@ $(BIN_DIR)/%: $(CMD_DIR)/%/main.go $(PROTO_TARGETS) $(BIN_DIR) FORCE
 
 $(SYS_TEST_DIR)/%/serve: $(SYS_TEST_DIR)/%/main.go $(PROTO_TARGETS) FORCE
 	export; $(MAKE) GO_OUTPUT=$@ GO_MAIN_TARGET=./$< $@
+
+#
+# Go pretest targets.
+
+FIND_GO_FILES := find -type f -name '*.go' ! -path './vendor/*' ! -path './.git/*' ! -name '*.pb.go'
+
+.PHONY: vet
+vet:
+	$(FIND_GO_FILES) -exec go tool vet {} \;
+
+.PHONY: lint
+lint:
+	$(FIND_GO_FILES) -exec golint {} \;
+
+.PHONY: fmt
+fmt:
+	$(FIND_GO_FILES) -exec gofmt -s -w {} \;
+
+.PHONY: fmtcheck
+fmtcheck:
+	@ export output="$$($(FIND_GO_FILES) -exec gofmt -s -d {} \;)"; \
+		test -z "$${output}" || (echo "$${output}" && exit 1)
+
+.PHONY: pretest
+pretest: vet lint fmtcheck
 
 #
 # Source generation targets.

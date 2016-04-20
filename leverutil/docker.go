@@ -68,8 +68,8 @@ func GetOwnContainerID() string {
 	docker := NewDockerLocal()
 	containers, err := docker.ListContainers(dockerapi.ListContainersOptions{
 		Filters: map[string][]string{
-			"status": []string{"running"},
-			"label":  []string{"com.leveros.isleveros"},
+			"status": {"running"},
+			"label":  {"com.leveros.isleveros"},
 		},
 	})
 	if err != nil {

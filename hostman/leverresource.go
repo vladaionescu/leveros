@@ -126,7 +126,7 @@ func (resource *LeverResource) construct() error {
 			Method: "NewResource",
 			ArgsOneof: &core.RPC_Args{
 				Args: &core.JSONArray{
-					Element: []*core.JSON{&core.JSON{
+					Element: []*core.JSON{{
 						JsonValueOneof: &core.JSON_JsonString{
 							JsonString: resource.leverResource,
 						},
@@ -182,7 +182,7 @@ func (resource *LeverResource) closeInternal(soft bool) {
 				Method: "CloseResource",
 				ArgsOneof: &core.RPC_Args{
 					Args: &core.JSONArray{
-						Element: []*core.JSON{&core.JSON{
+						Element: []*core.JSON{{
 							JsonValueOneof: &core.JSON_JsonString{
 								JsonString: resource.leverResource,
 							},
