@@ -57,6 +57,9 @@ cli: $(BIN_DIR)/lever
 .PHONY: cmd
 cmd: $(CMD_TARGETS)
 
+.PHONY: pretest
+pretest: vet lint fmtcheck
+
 .PHONY: test
 test: pretest $(TEST_SERVICES_TARGETS)
 	$(GO) test ./$(SYS_TEST_DIR)
@@ -138,9 +141,6 @@ fmt:
 fmtcheck:
 	@ export output="$$($(FIND_GO_FILES) -exec gofmt -s -d {} \;)"; \
 		test -z "$${output}" || (echo "$${output}" && exit 1)
-
-.PHONY: pretest
-pretest: vet lint fmtcheck
 
 #
 # Source generation targets.
