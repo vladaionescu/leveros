@@ -88,7 +88,6 @@ clean:
 	rm -rf $(BIN_DIR)
 	rm -rf $(BUILD_DIR)
 	rm -f $(TEST_SERVICES_TARGETS)
-	rm -f $(PROTO_TARGETS)
 
 .PHONY: clean-all
 clean-all:

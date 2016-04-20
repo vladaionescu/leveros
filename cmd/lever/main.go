@@ -37,7 +37,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "env, E",
-			Value:  core.DefaultDevEnvFlag.Get(),
+			Value:  "",
 			EnvVar: "LEVEROS_ENVIRONMENT",
 			Usage: "The name of the environment the client interacts " +
 				"with.",
@@ -57,7 +57,7 @@ func main() {
 		{
 			Name:      "deploy",
 			Usage:     "Deploy a directory as a Lever service.",
-			ArgsUsage: "<dir>",
+			ArgsUsage: "<env> [<dir>]",
 			Action:    actionDeploy,
 		},
 		{
@@ -113,12 +113,23 @@ func actionDeploy(ctx *cli.Context) {
 	if flagHost != "" {
 		host = flagHost
 	}
-	if flagEnv == core.DefaultDevEnvFlag.Get() {
-		host = core.DefaultDevEnvAliasFlag.Get()
+	adminEnv := core.AdminEnvFlag.Get()
+	if flagEnv != "" {
+		adminEnv = flagEnv
 	}
-	serviceDir := ctx.Args().First()
+	if adminEnv == core.AdminEnvFlag.Get() {
+		host = core.AdminEnvAliasFlag.Get()
+	}
+	destEnv := ctx.Args().First()
+	if destEnv == "" {
+		logger.Fatal("Destination environment not specified")
+	}
+	serviceDir := ctx.Args().Get(1)
+	if serviceDir == "" {
+		serviceDir = "."
+	}
 	err := leverapi.DeployServiceDir(
-		core.AdminEnvFlag.Get(), host, flagEnv, serviceDir)
+		adminEnv, host, destEnv, serviceDir)
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error trying to deploy service")
 	}
@@ -131,6 +142,9 @@ func actionInvoke(ctx *cli.Context) {
 	}
 	if peer.Environment == "" {
 		peer.Environment = flagEnv
+	}
+	if peer.Environment == "" {
+		peer.Environment = core.DefaultDevEnvFlag.Get()
 	}
 
 	client, err := leverapi.NewClient()
@@ -201,6 +215,9 @@ func actionStream(ctx *cli.Context) {
 	}
 	if peer.Environment == "" {
 		peer.Environment = flagEnv
+	}
+	if peer.Environment == "" {
+		peer.Environment = core.DefaultDevEnvFlag.Get()
 	}
 
 	client, err := leverapi.NewClient()
