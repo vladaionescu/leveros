@@ -23,7 +23,7 @@ var logger = leverutil.GetLogger(PackageName, "Admin")
 const (
 	codeBaseDir = "/leveros/custcodetree"
 
-	maxUploadSize = 30 * 1024 * 1024 // 10 MiB
+	maxUploadSize = 30 * 1024 * 1024 // 30 MiB
 )
 
 var (

@@ -115,13 +115,13 @@ clean-repo:
 $(BIN_DIR)/lever: GOOS:="" GOARCH:=""
 
 $(BIN_DIR)/%: $(CMD_DIR)/%/main.go $(PROTO_TARGETS) $(BIN_DIR) FORCE
-	export; $(MAKE) GO_OUTPUT=$@ GO_MAIN_TARGET=./$< $@
+	export > /dev/null ; $(MAKE) GO_OUTPUT=$@ GO_MAIN_TARGET=./$< $@
 
 #
 # Go system test targets.
 
 $(SYS_TEST_DIR)/%/serve: $(SYS_TEST_DIR)/%/main.go $(PROTO_TARGETS) FORCE
-	export; $(MAKE) GO_OUTPUT=$@ GO_MAIN_TARGET=./$< $@
+	export > /dev/null ; $(MAKE) GO_OUTPUT=$@ GO_MAIN_TARGET=./$< $@
 
 #
 # Go pretest targets.
