@@ -16,8 +16,20 @@ Install dev env
 * Build everything with `make build`.
 
 * Check that it works with `make run` and (in a different terminal)
-    `make test`.
+    `make systest`.
 * If something is broken, please open a GitHub issue.
+
+Contributing
+------------
+
+Committed code must pass golint, go vet, gofmt and go test. Running `make test`
+will check all of these.
+
+If your editor does not automatically call gofmt, `make fmt` will format all go
+files for you.
+
+Running the system tests is also recommended. To run them use `make run` and
+(in a different terminal) `make systest`.
 
 Misc recipes
 ------------

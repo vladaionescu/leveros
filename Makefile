@@ -61,8 +61,12 @@ cmd: $(CMD_TARGETS)
 pretest: vet lint fmtcheck
 
 .PHONY: test
-test: pretest $(TEST_SERVICES_TARGETS)
-	$(GO) test ./$(SYS_TEST_DIR)
+test: pretest
+	$(GO) test ./...
+
+.PHONY: systest
+systest: $(TEST_SERVICES_TARGETS)
+	$(GO) test -tags=integration ./$(SYS_TEST_DIR)
 
 .PHONY: run
 run:
