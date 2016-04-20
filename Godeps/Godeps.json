@@ -8,55 +8,303 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.9.0-17-ga26f435",
-			"Rev": "a26f43589d737684363ff856c5a0f9f24b946510"
+			"Comment": "v0.10.0-14-g081307d",
+			"Rev": "081307d9bc1364753142d5962fc1d795c742baaf"
 		},
 		{
 			"ImportPath": "github.com/aerospike/aerospike-client-go",
-			"Comment": "v1.9.0",
-			"Rev": "235a7cd675b4d6d0d77e68fb9a290cc4500ad1eb"
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/internal/lua",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/internal/lua/resources",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/logger",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/pkg/bcrypt",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/pkg/ripemd160",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/types",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/types/atomic",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/types/particle_type",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/types/rand",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
+		},
+		{
+			"ImportPath": "github.com/aerospike/aerospike-client-go/utils/buffer",
+			"Comment": "v1.13.0",
+			"Rev": "ad344291c1d9eadc47fc9f2b913449a4598a4bfe"
 		},
 		{
 			"ImportPath": "github.com/codegangsta/cli",
-			"Comment": "1.2.0-219-ga294348",
-			"Rev": "a2943485b110df8842045ae0600047f88a3a56a1"
+			"Comment": "1.2.0-237-g71f57d3",
+			"Rev": "71f57d300dd6a780ac1856c005c4b518cfd498ec"
+		},
+		{
+			"ImportPath": "github.com/davecgh/go-spew/spew",
+			"Rev": "5215b55f46b2b919f50a1df0eaa5886afe4e3b3d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/containers",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/lists",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/lists/singlylinkedlist",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/maps",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
 		},
 		{
 			"ImportPath": "github.com/emirpasic/gods/maps/treemap",
 			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
 		},
 		{
+			"ImportPath": "github.com/emirpasic/gods/stacks",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/stacks/linkedliststack",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/trees",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/trees/redblacktree",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/utils",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/utils/timsort",
+			"Rev": "6bfa9f318d6341686712b65c50b76b239fa93de0"
+		},
+		{
 			"ImportPath": "github.com/fsouza/go-dockerclient",
-			"Rev": "14e1bba0b2231f8b30e3aa4293cd7560d68e1faa"
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/Sirupsen/logrus",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/opts",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/archive",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/fileutils",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/homedir",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/idtools",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/ioutils",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/longpath",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/pools",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/promise",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/stdcopy",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/docker/pkg/system",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/docker/go-units",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/hashicorp/go-cleanhttp",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/github.com/opencontainers/runc/libcontainer/user",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/golang.org/x/net/context",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient/external/golang.org/x/sys/unix",
+			"Rev": "7e2450a717e8725de58dc1530218cd64117861b3"
 		},
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "99511271042a09d1e01baea8781caa5210fec66e"
+			"Rev": "2ebff28ac76fb19e2d25e5ddd4885708dfdd5611"
 		},
 		{
 			"ImportPath": "github.com/hashicorp/consul/api",
-			"Comment": "v0.6.3-109-g13bfad9",
-			"Rev": "13bfad9e1b0fab40f5b2f5f2c7ac21cb3f0a8d6d"
+			"Comment": "v0.6.4-232-gf97afda",
+			"Rev": "f97afda8e15046b41d951bf3b4220372c45df7ab"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/go-cleanhttp",
+			"Rev": "ad28ea4487f05916463e2423a55166280e8254b5"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/serf/coordinate",
+			"Comment": "v0.7.0-54-g44945ab",
+			"Rev": "44945ab711fb48f1cee51d248568487b938c178d"
+		},
+		{
+			"ImportPath": "github.com/leveros/grpc-go",
+			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+		},
+		{
+			"ImportPath": "github.com/leveros/grpc-go/codes",
+			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+		},
+		{
+			"ImportPath": "github.com/leveros/grpc-go/credentials",
+			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+		},
+		{
+			"ImportPath": "github.com/leveros/grpc-go/grpclog",
+			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+		},
+		{
+			"ImportPath": "github.com/leveros/grpc-go/internal",
+			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+		},
+		{
+			"ImportPath": "github.com/leveros/grpc-go/metadata",
+			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+		},
+		{
+			"ImportPath": "github.com/leveros/grpc-go/naming",
+			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+		},
+		{
+			"ImportPath": "github.com/leveros/grpc-go/peer",
+			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+		},
+		{
+			"ImportPath": "github.com/leveros/grpc-go/transport",
+			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+		},
+		{
+			"ImportPath": "github.com/mgutz/ansi",
+			"Rev": "c286dcecd19ff979eeb73ea444e479b903f2cfcb"
 		},
 		{
 			"ImportPath": "github.com/miekg/dns",
-			"Rev": "83f7d658ac219335d42f7ec4397a76e35ca7f835"
+			"Rev": "c9d1302d540edfb97d9ecbfe90b4fb515088630b"
+		},
+		{
+			"ImportPath": "github.com/pmezard/go-difflib/difflib",
+			"Rev": "792786c7400a136282c1664665ae0a8db921c6c2"
+		},
+		{
+			"ImportPath": "github.com/stretchr/testify/assert",
+			"Comment": "v1.1.3-12-gc5d7a69",
+			"Rev": "c5d7a69bf8a2c9c374798160849c071093e41dd1"
 		},
 		{
 			"ImportPath": "github.com/x-cray/logrus-prefixed-formatter",
 			"Rev": "19bfe61502ba35a3235b4970c10b9366a0aa9b61"
 		},
 		{
+			"ImportPath": "github.com/yuin/gopher-lua",
+			"Rev": "b5ca24ae61f4266ee8572f6f5c8e3637e6e5c4a1"
+		},
+		{
+			"ImportPath": "github.com/yuin/gopher-lua/ast",
+			"Rev": "b5ca24ae61f4266ee8572f6f5c8e3637e6e5c4a1"
+		},
+		{
+			"ImportPath": "github.com/yuin/gopher-lua/parse",
+			"Rev": "b5ca24ae61f4266ee8572f6f5c8e3637e6e5c4a1"
+		},
+		{
+			"ImportPath": "github.com/yuin/gopher-lua/pm",
+			"Rev": "b5ca24ae61f4266ee8572f6f5c8e3637e6e5c4a1"
+		},
+		{
 			"ImportPath": "golang.org/x/net/context",
-			"Rev": "35b06af0720201bc2f326773a80767387544f8c4"
+			"Rev": "fb93926129b8ec0056f2f458b1f519654814edf0"
 		},
 		{
 			"ImportPath": "golang.org/x/net/http2",
-			"Rev": "35b06af0720201bc2f326773a80767387544f8c4"
+			"Rev": "fb93926129b8ec0056f2f458b1f519654814edf0"
 		},
 		{
-			"ImportPath": "github.com/leveros/grpc-go",
-			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
+			"ImportPath": "golang.org/x/net/http2/hpack",
+			"Rev": "fb93926129b8ec0056f2f458b1f519654814edf0"
+		},
+		{
+			"ImportPath": "golang.org/x/net/internal/timeseries",
+			"Rev": "fb93926129b8ec0056f2f458b1f519654814edf0"
+		},
+		{
+			"ImportPath": "golang.org/x/net/trace",
+			"Rev": "fb93926129b8ec0056f2f458b1f519654814edf0"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "f64b50fbea64174967a8882830d621a18ee1548e"
 		}
 	]
 }
