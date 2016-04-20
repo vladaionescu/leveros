@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"strings"
 	"sync"
 
 	"github.com/leveros/leveros/leverutil"
@@ -182,8 +183,18 @@ func (conn *http2Connection) reader() {
 		frame, err = conn.framer.ReadFrame()
 		if err != nil {
 			if err != io.EOF {
-				connectionLogger.WithFields("err", err).Error("Read error")
-				conn.close(err)
+				streamErr, isStreamErr := err.(http2.StreamError)
+				if isStreamErr {
+					conn.lock.Lock()
+					stream, streamFound := conn.streams[streamErr.StreamID]
+					conn.lock.Unlock()
+					if streamFound {
+						conn.closeStream(stream, err)
+					}
+				} else {
+					connectionLogger.WithFields("err", err).Error("Read error")
+					conn.close(err)
+				}
 			} else {
 				conn.close(nil)
 			}
@@ -407,7 +418,25 @@ func (conn *http2Connection) writeHeaders(
 
 	// Encode headers.
 	conn.hpackBuffer.Reset()
+	// First the pseudo (start with ':').
 	for name, entry := range headers {
+		if !strings.HasPrefix(name, ":") {
+			continue
+		}
+		name = strings.ToLower(name)
+		for _, value := range entry {
+			conn.hpackEncoder.WriteField(hpack.HeaderField{
+				Name:  name,
+				Value: value,
+			})
+		}
+	}
+	// Then the regular (don't start with ':').
+	for name, entry := range headers {
+		if strings.HasPrefix(name, ":") {
+			continue
+		}
+		name = strings.ToLower(name)
 		for _, value := range entry {
 			conn.hpackEncoder.WriteField(hpack.HeaderField{
 				Name:  name,

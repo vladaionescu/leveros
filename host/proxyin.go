@@ -153,9 +153,13 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 	}
 
 	addHeaders := make(map[string][]string)
-	addHeaders["x-lever-src-env"] = []string{srcEnv}
+	if srcEnv != "" {
+		addHeaders["x-lever-src-env"] = []string{srcEnv}
+	}
+	if resourceName != "" {
+		addHeaders["x-lever-resource"] = []string{resourceName}
+	}
 	addHeaders["x-lever-internal-rpc-gateway"] = []string{ownIP}
-	addHeaders["x-lever-resource"] = []string{resourceName}
 
 	startTime := time.Now()
 	firstHeaders := true

@@ -142,7 +142,7 @@ func packFile(
 		}
 		err = buffer.Flush()
 		if err != nil {
-			return nil
+			return err
 		}
 	}
 	return nil
