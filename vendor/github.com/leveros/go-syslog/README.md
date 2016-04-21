@@ -9,7 +9,7 @@ Installation
 The recommended way to install go-syslog
 
 ```
-go get gopkg.in/mcuadros/go-syslog.v2
+go get github.com/leveros/go-syslog
 ```
 
 Examples
@@ -18,7 +18,7 @@ Examples
 How import the package
 
 ```go
-import "gopkg.in/mcuadros/go-syslog.v2"
+import "github.com/leveros/go-syslog"
 ```
 
 Example of a basic syslog [UDP server](example/basic_udp.go):

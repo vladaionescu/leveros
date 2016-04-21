@@ -3,10 +3,10 @@ package devlogger
 import (
 	"time"
 
+	"github.com/leveros/go-syslog"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
-	syslog "gopkg.in/mcuadros/go-syslog.v2"
 )
 
 // PackageName is the name of this package.
@@ -51,14 +51,17 @@ func NewDevLogger(ownIP string) (*DevLogger, error) {
 	dl.server.SetFormat(syslog.RFC5424)
 	dl.server.SetHandler(syslog.NewChannelHandler(dl.channel))
 	dl.server.ListenTCP("0.0.0.0:" + DevLoggerListenPortFlag.Get())
-	dl.server.Boot()
+	err := dl.server.Boot()
+	if err != nil {
+		return nil, err
+	}
 	go dl.worker()
 
 	// Register service.
 	instanceID := InstanceIDFlag.Get()
 	serviceAddr := ownIP + ":" + DevLoggerListenPortFlag.Get()
 	serviceTTL := 30 * time.Second
-	err := scale.RegisterServiceLocal(
+	err = scale.RegisterServiceLocal(
 		DevLoggerService, instanceID, serviceAddr, serviceTTL)
 	if err != nil {
 		dl.server.Kill()

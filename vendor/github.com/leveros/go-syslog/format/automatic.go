@@ -6,9 +6,9 @@ import (
 	"errors"
 	"strconv"
 
-	"github.com/jeromer/syslogparser"
-	"github.com/jeromer/syslogparser/rfc3164"
-	"github.com/jeromer/syslogparser/rfc5424"
+	"github.com/leveros/syslogparser"
+	"github.com/leveros/syslogparser/rfc3164"
+	"github.com/leveros/syslogparser/rfc5424"
 )
 
 /* Selecting an 'Automatic' format detects incoming format (i.e. RFC3164 vs RFC5424) and Framing

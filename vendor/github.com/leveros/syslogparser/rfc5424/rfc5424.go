@@ -5,10 +5,11 @@ package rfc5424
 
 import (
 	"fmt"
-	"github.com/jeromer/syslogparser"
 	"math"
 	"strconv"
 	"time"
+
+	"github.com/leveros/syslogparser"
 )
 
 const (
@@ -16,6 +17,7 @@ const (
 )
 
 var (
+	ErrExtraFieldInvalid = &syslogparser.ParserError{"Invalid extra field"}
 	ErrYearInvalid       = &syslogparser.ParserError{"Invalid year in timestamp"}
 	ErrMonthInvalid      = &syslogparser.ParserError{"Invalid month in timestamp"}
 	ErrDayInvalid        = &syslogparser.ParserError{"Invalid day in timestamp"}
@@ -28,7 +30,6 @@ var (
 	ErrInvalidAppName    = &syslogparser.ParserError{"Invalid app name"}
 	ErrInvalidProcId     = &syslogparser.ParserError{"Invalid proc ID"}
 	ErrInvalidMsgId      = &syslogparser.ParserError{"Invalid msg ID"}
-	ErrNoStructuredData  = &syslogparser.ParserError{"No structured data"}
 )
 
 type Parser struct {
@@ -122,6 +123,15 @@ func (p *Parser) Dump() syslogparser.LogParts {
 // HEADER = PRI VERSION SP TIMESTAMP SP HOSTNAME SP APP-NAME SP PROCID SP MSGID
 func (p *Parser) parseHeader() (header, error) {
 	hdr := header{}
+
+	if p.buff[p.cursor] != syslogparser.PRI_PART_START {
+		// An extra field before priority.
+		_, err := parseUpToLen(p.buff, &p.cursor, p.l, 48, ErrExtraFieldInvalid)
+		if err != nil {
+			return hdr, err
+		}
+		p.cursor++
+	}
 
 	pri, err := p.parsePriority()
 	if err != nil {
@@ -536,7 +546,7 @@ func parseStructuredData(buff []byte, cursor *int, l int) (string, error) {
 	}
 
 	if buff[*cursor] != '[' {
-		return sdData, ErrNoStructuredData
+		return sdData, nil
 	}
 
 	from := *cursor
@@ -564,7 +574,7 @@ func parseStructuredData(buff []byte, cursor *int, l int) (string, error) {
 		return string(buff[from:to]), nil
 	}
 
-	return sdData, ErrNoStructuredData
+	return sdData, nil
 }
 
 func parseUpToLen(buff []byte, cursor *int, l int, maxLen int, e error) (string, error) {

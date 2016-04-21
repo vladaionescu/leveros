@@ -71,19 +71,19 @@ func ParsePriority(buff []byte, cursor *int, l int) (Priority, error) {
 	i := 1
 	priDigit := 0
 
-	for i < l {
+	for *cursor + i < l {
 		if i >= 5 {
 			return pri, ErrPriorityTooLong
 		}
 
-		c := buff[i]
+		c := buff[*cursor+i]
 
 		if c == PRI_PART_END {
 			if i == 1 {
 				return pri, ErrPriorityTooShort
 			}
 
-			*cursor = i + 1
+			*cursor += i + 1
 			return newPriority(priDigit), nil
 		}
 

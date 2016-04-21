@@ -10,6 +10,7 @@ import (
 	dockerapi "github.com/fsouza/go-dockerclient"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
+	"github.com/leveros/leveros/devlogger"
 	"github.com/leveros/leveros/leverutil"
 )
 
@@ -140,6 +141,24 @@ func StartDockerContainer(
 		binds = append(
 			binds, LeverCodeHostDirFlag.Get()+":/leveros/custcodetree:Z")
 	}
+
+	// Configure logging.
+	var logConfig dockerapi.LogConfig
+	if devlogger.DisableFlag.Get() {
+		logConfig.Type = "none"
+	} else {
+		// TODO: Should use scale.Dereference... to get IP of syslog server
+		//       and shard by tag.
+		tag := environment + "/" + service
+		logConfig.Type = "syslog"
+		logConfig.Config = map[string]string{
+			"syslog-address":  "tcp://127.0.0.1:6514",
+			"syslog-facility": "user",
+			"tag":             tag,
+			"syslog-format":   "rfc5424",
+		}
+	}
+
 	container, err := docker.CreateContainer(dockerapi.CreateContainerOptions{
 		Name: "leveros_" + instanceID,
 		Config: &dockerapi.Config{
@@ -165,12 +184,12 @@ func StartDockerContainer(
 			NetworkMode:    "none",
 			Ulimits:        []dockerapi.ULimit{}, // TODO
 			SecurityOpt:    []string{},           // TODO
-			//LogConfig:      dockerapi.LogConfig{Type: "none"}, // TODO
-			Memory:     0, // TODO
-			MemorySwap: -1,
-			CPUShares:  0, // TODO
-			CPUPeriod:  0, // TODO
-			CPUQuota:   0, // TODO
+			LogConfig:      logConfig,
+			Memory:         0, // TODO
+			MemorySwap:     -1,
+			CPUShares:      0, // TODO
+			CPUPeriod:      0, // TODO
+			CPUQuota:       0, // TODO
 		},
 	})
 	if err != nil {
