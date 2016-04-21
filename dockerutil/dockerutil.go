@@ -1,4 +1,4 @@
-package leverutil
+package dockerutil
 
 import (
 	"fmt"
@@ -10,7 +10,11 @@ import (
 	dockerapi "github.com/fsouza/go-dockerclient"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
+	"github.com/leveros/leveros/leverutil"
 )
+
+// PackageName is the name of this package.
+const PackageName = "dockerutil"
 
 var (
 	// DockerSwarmFlag is the docker swarm endpoint.
@@ -32,7 +36,7 @@ var (
 		PackageName, "disableRemoveContainer")
 )
 
-var dockerLogger = GetLogger(PackageName, "docker")
+var dockerLogger = leverutil.GetLogger(PackageName, "docker")
 
 var (
 	containerIDLock sync.RWMutex
@@ -76,7 +80,7 @@ func GetOwnContainerID() string {
 		dockerLogger.WithFields("err", err).Fatal("Cannot get own container ID")
 	}
 
-	ownName := "/" + ContainerNameFlag.Get()
+	ownName := "/" + leverutil.ContainerNameFlag.Get()
 	for _, container := range containers {
 		for _, name := range container.Names {
 			if name == ownName {

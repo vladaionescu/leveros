@@ -18,8 +18,8 @@ services:
             --config leveroshost
             --service leveroshost
             --containerName leveroshost
-            --leverutil.leverCodeHostDir ${LEVEROS_REPO_DIR}
-            --leverutil.disableRemoveContainer true
+            --dockerutil.leverCodeHostDir ${LEVEROS_REPO_DIR}
+            --dockerutil.disableRemoveContainer true
         environment:
             LEVEROS_LISTEN_IP_PORT: ${LEVEROS_LISTEN_IP_PORT}
 

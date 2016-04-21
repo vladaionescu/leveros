@@ -7,6 +7,7 @@ import (
 	"github.com/leveros/leveros/cmd"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/devlogger"
+	"github.com/leveros/leveros/dockerutil"
 	"github.com/leveros/leveros/fleettracker"
 	"github.com/leveros/leveros/host"
 	"github.com/leveros/leveros/hostman"
@@ -40,11 +41,11 @@ func main() {
 	}
 
 	// Docker.
-	dockerLocal := leverutil.NewDockerLocal()
-	dockerSwarm := leverutil.NewDockerSwarm()
+	dockerLocal := dockerutil.NewDockerLocal()
+	dockerSwarm := dockerutil.NewDockerSwarm()
 
 	// Own regional IP.
-	ownIP, err := leverutil.GetOwnEnvIPv4(
+	ownIP, err := dockerutil.GetOwnEnvIPv4(
 		dockerLocal, hostman.RegionalNetworkFlag.Get())
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error getting own regional IPv4")

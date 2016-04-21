@@ -9,6 +9,7 @@ import (
 	grpc "github.com/leveros/grpc-go"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
+	"github.com/leveros/leveros/dockerutil"
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
 	"golang.org/x/net/context"
@@ -190,7 +191,7 @@ func (manager *Manager) EnsureInfrastructureInitialized(
 
 	// Connect the container to the env network bridge so we can talk to it
 	// (forward RPCs).
-	instanceIPv4, err := leverutil.ConnectToDockerEnvNetwork(
+	instanceIPv4, err := dockerutil.ConnectToDockerEnvNetwork(
 		manager.docker, info.ContainerID, entry.networkID)
 	if err != nil {
 		manager.logger.WithFields(
@@ -198,7 +199,7 @@ func (manager *Manager) EnsureInfrastructureInitialized(
 			"leverEnv", info.Environment,
 			"containerID", info.ContainerID,
 		).Error("Error connecting instance to env network")
-		removeErr := leverutil.RemoveDockerContainer(
+		removeErr := dockerutil.RemoveDockerContainer(
 			manager.docker, info.ContainerID)
 		if removeErr != nil {
 			manager.logger.WithFields(
@@ -212,7 +213,7 @@ func (manager *Manager) EnsureInfrastructureInitialized(
 
 	if core.IsAdmin(info.Environment, info.Service) {
 		// Admin environment. Also connect it to the regional network.
-		_, err := leverutil.ConnectToDockerEnvNetwork(
+		_, err := dockerutil.ConnectToDockerEnvNetwork(
 			manager.docker, info.ContainerID, RegionalNetworkFlag.Get())
 		if err != nil {
 			manager.logger.WithFields(
@@ -220,7 +221,7 @@ func (manager *Manager) EnsureInfrastructureInitialized(
 				"leverEnv", info.Environment,
 				"containerID", info.ContainerID,
 			).Error("Error connecting admin instance to regional network")
-			removeErr := leverutil.RemoveDockerContainer(
+			removeErr := dockerutil.RemoveDockerContainer(
 				manager.docker, info.ContainerID)
 			if removeErr != nil {
 				manager.logger.WithFields(
@@ -327,7 +328,7 @@ func (manager *Manager) getEnvironment(
 		"Adding environment")
 
 	// Create network for the new env.
-	networkID, networkIP, ownIP, err := leverutil.CreateDockerEnvNetwork(
+	networkID, networkIP, ownIP, err := dockerutil.CreateDockerEnvNetwork(
 		manager.docker, env)
 	if err != nil {
 		manager.logger.WithFields("err", err, "leverEnv", env).Error(
@@ -363,7 +364,7 @@ func (manager *Manager) removeEnvironment(env string) (firstErr error) {
 		instance.Close(true)
 	}
 
-	err := leverutil.RemoveDockerEnvNetwork(manager.docker, entry.networkID)
+	err := dockerutil.RemoveDockerEnvNetwork(manager.docker, entry.networkID)
 	if err != nil {
 		manager.logger.WithFields("err", err, "leverEnv", env).Error(
 			"Error trying to remove env network")

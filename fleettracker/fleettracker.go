@@ -10,6 +10,7 @@ import (
 	grpc "github.com/leveros/grpc-go"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
+	"github.com/leveros/leveros/dockerutil"
 	"github.com/leveros/leveros/hostman"
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
@@ -97,7 +98,7 @@ func (tracker *FleetTracker) OnRPC(rpcEvent *RPCEvent) error {
 			return tracker.OnRPC(rpcEvent)
 		}
 
-		codeDir := leverutil.CodeDirPath(
+		codeDir := dockerutil.CodeDirPath(
 			rpcEvent.Environment, rpcEvent.Service, rpcEvent.CodeVersion)
 		leverConfig, err := core.ReadLeverConfig(codeDir)
 		if err != nil {
@@ -142,7 +143,7 @@ func (tracker *FleetTracker) scaleUp(delta int, rpcEvent *RPCEvent) error {
 	).Info("Scaling up")
 
 	// Read the entry point from the config.
-	codeDir := leverutil.CodeDirPath(
+	codeDir := dockerutil.CodeDirPath(
 		rpcEvent.Environment, rpcEvent.Service, rpcEvent.CodeVersion)
 	leverConfig, err := core.ReadLeverConfig(codeDir)
 	if err != nil {
@@ -154,7 +155,7 @@ func (tracker *FleetTracker) scaleUp(delta int, rpcEvent *RPCEvent) error {
 	hadErrors := false
 	for i := 0; i < delta; i++ {
 		instanceID := leverutil.RandomID()
-		containerID, node, err := leverutil.StartDockerContainer(
+		containerID, node, err := dockerutil.StartDockerContainer(
 			tracker.docker, rpcEvent.Environment, rpcEvent.Service,
 			instanceID, entryPoint, rpcEvent.CodeVersion, rpcEvent.IsAdmin)
 		if err != nil {

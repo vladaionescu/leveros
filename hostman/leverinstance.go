@@ -7,6 +7,7 @@ import (
 
 	dockerapi "github.com/fsouza/go-dockerclient"
 	"github.com/leveros/leveros/config"
+	"github.com/leveros/leveros/dockerutil"
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
 )
@@ -268,7 +269,7 @@ func (instance *LeverInstance) termContainer(kill bool) error {
 	exited := make(chan struct{})
 	go func() {
 		instance.docker.WaitContainer(instance.containerID)
-		err := leverutil.RemoveDockerContainer(
+		err := dockerutil.RemoveDockerContainer(
 			instance.docker, instance.containerID)
 		if err != nil {
 			instance.logger.WithFields(

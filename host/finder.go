@@ -11,6 +11,7 @@ import (
 	leverapi "github.com/leveros/leveros/api"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
+	"github.com/leveros/leveros/dockerutil"
 	"github.com/leveros/leveros/hostman"
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
@@ -406,7 +407,7 @@ func (finder *Finder) newInstance(
 	}
 
 	// Read the entry point from the config.
-	codeDir := leverutil.CodeDirPath(env, service, version)
+	codeDir := dockerutil.CodeDirPath(env, service, version)
 	leverConfig, err := core.ReadLeverConfig(codeDir)
 	if err != nil {
 		finder.logger.WithFields("err", err).Error(
@@ -423,7 +424,7 @@ func (finder *Finder) newInstance(
 	//       handling and register those.
 	instanceID := leverutil.RandomID() // TODO: Collisions possible.
 	isAdmin := core.IsAdmin(env, service)
-	containerID, node, err := leverutil.StartDockerContainer(
+	containerID, node, err := dockerutil.StartDockerContainer(
 		finder.docker, env, service, instanceID, entryPoint, version, isAdmin)
 	if err != nil {
 		finder.logger.WithFields(
