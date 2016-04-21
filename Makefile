@@ -11,8 +11,8 @@ HAVE_GO := $(shell which $(GO))
 GO_BUILD_ARGS := -race
 # Most things will run in a docker container. They need to be compiled for
 # linux/amd64.
-GOOS := linux
-GOARCH := amd64
+export GOOS ?= linux
+export GOARCH ?= amd64
 
 VENDOR_DIR := vendor
 GODEPS_CONFIG := Godeps/Godeps.json
@@ -124,8 +124,8 @@ clean-repo:
 # Go targets.
 
 # The CLI is the only thing that needs to be compiled for the current OS/arch.
-$(BIN_DIR)/lever: GOOS :=
-$(BIN_DIR)/lever: GOARCH :=
+$(BIN_DIR)/lever: GOOS ?=
+$(BIN_DIR)/lever: GOARCH ?=
 
 GO_BUILD_COMMAND = \
 	if [ -n "$(HAVE_GO)" ]; then \
@@ -150,7 +150,8 @@ $(SYS_TEST_DIR)/%/serve: $(SYS_TEST_DIR)/%/main.go $(PROTO_TARGETS) FORCE
 #
 # Go pretest targets.
 
-FIND_GO_FILES := find -type f -name '*.go' ! -path './vendor/*' ! -path './.git/*' ! -name '*.pb.go'
+FIND_GO_FILES := find -type f -name '*.go' \
+	! -path './vendor/*' ! -path './.git/*' ! -name '*.pb.go'
 
 .PHONY: vet
 vet:

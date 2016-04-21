@@ -34,18 +34,14 @@ var (
 	EnvAliasMapFlag = config.DeclareString(
 		PackageName, "envAliasMap", defaultListenIPPort()+",dev.lever")
 
-	// DefaultDevEnvAliasFlag is the actual address of the default Lever
+	// DefaultDevAliasFlag is the actual address of the default Lever
 	// environment used for local development.
-	DefaultDevEnvAliasFlag = config.DeclareString(
-		PackageName, "defaultDevEnvAlias", defaultListenIPPort())
+	DefaultDevAliasFlag = config.DeclareString(
+		PackageName, "defaultDevAlias", defaultListenIPPort())
 	// DefaultDevEnvFlag is the default Lever environment used for local
 	// development.
 	DefaultDevEnvFlag = config.DeclareString(
 		PackageName, "defaultDevEnv", "dev.lever")
-	// AdminEnvAliasFlag is the actual address of the default Lever
-	// admin environment.
-	AdminEnvAliasFlag = config.DeclareString(
-		PackageName, "adminEnvAlias", defaultListenIPPort())
 	// AdminEnvFlag is the admin Lever environment.
 	AdminEnvFlag = config.DeclareString(
 		PackageName, "adminEnv", "admin.lever")

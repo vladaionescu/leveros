@@ -27,7 +27,7 @@ func TestMain(m *testing.M) {
 
 	logger.Info("Deploying...")
 	err := api.DeployServiceDir(
-		core.AdminEnvFlag.Get(), core.DefaultDevEnvAliasFlag.Get(),
+		core.AdminEnvFlag.Get(), core.DefaultDevAliasFlag.Get(),
 		core.DefaultDevEnvFlag.Get(), serviceName)
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error when deploying")
@@ -37,7 +37,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error getting client")
 	}
-	client.ForceHost = core.DefaultDevEnvAliasFlag.Get()
+	client.ForceHost = core.DefaultDevAliasFlag.Get()
 	leverService = client.Service(core.DefaultDevEnvFlag.Get(), serviceName)
 	logger.Info("Running tests...")
 	os.Exit(m.Run())

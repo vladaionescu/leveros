@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/codegangsta/cli"
 	leverapi "github.com/leveros/leveros/api"
@@ -49,7 +50,7 @@ func main() {
 			EnvVar: "LEVEROS_HOST_ADDR",
 			Usage: "The address to direct the client to, if different from " +
 				"the env name. Defaults to $LEVEROS_LISTEN_IP_PORT if env " +
-				"is " + core.DefaultDevEnvFlag.Get() + ".",
+				"ends with \".lever\" (ie when in development).",
 			Destination: &flagHost,
 		},
 	}
@@ -117,8 +118,8 @@ func actionDeploy(ctx *cli.Context) {
 	if flagEnv != "" {
 		adminEnv = flagEnv
 	}
-	if adminEnv == core.AdminEnvFlag.Get() {
-		host = core.AdminEnvAliasFlag.Get()
+	if strings.HasSuffix(adminEnv, ".lever") {
+		host = core.DefaultDevAliasFlag.Get()
 	}
 	destEnv := ctx.Args().First()
 	if destEnv == "" {
@@ -154,8 +155,8 @@ func actionInvoke(ctx *cli.Context) {
 	if flagHost != "" {
 		client.ForceHost = flagHost
 	}
-	if peer.Environment == core.DefaultDevEnvFlag.Get() {
-		client.ForceHost = core.DefaultDevEnvAliasFlag.Get()
+	if strings.HasSuffix(peer.Environment, ".lever") {
+		client.ForceHost = core.DefaultDevAliasFlag.Get()
 	}
 
 	if ctx.NArg() > 2 && ctx.Args().Get(2) == "--" {
@@ -227,8 +228,8 @@ func actionStream(ctx *cli.Context) {
 	if flagHost != "" {
 		client.ForceHost = flagHost
 	}
-	if peer.Environment == core.DefaultDevEnvFlag.Get() {
-		client.ForceHost = core.DefaultDevEnvAliasFlag.Get()
+	if strings.HasSuffix(peer.Environment, ".lever") {
+		client.ForceHost = core.DefaultDevAliasFlag.Get()
 	}
 
 	var args []interface{}
