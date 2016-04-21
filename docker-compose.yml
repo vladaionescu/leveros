@@ -13,6 +13,7 @@ services:
             - ${LEVEROS_REPO_DIR}:/leveros/custcodetree:Z
         ports:
             - ${LEVEROS_LISTEN_IP_PORT}:8080
+            - 127.0.0.1:6514:6514  # Dev logger.
         command: >-
             --config leveroshost
             --service leveroshost

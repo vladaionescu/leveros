@@ -6,6 +6,7 @@ import (
 	grpc "github.com/leveros/grpc-go"
 	"github.com/leveros/leveros/cmd"
 	"github.com/leveros/leveros/config"
+	"github.com/leveros/leveros/devlogger"
 	"github.com/leveros/leveros/fleettracker"
 	"github.com/leveros/leveros/host"
 	"github.com/leveros/leveros/hostman"
@@ -24,11 +25,19 @@ var (
 	// connections.
 	InternalGRPCListenPortFlag = config.DeclareString(
 		PackageName, "internalGRPCListenPort", "3501")
+	// ExternalIPFlag is the host's external IP address.
+	ExternalIPFlag = config.DeclareString(
+		PackageName, "externalIP", "127.0.0.1")
 )
 
 func main() {
 	config.Initialize()
 	leverutil.UpdateLoggingSettings()
+
+	_, err := devlogger.NewDevLogger(ExternalIPFlag.Get())
+	if err != nil {
+		logger.WithFields("err", err).Fatal("Cannot start devlogger")
+	}
 
 	// Docker.
 	dockerLocal := leverutil.NewDockerLocal()

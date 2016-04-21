@@ -210,6 +210,18 @@
 			"Rev": "44945ab711fb48f1cee51d248568487b938c178d"
 		},
 		{
+			"ImportPath": "github.com/jeromer/syslogparser",
+			"Rev": "ff71fe7a7d5279df4b964b31f7ee4adf117277f6"
+		},
+		{
+			"ImportPath": "github.com/jeromer/syslogparser/rfc3164",
+			"Rev": "ff71fe7a7d5279df4b964b31f7ee4adf117277f6"
+		},
+		{
+			"ImportPath": "github.com/jeromer/syslogparser/rfc5424",
+			"Rev": "ff71fe7a7d5279df4b964b31f7ee4adf117277f6"
+		},
+		{
 			"ImportPath": "github.com/leveros/grpc-go",
 			"Rev": "d08ba7832f29502c1ff423e3b65961072d99150b"
 		},
@@ -305,6 +317,16 @@
 		{
 			"ImportPath": "golang.org/x/sys/unix",
 			"Rev": "f64b50fbea64174967a8882830d621a18ee1548e"
+		},
+		{
+			"ImportPath": "gopkg.in/mcuadros/go-syslog.v2",
+			"Comment": "v2.1.1",
+			"Rev": "e75d99192244197242b8fc3c84df9e95e00bdd0d"
+		},
+		{
+			"ImportPath": "gopkg.in/mcuadros/go-syslog.v2/format",
+			"Comment": "v2.1.1",
+			"Rev": "e75d99192244197242b8fc3c84df9e95e00bdd0d"
 		}
 	]
 }
