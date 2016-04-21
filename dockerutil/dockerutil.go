@@ -36,7 +36,7 @@ var (
 		PackageName, "disableRemoveContainer")
 )
 
-var dockerLogger = leverutil.GetLogger(PackageName, "docker")
+var logger = leverutil.GetLogger(PackageName, "dockerutil")
 
 var (
 	containerIDLock sync.RWMutex
@@ -77,7 +77,7 @@ func GetOwnContainerID() string {
 		},
 	})
 	if err != nil {
-		dockerLogger.WithFields("err", err).Fatal("Cannot get own container ID")
+		logger.WithFields("err", err).Fatal("Cannot get own container ID")
 	}
 
 	ownName := "/" + leverutil.ContainerNameFlag.Get()
@@ -86,7 +86,7 @@ func GetOwnContainerID() string {
 			if name == ownName {
 				ownContainerID = container.ID
 				containerIDLock.Unlock()
-				dockerLogger.WithFields(
+				logger.WithFields(
 					"containerID", ownContainerID,
 				).Info("Detected own container ID")
 				return ownContainerID
@@ -94,7 +94,7 @@ func GetOwnContainerID() string {
 		}
 	}
 
-	dockerLogger.WithFields("err", err, "containerName", ownName).Fatal(
+	logger.WithFields("err", err, "containerName", ownName).Fatal(
 		"Cannot find own container ID by name")
 	return ""
 }
@@ -103,7 +103,7 @@ func GetOwnContainerID() string {
 func NewDockerSwarm() (docker *dockerapi.Client) {
 	docker, err := dockerapi.NewClient(DockerSwarmFlag.Get())
 	if err != nil {
-		dockerLogger.WithFields("err", err).Fatal(
+		logger.WithFields("err", err).Fatal(
 			"Failed to create swarm docker client")
 	}
 	return
@@ -113,7 +113,7 @@ func NewDockerSwarm() (docker *dockerapi.Client) {
 func NewDockerLocal() (docker *dockerapi.Client) {
 	docker, err := dockerapi.NewClient(DockerLocalFlag.Get())
 	if err != nil {
-		dockerLogger.WithFields("err", err).Fatal(
+		logger.WithFields("err", err).Fatal(
 			"Failed to create docker client for local")
 	}
 	return
@@ -174,7 +174,7 @@ func StartDockerContainer(
 		},
 	})
 	if err != nil {
-		dockerLogger.WithFields("err", err).Debug(
+		logger.WithFields("err", err).Debug(
 			"Error trying to create container")
 		return "", "", err
 	}
@@ -184,7 +184,7 @@ func StartDockerContainer(
 	if err != nil {
 		removeErr := RemoveDockerContainer(docker, container.ID)
 		if removeErr != nil {
-			dockerLogger.WithFields(
+			logger.WithFields(
 				"containerID", containerID,
 				"err", removeErr,
 			).Error("Error trying to remove container after previous error")
@@ -195,7 +195,7 @@ func StartDockerContainer(
 		node = container.Node.Name
 	} else {
 		// In a dev/testing (non-swarm) environment.
-		dockerLogger.Warning(
+		logger.Warning(
 			"Using non-swarm node. " +
 				"YOU SHOULD NEVER SEE THIS IN PRODUCTION.")
 		node = "leverosconsul"
@@ -206,7 +206,7 @@ func StartDockerContainer(
 	if err != nil {
 		removeErr := RemoveDockerContainer(docker, container.ID)
 		if removeErr != nil {
-			dockerLogger.WithFields(
+			logger.WithFields(
 				"containerID", containerID,
 				"err", removeErr,
 			).Error("Error trying to remove container after failed to start")
@@ -220,7 +220,7 @@ func StartDockerContainer(
 	if err != nil {
 		removeErr := RemoveDockerContainer(docker, container.ID)
 		if removeErr != nil {
-			dockerLogger.WithFields(
+			logger.WithFields(
 				"containerID", containerID,
 				"err", removeErr,
 			).Error("Error trying to remove container after previous error")
@@ -234,7 +234,7 @@ func StartDockerContainer(
 // RemoveDockerContainer removes a Docker container which has stopped.
 func RemoveDockerContainer(docker *dockerapi.Client, containerID string) error {
 	if DisableRemoveContainerFlag.Get() {
-		dockerLogger.Warning(
+		logger.Warning(
 			"disableRemoveContainer flag is true. " +
 				"YOU SHOULD NEVER SEE THIS IN PRODUCTION!")
 		return nil
