@@ -8,5 +8,5 @@ docker run --rm --entrypoint "${entry_point}" \
     -v "${PWD}/${1}:${entry_point}:ro" \
     ${EXTRA_DOCKER_ARGS} \
     --net leveros_default \
-    leveros/ubuntubase:latest \
+    leveros/base:latest \
     "${@:2}"

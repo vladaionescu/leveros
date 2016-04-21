@@ -202,8 +202,9 @@ docker-images: $(DOCKER_TARGETS)
 docker-%: $(SERVICES_DIR)/%/Dockerfile FORCE
 	$(DOCKER) build -t leveros/$(@:docker-%=%) $(dir $<)
 
-docker-consul: | docker-ubuntubase
-docker-leveroshost: | docker-ubuntubase
+docker-consul: | docker-base
+docker-leveroshost: | docker-base
+docker-levercontainer: | docker-base
 docker-leveroshost: $(SERVICES_DIR)/leveroshost/leveroshost
 $(SERVICES_DIR)/leveroshost/leveroshost: $(BIN_DIR)/leveroshost
 	cp $< $@

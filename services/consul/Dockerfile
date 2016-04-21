@@ -1,8 +1,11 @@
-FROM leveros/ubuntubase:latest
+FROM leveros/base:latest
+
+RUN apk add --update docker wget unzip \
+    && rm -rf /var/cache/apk/*
 
 # Install consul.
-RUN bash -c "cd /usr/local/bin && wget https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_linux_amd64.zip && unzip consul_0.6.3_linux_amd64.zip && rm consul_0.6.3_linux_amd64.zip"
-RUN bash -c "mkdir -p /consul/ui && cd /consul/ui && wget https://releases.hashicorp.com/consul/0.6.3/consul_0.6.3_web_ui.zip && unzip consul_0.6.3_web_ui.zip && rm consul_0.6.3_web_ui.zip"
+RUN bash -c "cd /usr/local/bin && wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_linux_amd64.zip && unzip consul_0.6.4_linux_amd64.zip && rm consul_0.6.4_linux_amd64.zip"
+RUN bash -c "mkdir -p /consul/ui && cd /consul/ui && wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_web_ui.zip && unzip consul_0.6.4_web_ui.zip && rm consul_0.6.4_web_ui.zip"
 RUN bash -c "mkdir -p /consul/data"
 
 COPY conf.json /consul/conf/conf.json

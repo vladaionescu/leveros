@@ -1,4 +1,4 @@
-FROM leveros/ubuntubase:latest
+FROM leveros/base:latest
 
 COPY ./leveroshost /leveros/bin/
 
