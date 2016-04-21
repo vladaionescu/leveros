@@ -90,6 +90,16 @@ func NewManager(
 	if err != nil {
 		return nil, err
 	}
+	// TODO: This is a workaround for docker's bug where a network connect
+	//       causes active connections to be closed. This prevents the admin
+	//       env's network from being created at request time, causing that
+	//       request to fail (and client to retry).
+	adminEntry, err := manager.getEnvironment(core.AdminEnvFlag.Get())
+	if err != nil {
+		manager.logger.WithFields("err", err).Warning(
+			"Admin env workaround failed")
+	}
+	adminEntry.envLock.Unlock()
 	return manager, nil
 }
 
