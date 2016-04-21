@@ -97,6 +97,14 @@ func main() {
 		logger.WithFields("err", err).Fatal("Error starting fleettracker")
 	}
 
+	logger.Info("\n" +
+		"    _                       ___  ___ \n" +
+		"   | |   _____ _____ _ _   / _ \\/ __|\n" +
+		"   | |__/ -_) V / -_) '_| | (_) \\__ \\\n" +
+		"   |____\\___|\\_/\\___|_|    \\___/|___/\n" +
+		"\n" +
+		"           Ready to serve\n")
+
 	// GRPC enter loop.
 	err = grpcServer.Serve(listener)
 	if err != nil {

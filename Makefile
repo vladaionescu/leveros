@@ -8,20 +8,20 @@ GO := go
 # docker image. Note: Installing go is strongly recommended for contributing.
 HAVE_GO := $(shell which $(GO))
 
-DEBUG :=
+export LEVEROS_DEBUG ?=
+export LEVEROS_REPO_DIR ?= $(abspath repo)
+export LEVEROS_LISTEN_IP_PORT ?= 127.0.0.1:8080
 
-GO_BUILD_ARGS := $(shell test -n "$(DEBUG)" && echo -race)
+GO_BUILD_ARGS := $(shell test -n "$(LEVEROS_DEBUG)" && echo -race)
 # Most things will run in a docker container. They need to be compiled for
 # linux/amd64.
 export GOOS ?= linux
 export GOARCH ?= amd64
-export CGO_ENABLED ?= $(shell test -n "$(DEBUG)" && echo 1 || echo 0)
+export CGO_ENABLED ?= $(shell test -n "$(LEVEROS_DEBUG)" && echo 1 || echo 0)
 
 VENDOR_DIR := vendor
 GODEPS_CONFIG := Godeps/Godeps.json
 
-export LEVEROS_REPO_DIR ?= $(abspath repo)
-export LEVEROS_LISTEN_IP_PORT ?= 127.0.0.1:8080
 DBDATA_VOL := leveros_dbdata
 ADMIN_ENV := admin.lever
 MISC_PROCESSES := consul aerospike

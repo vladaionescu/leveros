@@ -19,7 +19,7 @@ services:
             --service leveroshost
             --containerName leveroshost
             --dockerutil.leverCodeHostDir ${LEVEROS_REPO_DIR}
-            --dockerutil.disableRemoveContainer true
+            --dockerutil.disableRemoveContainer ${LEVEROS_DEBUG}
         environment:
             LEVEROS_LISTEN_IP_PORT: ${LEVEROS_LISTEN_IP_PORT}
 
