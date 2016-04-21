@@ -58,10 +58,11 @@ func defaultListenIPPort() string {
 // IsInternalEnvironment returns true iff the provided environment is part of
 // the same Lever deployment (RPCs can be routed internally).
 func IsInternalEnvironment(environment string) bool {
-	if InternalEnvironmentSuffixFlag.Get() == "" {
+	suffix := InternalEnvironmentSuffixFlag.Get()
+	if suffix == "" {
 		return false
 	}
-	return strings.HasSuffix(environment, InternalEnvironmentSuffixFlag.Get())
+	return strings.HasSuffix(environment, suffix)
 }
 
 // IsAdmin returns true iff the env + service represent the admin service.
