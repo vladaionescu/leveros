@@ -28,8 +28,8 @@ will check all of these.
 If your editor does not automatically call gofmt, `make fmt` will format all go
 files for you.
 
-Running the system tests is also recommended. To run them use `make run` and
-(in a different terminal) `make systest`.
+Running the system tests is also recommended. To run them use `make run`
+and (in a different terminal) `make systest`.
 
 Misc recipes
 ------------

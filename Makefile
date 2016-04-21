@@ -1,9 +1,12 @@
 
 export GO15VENDOREXPERIMENT := 1
-GO := go
 PROTOC := protoc
 DOCKER := docker
 DOCKER_COMPOSE := docker-compose
+GO := go
+# Autodetect if go exists. If it does not exist, we will compile within a
+# docker image. Note: Installing go is strongly recommended for contributing.
+HAVE_GO := $(shell which $(GO))
 
 GO_BUILD_ARGS := -race
 # Most things will run in a docker container. They need to be compiled for
@@ -70,11 +73,20 @@ systest: $(TEST_SERVICES_TARGETS)
 
 .PHONY: run
 run:
+	$(MAKE) all
+	$(MAKE) runcommon
+
+# This uses pre-built docker images as much as possible and compiles within
+# docker.
+.PHONY: fastrun
+fastrun:
+	$(MAKE) HAVE_GO="" runcommon
+
+.PHONY: runcommon
+runcommon:
+	$(MAKE) clean-containers
 	$(MAKE) \
-		clean-containers \
 		init-dbdata \
-		docker-images \
-		cli \
 		admin-env
 	$(DOCKER_COMPOSE) up -d --force-recreate $(MISC_PROCESSES)
 	sleep 1
@@ -112,16 +124,28 @@ clean-repo:
 # Go targets.
 
 # The CLI is the only thing that needs to be compiled for the current OS/arch.
-$(BIN_DIR)/lever: GOOS:="" GOARCH:=""
+$(BIN_DIR)/lever: GOOS :=
+$(BIN_DIR)/lever: GOARCH :=
+
+GO_BUILD_COMMAND = \
+	if [ -n "$(HAVE_GO)" ]; then \
+		$(MAKE) GO_OUTPUT=$@ GO_MAIN_TARGET=./$< $@ ;\
+	else \
+		test -f $@ || docker run --rm \
+			-v "$(PWD)":/go/src/github.com/leveros/leveros \
+			-w /go/src/github.com/leveros/leveros \
+			-e GOOS=$(GOOS) -e GOARCH=$(GOARCH) \
+			golang:1.6.1-alpine go build -o $@ ./$< ;\
+	fi
 
 $(BIN_DIR)/%: $(CMD_DIR)/%/main.go $(PROTO_TARGETS) $(BIN_DIR) FORCE
-	export > /dev/null ; $(MAKE) GO_OUTPUT=$@ GO_MAIN_TARGET=./$< $@
+	$(GO_BUILD_COMMAND)
 
 #
 # Go system test targets.
 
 $(SYS_TEST_DIR)/%/serve: $(SYS_TEST_DIR)/%/main.go $(PROTO_TARGETS) FORCE
-	export > /dev/null ; $(MAKE) GO_OUTPUT=$@ GO_MAIN_TARGET=./$< $@
+	$(GO_BUILD_COMMAND)
 
 #
 # Go pretest targets.
@@ -184,7 +208,7 @@ $(SERVICES_DIR)/leveroshost/leveroshost: $(BIN_DIR)/leveroshost
 # DB state targets.
 
 .PHONY: init-dbdata
-init-dbdata: docker-aerospikedev
+init-dbdata:
 	$(DOCKER) run --rm -v $(DBDATA_VOL):/leveros/dbdata \
 	    leveros/aerospikedev \
 	    bash -c "chown -R aerospike:aerospike /leveros/dbdata"
@@ -199,7 +223,7 @@ init-db-tables: $(BIN_DIR)/inittables
 
 .PHONY: upload-config
 upload-config: $(BIN_DIR)/uploadconfig
-	EXTRA_DOCKER_ARGS="-v $(abspath $(LEVEROSHOST_CONFIG)):/leveros/$(notdir $(LEVEROSHOST_CONFIG))" \
+	EXTRA_DOCKER_ARGS="-v $(abspath $(LEVEROSHOST_CONFIG)):/leveros/$(notdir $(LEVEROSHOST_CONFIG)):ro" \
 		./runasdocker.sh $< \
 		--file "/leveros/$(notdir $(LEVEROSHOST_CONFIG))" \
 	    --service leveroshost
@@ -238,7 +262,7 @@ $(REPO_DIR):
 # Targets related to compiling go sources. Automatically detects dependencies
 # using go list. These are invoked with another call to make like so:
 #
-# $(MAKE) GO_BUILD_ARGS=$(GO_BUILD_ARGS) \
+# $(MAKE) \
 #     GO_OUTPUT=<output> \
 #     GO_MAIN_TARGET=./<target> \
 #     <output>
