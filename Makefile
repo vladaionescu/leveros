@@ -84,8 +84,8 @@ fastrun:
 
 .PHONY: runcommon
 runcommon:
-	$(MAKE) clean-containers
 	$(MAKE) \
+		clean-containers \
 		init-dbdata \
 		admin-env
 	$(DOCKER_COMPOSE) up -d --force-recreate $(MISC_PROCESSES)
