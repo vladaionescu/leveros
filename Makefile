@@ -8,11 +8,14 @@ GO := go
 # docker image. Note: Installing go is strongly recommended for contributing.
 HAVE_GO := $(shell which $(GO))
 
-GO_BUILD_ARGS := -race
+DEBUG :=
+
+GO_BUILD_ARGS := $(shell test -n "$(DEBUG)" && echo -race)
 # Most things will run in a docker container. They need to be compiled for
 # linux/amd64.
 export GOOS ?= linux
 export GOARCH ?= amd64
+export CGO_ENABLED ?= $(shell test -n "$(DEBUG)" && echo 1 || echo 0)
 
 VENDOR_DIR := vendor
 GODEPS_CONFIG := Godeps/Godeps.json
@@ -134,8 +137,8 @@ GO_BUILD_COMMAND = \
 		test -f $@ || docker run --rm \
 			-v "$(PWD)":/go/src/github.com/leveros/leveros \
 			-w /go/src/github.com/leveros/leveros \
-			-e GOOS=$(GOOS) -e GOARCH=$(GOARCH) \
-			golang:1.6.1-alpine go build -o $@ ./$< ;\
+			-e GOOS=$(GOOS) -e GOARCH=$(GOARCH) -e CGO_ENABLED=$(CGO_ENABLED) \
+			golang:1.6.1-alpine go build $(GO_BUILD_ARGS) -o $@ ./$< ;\
 	fi
 
 $(BIN_DIR)/%: $(CMD_DIR)/%/main.go $(PROTO_TARGETS) $(BIN_DIR) FORCE
