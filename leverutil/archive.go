@@ -11,7 +11,6 @@ import (
 	"runtime"
 	"strings"
 	"sync"
-	"syscall"
 )
 
 var bufferedReaderPool = &sync.Pool{
@@ -280,7 +279,7 @@ func unpackFile(
 	}
 
 	for key, value := range header.Xattrs {
-		err := syscall.Setxattr(path, key, []byte(value), 0)
+		err := setxattr(path, key, []byte(value), 0)
 		if err != nil {
 			return err
 		}
