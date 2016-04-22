@@ -257,15 +257,15 @@
 		},
 		{
 			"ImportPath": "github.com/leveros/syslogparser",
-			"Rev": "2a55a0a181c4356ee447ae9f49efbc5bb0b24e6b"
+			"Rev": "7a0b75ad1d72a6291f1aaed47ca6c03dc79da1b0"
 		},
 		{
 			"ImportPath": "github.com/leveros/syslogparser/rfc3164",
-			"Rev": "2a55a0a181c4356ee447ae9f49efbc5bb0b24e6b"
+			"Rev": "7a0b75ad1d72a6291f1aaed47ca6c03dc79da1b0"
 		},
 		{
 			"ImportPath": "github.com/leveros/syslogparser/rfc5424",
-			"Rev": "2a55a0a181c4356ee447ae9f49efbc5bb0b24e6b"
+			"Rev": "7a0b75ad1d72a6291f1aaed47ca6c03dc79da1b0"
 		},
 		{
 			"ImportPath": "github.com/mgutz/ansi",

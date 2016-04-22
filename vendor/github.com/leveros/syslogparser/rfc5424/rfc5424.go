@@ -249,7 +249,7 @@ func (p *Parser) parseHostname() (string, error) {
 
 // APP-NAME = NILVALUE / 1*48PRINTUSASCII
 func (p *Parser) parseAppName() (string, error) {
-	return parseUpToLen(p.buff, &p.cursor, p.l, 48, ErrInvalidAppName)
+	return parseUpToLen(p.buff, &p.cursor, p.l, 256, ErrInvalidAppName)
 }
 
 // PROCID = NILVALUE / 1*128PRINTUSASCII

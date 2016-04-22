@@ -149,7 +149,7 @@ func StartDockerContainer(
 	} else {
 		// TODO: Should use scale.Dereference... to get IP of syslog server
 		//       and shard by tag.
-		tag := environment + "/" + service
+		tag := environment + "/" + service + "/" + instanceID
 		logConfig.Type = "syslog"
 		logConfig.Config = map[string]string{
 			"syslog-address":  "tcp://127.0.0.1:6514",
