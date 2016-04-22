@@ -34,12 +34,12 @@ var (
 	// translated env names that will be used internally for routing. Useful
 	// in development, when we want to test against a localhost server.
 	EnvAliasMapFlag = config.DeclareString(
-		PackageName, "envAliasMap", defaultLeverOSIPPort()+",dev.lever")
+		PackageName, "envAliasMap", getDefaultLeverOSIPPort()+",dev.lever")
 
 	// DefaultDevAliasFlag is the actual address of the default Lever
 	// environment used for local development.
 	DefaultDevAliasFlag = config.DeclareString(
-		PackageName, "defaultDevAlias", defaultLeverOSIPPort())
+		PackageName, "defaultDevAlias", getDefaultLeverOSIPPort())
 	// DefaultDevEnvFlag is the default Lever environment used for local
 	// development.
 	DefaultDevEnvFlag = config.DeclareString(
@@ -51,7 +51,12 @@ var (
 
 var logger = leverutil.GetLogger(PackageName, "core")
 
-func defaultLeverOSIPPort() string {
+var defaultLeverOSIPPort string
+
+func getDefaultLeverOSIPPort() string {
+	if defaultLeverOSIPPort != "" {
+		return defaultLeverOSIPPort
+	}
 	ipPort := os.Getenv("LEVEROS_IP_PORT")
 	if ipPort == "" {
 		ipPort = detectLeverOSIPPortOnDockerMachine()
@@ -61,6 +66,7 @@ func defaultLeverOSIPPort() string {
 		logger.WithFields("ipPort", ipPort).Warning(
 			"Could not detect Lever OS ip+port. Using a hardcoded value.")
 	}
+	defaultLeverOSIPPort = ipPort
 	return ipPort
 }
 
@@ -75,7 +81,7 @@ func detectLeverOSIPPortOnDockerMachine() string {
 			"Error running docker-machine command")
 		return ""
 	}
-	ipStr := string(ip)
+	ipStr := strings.TrimSpace(string(ip))
 	if ipStr == "" {
 		return ""
 	}
