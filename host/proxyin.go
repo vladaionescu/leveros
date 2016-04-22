@@ -140,7 +140,7 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 	}
 
 	// TODO: If the instance is new, try a few times here. Just in case it takes
-	//       longer for the instance to start. (Also, how does the failure look
+	//       longer for the instance to start. (Also, what does the failure look
 	//       like in that case?)
 	destStream, err := proxy.client.NewStream(instanceAddr)
 	if err != nil {
