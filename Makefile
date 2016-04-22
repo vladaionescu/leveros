@@ -3,6 +3,7 @@ export GO15VENDOREXPERIMENT := 1
 PROTOC := protoc
 DOCKER := docker
 DOCKER_COMPOSE := docker-compose
+DOCKER_MACHINE := docker-machine
 GO := go
 # Autodetect if go exists. If it does not exist, we will compile within a
 # docker image. Note: Installing go is strongly recommended for contributing.
@@ -10,7 +11,7 @@ HAVE_GO := $(shell which $(GO))
 
 export LEVEROS_DEBUG ?=
 export LEVEROS_REPO_DIR ?= $(abspath repo)
-export LEVEROS_LISTEN_IP_PORT ?= 127.0.0.1:8080
+export LEVEROS_IP_PORT ?= $(shell which $(DOCKER_MACHINE) > /dev/null && test -n "$$DOCKER_MACHINE_NAME" && docker-machine ip "$$DOCKER_MACHINE_NAME" || echo 127.0.0.1):8080
 
 GO_BUILD_ARGS := $(shell test -n "$(LEVEROS_DEBUG)" && echo -race)
 # Most things will run in a docker container. They need to be compiled for
@@ -210,11 +211,13 @@ docker-leveroshost: $(SERVICES_DIR)/leveroshost/leveroshost
 $(SERVICES_DIR)/leveroshost/leveroshost: $(BIN_DIR)/leveroshost
 	cp $< $@
 
-push-docker-images:
+.PHONY: push-docker-images
+push-docker-images: $(DOCKER_TARGETS)
 	for image in $(DOCKER_IMAGES); do \
 		$(DOCKER) push $$image ;\
 	done
 
+.PHONY: pull-docker-images
 pull-docker-images:
 	for image in $(DOCKER_IMAGES); do \
 		$(DOCKER) pull $$image ;\

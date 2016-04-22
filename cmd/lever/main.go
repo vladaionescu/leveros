@@ -49,7 +49,7 @@ func main() {
 			Value:  "",
 			EnvVar: "LEVEROS_HOST_ADDR",
 			Usage: "The address to direct the client to, if different from " +
-				"the env name. Defaults to $LEVEROS_LISTEN_IP_PORT if env " +
+				"the env name. Defaults to $LEVEROS_IP_PORT if env " +
 				"ends with \".lever\" (ie when in development).",
 			Destination: &flagHost,
 		},

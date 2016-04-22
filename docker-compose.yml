@@ -12,7 +12,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:z
             - ${LEVEROS_REPO_DIR}:/leveros/custcodetree:Z
         ports:
-            - ${LEVEROS_LISTEN_IP_PORT}:8080
+            - ${LEVEROS_IP_PORT}:8080
             - 127.0.0.1:6514:6514  # Dev logger.
         command: >-
             --config leveroshost
@@ -21,7 +21,7 @@ services:
             --dockerutil.leverCodeHostDir ${LEVEROS_REPO_DIR}
             --dockerutil.disableRemoveContainer ${LEVEROS_DEBUG}
         environment:
-            LEVEROS_LISTEN_IP_PORT: ${LEVEROS_LISTEN_IP_PORT}
+            LEVEROS_IP_PORT: ${LEVEROS_IP_PORT}
 
     consul:
         image: leveros/consul:latest

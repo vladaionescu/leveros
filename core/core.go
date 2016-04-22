@@ -32,12 +32,12 @@ var (
 	// translated env names that will be used internally for routing. Useful
 	// in development, when we want to test against a localhost server.
 	EnvAliasMapFlag = config.DeclareString(
-		PackageName, "envAliasMap", defaultListenIPPort()+",dev.lever")
+		PackageName, "envAliasMap", defaultLeverOSIPPort()+",dev.lever")
 
 	// DefaultDevAliasFlag is the actual address of the default Lever
 	// environment used for local development.
 	DefaultDevAliasFlag = config.DeclareString(
-		PackageName, "defaultDevAlias", defaultListenIPPort())
+		PackageName, "defaultDevAlias", defaultLeverOSIPPort())
 	// DefaultDevEnvFlag is the default Lever environment used for local
 	// development.
 	DefaultDevEnvFlag = config.DeclareString(
@@ -47,10 +47,10 @@ var (
 		PackageName, "adminEnv", "admin.lever")
 )
 
-func defaultListenIPPort() string {
-	ret := os.Getenv("LEVEROS_LISTEN_IP_PORT")
+func defaultLeverOSIPPort() string {
+	ret := os.Getenv("LEVEROS_IP_PORT")
 	if ret == "" {
-		return "localhost:8080"
+		return "127.0.0.1:8080"
 	}
 	return ret
 }
