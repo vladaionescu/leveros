@@ -152,8 +152,8 @@ clean-repo:
 # Go targets.
 
 # The CLI is the only thing that needs to be compiled for the host OS/arch.
-$(BIN_DIR)/lever: GOOS = $(shell test -n "$$GOOS" && echo "$$GOOS" || echo $(HOST_OS))
-$(BIN_DIR)/lever: GOARCH = $(shell test -n "$$GOARCH" && echo "$$GOARCH" || echo $(HOST_ARCH))
+$(BIN_DIR)/lever: GOOS = $(HOST_OS)
+$(BIN_DIR)/lever: GOARCH = $(HOST_ARCH)
 
 GO_BUILD_COMMAND = \
 	if [ -n "$(HAVE_GO)" ]; then \
