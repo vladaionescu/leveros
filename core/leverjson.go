@@ -21,6 +21,8 @@ type LeverConfig struct {
 	MaxInstanceLoad float64 `json:"maxInstanceLoad,omitempty"`
 	MinInstances    int     `json:"minInstances,omitempty"`
 
+	InstanceMemoryMB int `json:"ram,omitempty"`
+
 	// TODO: Future: Allow cust to add own config which can be read from within
 	//       the service. Changing just these would not cause service restart.
 	//       Think feature flags.
@@ -46,6 +48,9 @@ func ReadLeverConfig(dirPath string) (*LeverConfig, error) {
 	}
 	if leverConfig.CustConfig == nil {
 		leverConfig.CustConfig = make(map[string]interface{})
+	}
+	if leverConfig.InstanceMemoryMB <= 0 {
+		leverConfig.InstanceMemoryMB = 50
 	}
 
 	if leverConfig.Service == "" {

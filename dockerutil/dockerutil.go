@@ -124,15 +124,16 @@ func NewDockerLocal() (docker *dockerapi.Client) {
 // environment and service.
 func StartDockerContainer(
 	docker *dockerapi.Client, environment string, service string,
-	instanceID string, entryPoint []string, codeVersion int64, isAdmin bool) (
+	instanceID string, codeVersion int64, isAdmin bool,
+	leverConfig *core.LeverConfig) (
 	containerID string, node string, err error) {
 	codeDir := HostCodeDirPath(environment, service, codeVersion)
 	binds := []string{codeDir + ":/leveros/custcode:ro,Z"}
 	env := []string{
 		"LEVEROS_ENVIRONMENT=" + environment,
 		"LEVEROS_SERVICE=" + service,
-		"LEVEROS_CODE_VERSION=" + strconv.Itoa(int(codeVersion)),
 		"LEVEROS_INSTANCE_ID=" + instanceID,
+		"LEVEROS_CODE_VERSION=" + strconv.Itoa(int(codeVersion)),
 		"LEVEROS_INTERNAL_ENV_SUFFIX=" +
 			core.InternalEnvironmentSuffixFlag.Get(),
 	}
@@ -159,37 +160,41 @@ func StartDockerContainer(
 		}
 	}
 
+	memoryBytes := int64(leverConfig.InstanceMemoryMB) * 1000 * 1000
+	memAndSwapBytes := memoryBytes     // No swap.
+	kernelMemBytes := memoryBytes / 10 // Allow 10% memory for kernel.
 	container, err := docker.CreateContainer(dockerapi.CreateContainerOptions{
 		Name: "leveros_" + instanceID,
 		Config: &dockerapi.Config{
-			Image:             "leveros/levercontainer:latest",
-			Cmd:               entryPoint,
-			Env:               env,
-			KernelMemory:      0, // TODO
-			MemoryReservation: 0, // TODO
+			Image:        "leveros/levercontainer:latest",
+			Cmd:          leverConfig.EntryPoint,
+			Env:          env,
+			KernelMemory: kernelMemBytes,
 			Labels: map[string]string{
 				"com.leveros.environment": environment,
 				"com.leveros.service":     service,
 				"com.leveros.instanceid":  instanceID,
+				"com.leveros.codeversion": strconv.Itoa(int(codeVersion)),
 			},
 		},
 		// TODO: Documentation for these here:
-		//       https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#create-a-container
+		//       https://docs.docker.com/engine/reference/api/docker_remote_api_v1.23/#create-a-container
 		// TODO: Also check if need to set limits on IO operations (blkio).
 		// TODO: Should allow to write to disk, but limit amount of disk space.
 		HostConfig: &dockerapi.HostConfig{
-			ReadonlyRootfs: true,
-			Binds:          binds,
-			CapDrop:        []string{}, // TODO
-			NetworkMode:    "none",
-			Ulimits:        []dockerapi.ULimit{}, // TODO
-			SecurityOpt:    []string{},           // TODO
-			LogConfig:      logConfig,
-			Memory:         0, // TODO
-			MemorySwap:     -1,
-			CPUShares:      0, // TODO
-			CPUPeriod:      0, // TODO
-			CPUQuota:       0, // TODO
+			ReadonlyRootfs:   true,
+			Binds:            binds,
+			CapDrop:          []string{"all"},
+			NetworkMode:      "none",
+			Ulimits:          []dockerapi.ULimit{}, // TODO
+			SecurityOpt:      []string{},           // TODO
+			LogConfig:        logConfig,
+			Memory:           memoryBytes,
+			MemorySwap:       memAndSwapBytes,
+			MemorySwappiness: 0,
+			CPUShares:        0, // TODO
+			CPUPeriod:        0, // TODO
+			CPUQuota:         0, // TODO
 		},
 	})
 	if err != nil {

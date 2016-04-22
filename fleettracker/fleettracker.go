@@ -149,7 +149,6 @@ func (tracker *FleetTracker) scaleUp(delta int, rpcEvent *RPCEvent) error {
 	if err != nil {
 		return err
 	}
-	entryPoint := leverConfig.EntryPoint
 
 	// Spin up.
 	hadErrors := false
@@ -157,7 +156,7 @@ func (tracker *FleetTracker) scaleUp(delta int, rpcEvent *RPCEvent) error {
 		instanceID := leverutil.RandomID()
 		containerID, node, err := dockerutil.StartDockerContainer(
 			tracker.docker, rpcEvent.Environment, rpcEvent.Service,
-			instanceID, entryPoint, rpcEvent.CodeVersion, rpcEvent.IsAdmin)
+			instanceID, rpcEvent.CodeVersion, rpcEvent.IsAdmin, leverConfig)
 		if err != nil {
 			logger.WithFields(
 				"err", err,

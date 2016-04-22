@@ -414,7 +414,6 @@ func (finder *Finder) newInstance(
 			"Failed to read lever.json")
 		return nil, "", nil, false, err
 	}
-	entryPoint := leverConfig.EntryPoint
 
 	// TODO: If somehow first RPC fails and service no longer
 	//       contacted afterwards, then the container remains hanging
@@ -425,7 +424,7 @@ func (finder *Finder) newInstance(
 	instanceID := leverutil.RandomID() // TODO: Collisions possible.
 	isAdmin := core.IsAdmin(env, service)
 	containerID, node, err := dockerutil.StartDockerContainer(
-		finder.docker, env, service, instanceID, entryPoint, version, isAdmin)
+		finder.docker, env, service, instanceID, version, isAdmin, leverConfig)
 	if err != nil {
 		finder.logger.WithFields(
 			"err", err,
