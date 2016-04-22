@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/codegangsta/cli"
@@ -47,10 +48,9 @@ func main() {
 		cli.StringFlag{
 			Name:   "host, H",
 			Value:  "",
-			EnvVar: "LEVEROS_HOST_ADDR",
+			EnvVar: "LEVEROS_IP_PORT",
 			Usage: "The address to direct the client to, if different from " +
-				"the env name. Defaults to $LEVEROS_IP_PORT if env " +
-				"ends with \".lever\" (ie when in development).",
+				"the env name.",
 			Destination: &flagHost,
 		},
 	}
@@ -116,7 +116,7 @@ func actionDeploy(ctx *cli.Context) {
 		adminEnv = flagEnv
 	}
 	if strings.HasSuffix(adminEnv, ".lever") {
-		host = core.DefaultDevAliasFlag.Get()
+		host = detectLeverOSIPPort()
 	}
 	if flagHost != "" {
 		host = flagHost
@@ -154,7 +154,7 @@ func actionInvoke(ctx *cli.Context) {
 		logger.WithFields("err", err).Fatal("Error creating client")
 	}
 	if strings.HasSuffix(peer.Environment, ".lever") {
-		client.ForceHost = core.DefaultDevAliasFlag.Get()
+		client.ForceHost = detectLeverOSIPPort()
 	}
 	if flagHost != "" {
 		client.ForceHost = flagHost
@@ -227,7 +227,7 @@ func actionStream(ctx *cli.Context) {
 		logger.WithFields("err", err).Fatal("Error creating client")
 	}
 	if strings.HasSuffix(peer.Environment, ".lever") {
-		client.ForceHost = core.DefaultDevAliasFlag.Get()
+		client.ForceHost = detectLeverOSIPPort()
 	}
 	if flagHost != "" {
 		client.ForceHost = flagHost
@@ -347,4 +347,40 @@ func actionStream(ctx *cli.Context) {
 		logger.WithFields("err", err).Fatal("Error trying to close stream")
 	}
 	<-receiveDone
+}
+
+func detectLeverOSIPPort() (ipPort string) {
+	ipPort = os.Getenv("LEVEROS_IP_PORT")
+	if ipPort != "" {
+		return ipPort
+	}
+	ipPort = detectLeverOSIPPortOnDockerMachine()
+	if ipPort != "" {
+		return ipPort
+	}
+	ipPort = "127.0.0.1:8080"
+	logger.WithFields("ipPort", ipPort).Warning(
+		"Could not detect Lever OS ip+port. Using a hardcoded value.")
+	return ipPort
+}
+
+func detectLeverOSIPPortOnDockerMachine() (ipPort string) {
+	dockerMachineName := os.Getenv("DOCKER_MACHINE_NAME")
+	if dockerMachineName == "" {
+		return ""
+	}
+	ip, err := exec.Command("docker-machine", "ip", dockerMachineName).Output()
+	if err != nil {
+		logger.WithFields("err", err).Error(
+			"Error running docker-machine command")
+		return ""
+	}
+	ipStr := strings.TrimSpace(string(ip))
+	if ipStr == "" {
+		return ""
+	}
+	ipPort = ipStr + ":8080"
+	logger.WithFields("ipPort", ipPort).Info(
+		"Using Lever OS IP+port inferred from docker-machine IP")
+	return ipPort
 }

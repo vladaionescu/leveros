@@ -20,6 +20,29 @@ export GOOS ?= linux
 export GOARCH ?= amd64
 export CGO_ENABLED ?= $(shell test -n "$(LEVEROS_DEBUG)" && echo 1 || echo 0)
 
+ifdef MSVC
+    UNAME_S := Windows
+else
+    UNAME_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
+endif
+ifeq ($(UNAME_S), Linux)
+    HOST_OS := linux
+endif
+ifeq ($(UNAME_S), Darwin)
+    HOST_OS := darwin
+endif
+ifeq ($(UNAME_S), Windows)
+	HOST_OS := windows
+endif
+LBITS := $(shell getconf LONG_BIT)
+ifeq ($(LBITS),64)
+   HOST_ARCH := amd64
+else
+   HOST_ARCH := 386
+endif
+
+GO_TEST := GOOS=$(HOST_OS) GOARCH=$(HOST_ARCH) $(GO) test
+
 VENDOR_DIR := vendor
 GODEPS_CONFIG := Godeps/Godeps.json
 
@@ -70,11 +93,11 @@ pretest: vet lint fmtcheck
 
 .PHONY: test
 test: pretest
-	$(GO) test ./...
+	$(GO_TEST) ./...
 
 .PHONY: systest
 systest: $(TEST_SERVICES_TARGETS)
-	$(GO) test -tags=integration ./$(SYS_TEST_DIR)
+	$(GO_TEST) -tags=integration ./$(SYS_TEST_DIR)
 
 .PHONY: run
 run:
@@ -128,30 +151,9 @@ clean-repo:
 #
 # Go targets.
 
-ifdef MSVC
-    UNAME_S := Windows
-else
-    UNAME_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
-endif
-ifeq ($(UNAME_S), Linux)
-    HOST_OS := linux
-endif
-ifeq ($(UNAME_S), Darwin)
-    HOST_OS := darwin
-endif
-ifeq ($(UNAME_S), Windows)
-	HOST_OS := windows
-endif
-LBITS := $(shell getconf LONG_BIT)
-ifeq ($(LBITS),64)
-   HOST_ARCH := amd64
-else
-   HOST_ARCH := 386
-endif
-
 # The CLI is the only thing that needs to be compiled for the host OS/arch.
-$(BIN_DIR)/lever: GOOS = $(shell test -n "$$GOOS" && echo "$$GOOS" || echo $(HOST_OS))
-$(BIN_DIR)/lever: GOARCH = $(shell test -n "$$GOARCH" && echo "$$GOARCH" || echo $(HOST_ARCH))
+$(BIN_DIR)/lever: GOOS = $(HOST_OS)
+$(BIN_DIR)/lever: GOARCH = $(HOST_ARCH)
 
 GO_BUILD_COMMAND = \
 	if [ -n "$(HAVE_GO)" ]; then \

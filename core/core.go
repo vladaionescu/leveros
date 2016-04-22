@@ -2,12 +2,10 @@ package core
 
 import (
 	"os"
-	"os/exec"
 	"strings"
 
 	grpc "github.com/leveros/grpc-go"
 	"github.com/leveros/leveros/config"
-	"github.com/leveros/leveros/leverutil"
 )
 
 // PackageName is the name of this package.
@@ -34,12 +32,12 @@ var (
 	// translated env names that will be used internally for routing. Useful
 	// in development, when we want to test against a localhost server.
 	EnvAliasMapFlag = config.DeclareString(
-		PackageName, "envAliasMap", defaultLeverOSIPPort()+",dev.lever")
+		PackageName, "envAliasMap", getDefaultLeverOSIPPort()+",dev.lever")
 
 	// DefaultDevAliasFlag is the actual address of the default Lever
 	// environment used for local development.
 	DefaultDevAliasFlag = config.DeclareString(
-		PackageName, "defaultDevAlias", defaultLeverOSIPPort())
+		PackageName, "defaultDevAlias", getDefaultLeverOSIPPort())
 	// DefaultDevEnvFlag is the default Lever environment used for local
 	// development.
 	DefaultDevEnvFlag = config.DeclareString(
@@ -49,40 +47,12 @@ var (
 		PackageName, "adminEnv", "admin.lever")
 )
 
-var logger = leverutil.GetLogger(PackageName, "core")
-
-func defaultLeverOSIPPort() string {
+func getDefaultLeverOSIPPort() string {
 	ipPort := os.Getenv("LEVEROS_IP_PORT")
-	if ipPort == "" {
-		ipPort = detectLeverOSIPPortOnDockerMachine()
+	if ipPort != "" {
+		return ipPort
 	}
-	if ipPort == "" {
-		ipPort = "127.0.0.1:8080"
-		logger.WithFields("ipPort", ipPort).Warning(
-			"Could not detect Lever OS ip+port. Using a hardcoded value.")
-	}
-	return ipPort
-}
-
-func detectLeverOSIPPortOnDockerMachine() string {
-	dockerMachineName := os.Getenv("DOCKER_MACHINE_NAME")
-	if dockerMachineName == "" {
-		return ""
-	}
-	ip, err := exec.Command("docker-machine", "ip", dockerMachineName).Output()
-	if err != nil {
-		logger.WithFields("err", err).Error(
-			"Error running docker-machine command")
-		return ""
-	}
-	ipStr := string(ip)
-	if ipStr == "" {
-		return ""
-	}
-	ipPort := ipStr + ":8080"
-	logger.WithFields("ipPort", ipPort).Info(
-		"Using Lever OS IP+port inferred from docker-machine IP")
-	return ipPort
+	return "127.0.0.1:8080"
 }
 
 // IsInternalEnvironment returns true iff the provided environment is part of
