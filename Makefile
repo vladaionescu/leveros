@@ -46,6 +46,7 @@ PROTO_TARGETS := $(patsubst $(PROTOS_DIR)/%.proto,%.pb.go,$(PROTO_SOURCES))
 
 DOCKER_SOURCES := $(wildcard $(SERVICES_DIR)/*/Dockerfile)
 DOCKER_TARGETS := $(patsubst $(SERVICES_DIR)/%/Dockerfile,docker-%,$(DOCKER_SOURCES))
+DOCKER_IMAGES := $(patsubst $(SERVICES_DIR)/%/Dockerfile,leveros/%,$(DOCKER_SOURCES))
 
 RUNNING_LEVER_CONTAINERS = $(shell $(DOCKER) ps -q --filter="label=com.leveros.islevercontainer")
 LEVER_CONTAINERS = $(shell $(DOCKER) ps -a -q --filter="label=com.leveros.islevercontainer")
@@ -134,7 +135,7 @@ GO_BUILD_COMMAND = \
 	if [ -n "$(HAVE_GO)" ]; then \
 		$(MAKE) GO_OUTPUT=$@ GO_MAIN_TARGET=./$< $@ ;\
 	else \
-		test -f $@ || docker run --rm \
+		test -f $@ || $(DOCKER) run --rm \
 			-v "$(PWD)":/go/src/github.com/leveros/leveros \
 			-w /go/src/github.com/leveros/leveros \
 			-e GOOS=$(GOOS) -e GOARCH=$(GOARCH) -e CGO_ENABLED=$(CGO_ENABLED) \
@@ -208,6 +209,16 @@ docker-levercontainer: | docker-base
 docker-leveroshost: $(SERVICES_DIR)/leveroshost/leveroshost
 $(SERVICES_DIR)/leveroshost/leveroshost: $(BIN_DIR)/leveroshost
 	cp $< $@
+
+push-docker-images:
+	for image in $(DOCKER_IMAGES); do \
+		$(DOCKER) push $$image ;\
+	done
+
+pull-docker-images:
+	for image in $(DOCKER_IMAGES); do \
+		$(DOCKER) pull $$image ;\
+	done
 
 #
 # DB state targets.
@@ -288,6 +299,7 @@ OWN_PACKAGE_DEPS := $(call get_own_deps,$(PACKAGE))
 GO_DEPS := $(foreach package_dep,$(OWN_PACKAGE_DEPS),$(call get_package_files,$(package_dep)))
 
 $(GO_OUTPUT): $(GO_DEPS) $(VENDOR_DIR) $(GODEPS_CONFIG)
-	$(GO) build $(GO_BUILD_ARGS) -o $@ $(GO_MAIN_TARGET)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) CGO_ENABLED=$(CGO_ENABLED) \
+		$(GO) build $(GO_BUILD_ARGS) -o $@ $(GO_MAIN_TARGET)
 
 endif  # ifneq (,$(GO_MAIN_TARGET))
