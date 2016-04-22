@@ -111,9 +111,6 @@ func main() {
 
 func actionDeploy(ctx *cli.Context) {
 	host := ""
-	if flagHost != "" {
-		host = flagHost
-	}
 	adminEnv := core.AdminEnvFlag.Get()
 	if flagEnv != "" {
 		adminEnv = flagEnv
@@ -121,6 +118,10 @@ func actionDeploy(ctx *cli.Context) {
 	if strings.HasSuffix(adminEnv, ".lever") {
 		host = core.DefaultDevAliasFlag.Get()
 	}
+	if flagHost != "" {
+		host = flagHost
+	}
+
 	destEnv := ctx.Args().First()
 	if destEnv == "" {
 		logger.Fatal("Destination environment not specified")
@@ -152,11 +153,11 @@ func actionInvoke(ctx *cli.Context) {
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error creating client")
 	}
-	if flagHost != "" {
-		client.ForceHost = flagHost
-	}
 	if strings.HasSuffix(peer.Environment, ".lever") {
 		client.ForceHost = core.DefaultDevAliasFlag.Get()
+	}
+	if flagHost != "" {
+		client.ForceHost = flagHost
 	}
 
 	if ctx.NArg() > 2 && ctx.Args().Get(2) == "--" {
@@ -225,11 +226,11 @@ func actionStream(ctx *cli.Context) {
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error creating client")
 	}
-	if flagHost != "" {
-		client.ForceHost = flagHost
-	}
 	if strings.HasSuffix(peer.Environment, ".lever") {
 		client.ForceHost = core.DefaultDevAliasFlag.Get()
+	}
+	if flagHost != "" {
+		client.ForceHost = flagHost
 	}
 
 	var args []interface{}
