@@ -186,8 +186,8 @@ func StartDockerContainer(
 			Binds:            binds,
 			CapDrop:          []string{"all"},
 			NetworkMode:      "none",
-			Ulimits:          []dockerapi.ULimit{}, // TODO
-			SecurityOpt:      []string{},           // TODO
+			Ulimits:          []dockerapi.ULimit{},          // TODO
+			SecurityOpt:      []string{"no-new-privileges"}, // TODO
 			LogConfig:        logConfig,
 			Memory:           memoryBytes,
 			MemorySwap:       memAndSwapBytes,
