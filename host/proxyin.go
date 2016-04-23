@@ -144,10 +144,8 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 		func() (clientStream interface{}, err error, finalErr error) {
 			clientStream, err = proxy.client.NewStream(instanceAddr)
 			if err != nil {
-				if strings.Contains(err.Error(), "connection refused") {
-					if !proxy.manager.IsInstanceAlive(servingID, instanceID) {
-						return nil, nil, err
-					}
+				if strings.Contains(err.Error(), "connection refused") &&
+					proxy.manager.IsInstanceAlive(servingID, instanceID) {
 					// Retry.
 					return nil, err, nil
 				}
