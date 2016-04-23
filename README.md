@@ -20,9 +20,21 @@ Getting started
 
 ### Prerequisites
 
-* Docker (including Docker Compose)
+* [Docker](https://docs.docker.com/engine/installation/) (including [Docker
+    Compose](https://docs.docker.com/compose/install/)). On a Mac you
+    can install [Docker Toolbox](https://docs.docker.com/toolbox/overview/) to
+    get everything you need.
 * Make
 * Linux or Mac (Windows should work too but it was never tested)
+
+If you need to use docker-machine to run docker (on a Mac), you also need
+to install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and then run
+these commands to get started with docker:
+
+```
+$ docker-machine create --driver virtualbox default
+$ eval `docker-machine env default`  # In each terminal window you're using.
+```
 
 ### Your first Lever service
 
