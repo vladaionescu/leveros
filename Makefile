@@ -58,6 +58,7 @@ SYS_TEST_DIR := systemtest
 SERVICES_DIR := services
 PROTOS_DIR := protos
 REPO_DIR := $(LEVEROS_REPO_DIR)
+CLI_INSTALL_DIR := /usr/local/bin
 
 CMD_SOURCES := $(wildcard $(CMD_DIR)/*/main.go)
 CMD_TARGETS := $(patsubst $(CMD_DIR)/%/main.go,$(BIN_DIR)/%,$(CMD_SOURCES))
@@ -122,6 +123,14 @@ runcommon:
 		upload-config \
 		init-db-tables
 	$(DOCKER_COMPOSE) up --force-recreate leveroshost
+
+.PHONY: install-cli
+install-cli: $(BIN_DIR)/lever
+	cp $< $(CLI_INSTALL_DIR)
+
+.PHONY: uninstall-cli
+uninstall-cli:
+	rm $(CLI_INSTALL_DIR)/lever
 
 .PHONY: clean
 clean:

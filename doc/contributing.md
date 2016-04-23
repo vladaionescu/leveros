@@ -1,8 +1,11 @@
 
-Install dev env
-===============
+Contributing
+============
 
-* Install GNU make.
+Prerequisites
+-------------
+
+* Install make.
 * Install golang and set GOROOT and GOPATH correctly.
 * If not on linux/amd64, go needs to be able to cross-compile for linux/amd64.
     (On Mac you can achieve this by installing go with this command:
@@ -13,9 +16,8 @@ Install dev env
 * In leveros dir: `godep restore ./...`
 * Install docker and docker-compose.
 * Optional (for multi-node testing), install VirtualBox and docker-machine.
-* Build everything with `make build`.
 
-* Check that it works with `make run` and (in a different terminal)
+* Check that everything works with `make run` and (in a different terminal)
     `make systest`.
 * If something is broken, please open a GitHub issue.
 
@@ -37,7 +39,7 @@ Misc recipes
 ### To install Go dependencies
 
 * `go get github.com/tools/godep`
-* `godep restore`
+* `godep restore ./...`
 
 ### To add new dependencies
 

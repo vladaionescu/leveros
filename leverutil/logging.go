@@ -14,7 +14,7 @@ var (
 		PackageName, "loggingFormat", "colortext")
 	// LoggingLevelFlag is the minimum level to log.
 	LoggingLevelFlag = config.DeclareString(
-		PackageName, "loggingLevel", "debug")
+		PackageName, "loggingLevel", "info")
 	// LogInstanceAndServiceFlag causes all loggers to also log the instance ID
 	// and service name of the process. Useful if logs from multiple sources
 	// are merged and need to be filtered afterwards.

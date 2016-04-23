@@ -10,7 +10,7 @@ Lever OS is in **beta**. Please report bugs via [GitHub issues](https://github.c
 API reference
 -------------
 
-* For CLI reference run `./lever --help` or `./lever --help <command>`.
+* For CLI reference run `lever --help` or `lever --help <command>`.
 * lever.json reference (TODO)
 * JavaScript API reference (TODO)
 * [Golang API reference (godoc)](https://godoc.org/github.com/leveros/leveros/api)
@@ -21,18 +21,18 @@ Getting started
 ### Prerequisites
 
 * Docker (including Docker Compose)
-* Go
-* GNU Make
+* Make
 * Linux or Mac (Windows should work too but it was never tested)
 
 ### Your first Lever service
 
-Run Lever OS locally (assumes docker command available):
+Install and run Lever OS locally (assumes docker command available):
 
 ```
+$ make pull-docker-images  # Pull the pre-built Docker images.
 $ make cli  # Compile the CLI.
-$ make pull  # Pull the pre-built Docker images.
-$ make run  # Fire up Lever OS.
+$ sudo make install-cli  # Install the CLI in /usr/local/bin/
+$ make fastrun  # Fire up Lever OS.
 ```
 
 Then, create a new dir for your first Lever service and add the following files.
@@ -53,15 +53,14 @@ module.exports.SayHello = function (name, callback) {
 }
 ```
 
-Deploy your service
+Deploy your service locally
 ```
-$ <path-to-leveros-dir>/lever deploy
+$ lever deploy dev.lever
 ```
 
 ###### Invoke via CLI
 ```
-$ <path-to-leveros-dir>/lever invoke \
->    https://127.0.0.1:8080/helloService SayHello '"world"'
+$ lever invoke https://dev.lever/helloService SayHello '"world"'
 "Hello, world!"
 ```
 
@@ -71,7 +70,7 @@ strings.)
 ###### Invoke from JavaScript
 ```javascript
 var leveros = require("leveros");
-var service = leveros.service("127.0.0.1:8080", "helloService");
+var service = leveros.service("dev.lever", "helloService");
 service.invoke("SayHello", "world", function (error, reply) {
     console.log(reply);  // Hello, world!
 });
@@ -247,8 +246,10 @@ means (eg a DB-as-a-service).
 #### Can existing legacy services interact with Lever services?
 
 Absolutely! Just use the Lever client libraries to call into a Lever service
-from a legacy service. Also, you are free to use any existing client library
-you may have for your legacy service within the Lever service.
+from a legacy service.
+
+Also, you are free to use any library *within* the Lever service, which allows
+you to call a legacy service from Lever.
 
 Contributing
 ------------
@@ -259,10 +260,7 @@ Contributing
 * Questions via GitHub issues also welcome!
 * PRs welcome! But please give a heads-up in GitHub issue before starting work.
     If there is no GitHub issue for what you want to do, please create one.
-* Please `gofmt`, `golint` and `make test` your code. Also, no more than 80
-    chars per line.
-
-To build from source check [install-dev-env.md](./install-dev-env.md).
+* To build from source, check the [contributing](./doc/contributing.md) page.
 
 Security Disclosure
 -------------------
