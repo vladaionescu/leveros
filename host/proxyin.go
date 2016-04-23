@@ -146,13 +146,9 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 			if err != nil {
 				if strings.Contains(err.Error(), "connection refused") {
 					if !proxy.manager.IsInstanceAlive(servingID, instanceID) {
-						streamLogger.WithFields("err", err).Debug(
-							"Instance no longer alive")
 						return nil, nil, err
 					}
 					// Retry.
-					streamLogger.WithFields("err", err).Debug(
-						"Client stream failure")
 					return nil, err, nil
 				}
 				return nil, nil, err
