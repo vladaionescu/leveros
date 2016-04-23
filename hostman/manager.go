@@ -261,6 +261,19 @@ func (manager *Manager) EnsureInfrastructureInitialized(
 	return entry.networkIP, entry.ownIP, instanceAddr, keepAlive, nil
 }
 
+// IsInstanceAlive verifies whether an instance is still alive.
+func (manager *Manager) IsInstanceAlive(
+	servingID string, instanceID string) bool {
+	manager.servingIDsLock.RLock()
+	defer manager.servingIDsLock.RUnlock()
+	instanceIDs, ok := manager.servingIDs[servingID]
+	if !ok {
+		return false
+	}
+	_, ok = instanceIDs[instanceID]
+	return ok
+}
+
 // Close stops the manager.
 func (manager *Manager) Close() {
 	manager.serviceSKA.Stop()

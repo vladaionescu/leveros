@@ -3,6 +3,7 @@ package host
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/leveros/leveros/core"
@@ -139,10 +140,25 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 		return
 	}
 
-	// TODO: If the instance is new, try a few times here. Just in case it takes
-	//       longer for the instance to start. (Also, what does the failure look
-	//       like in that case?)
-	destStream, err := proxy.client.NewStream(instanceAddr)
+	destStreamI, err := leverutil.ExpBackoff(
+		func() (clientStream interface{}, err error, finalErr error) {
+			clientStream, err = proxy.client.NewStream(instanceAddr)
+			if err != nil {
+				if strings.Contains(err.Error(), "connection refused") {
+					if !proxy.manager.IsInstanceAlive(servingID, instanceID) {
+						streamLogger.WithFields("err", err).Debug(
+							"Instance no longer alive")
+						return nil, nil, err
+					}
+					// Retry.
+					streamLogger.WithFields("err", err).Debug(
+						"Client stream failure")
+					return nil, err, nil
+				}
+				return nil, nil, err
+			}
+			return clientStream, nil, nil
+		}, 10*time.Millisecond, 15*time.Second)
 	if err != nil {
 		streamLogger.WithFields(
 			"err", err,
@@ -151,6 +167,7 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 		stream.Write(&http2stream.MsgError{Err: err})
 		return
 	}
+	destStream := destStreamI.(*http2stream.HTTP2Stream)
 
 	addHeaders := make(map[string][]string)
 	if srcEnv != "" {
