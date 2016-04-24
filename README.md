@@ -13,6 +13,7 @@ API reference
 * For CLI reference run `lever --help` or `lever --help <command>`.
 * lever.json reference (TODO)
 * JavaScript API reference (TODO)
+* [Golang API dir](./api/)
 * [Golang API reference (godoc)](https://godoc.org/github.com/leveros/leveros/api)
 
 Getting started
@@ -27,7 +28,7 @@ Getting started
 * Make
 * Linux or Mac (Windows should work too but it was never tested)
 
-If you need to use docker-machine to run docker (on a Mac), you also need
+If you need to use docker-machine to run docker (eg on a Mac), you also need
 to install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and then run
 these commands to [get started](https://docs.docker.com/machine/get-started/):
 
