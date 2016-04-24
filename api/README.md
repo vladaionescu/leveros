@@ -61,7 +61,7 @@ func (*Handler) SayHello(name string) (result string, err error) {
 {
     "name": "helloService",
     "description": "A hello service.",
-    "entry": "serve"
+    "entry": ["serve"]
 }
 ```
 
