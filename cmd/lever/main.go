@@ -33,9 +33,10 @@ func main() {
 
 	app := cli.NewApp()
 	app.Name = "lever"
-	app.Usage = "Client for LeverOS"
+	app.Usage = "Command line interface for Lever OS"
 	// TODO: Need proper installation logic for bash completion to work.
 	app.EnableBashCompletion = true
+	app.Version = "0.1.0"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "env, E",

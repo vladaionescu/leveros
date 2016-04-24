@@ -20,36 +20,47 @@ Getting started
 
 ### Prerequisites
 
-* [Docker](https://docs.docker.com/engine/installation/) (including [Docker
-    Compose](https://docs.docker.com/compose/install/)). On a Mac you
+* [Docker](https://docs.docker.com/engine/installation/) and [Docker
+    Compose](https://docs.docker.com/compose/install/). On a Mac you
     can install [Docker Toolbox](https://docs.docker.com/toolbox/overview/) to
-    get everything you need.
+    get what you need.
 * Make
 * Linux or Mac (Windows should work too but it was never tested)
 
 If you need to use docker-machine to run docker (on a Mac), you also need
 to install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and then run
-these commands to get started with docker:
+these commands to [get started](https://docs.docker.com/machine/get-started/):
 
 ```
 $ docker-machine create --driver virtualbox default
-$ eval `docker-machine env default`  # In each terminal window you're using.
+$ eval `docker-machine env default`
 ```
+
+You will need to run the second command for every new terminal window.
+
+### Installation
+
+```bash
+$ git clone https://github.com/leveros/leveros
+$ cd leveros
+$ make pull-docker-images
+$ make cli
+$ sudo make install-cli
+$ make fastrun
+```
+
+The commands above pull the necessary Docker images, install the `lever` CLI and
+run a Lever OS instance locally.
 
 ### Your first Lever service
 
-Install and run Lever OS locally (assumes docker command available):
-
+```bash
+$ mkdir hello
+$ cd hello
 ```
-$ make pull-docker-images  # Pull the pre-built Docker images.
-$ make cli  # Compile the CLI.
-$ sudo make install-cli  # Install the CLI in /usr/local/bin/
-$ make fastrun  # Fire up Lever OS.
-```
-
-Then, create a new dir for your first Lever service and add the following files.
 
 ###### server.js
+
 ```javascript
 module.exports.SayHello = function (name, callback) {
     callback(null, "Hello, " + name + "!");
@@ -57,6 +68,7 @@ module.exports.SayHello = function (name, callback) {
 ```
 
 ###### lever.json
+
 ```json
 {
     "name": "helloService",
@@ -66,12 +78,14 @@ module.exports.SayHello = function (name, callback) {
 ```
 
 Deploy your service locally
-```
+
+```bash
 $ lever deploy dev.lever
 ```
 
 ###### Invoke via CLI
-```
+
+```bash
 $ lever invoke https://dev.lever/helloService SayHello '"world"'
 "Hello, world!"
 ```
@@ -79,13 +93,21 @@ $ lever invoke https://dev.lever/helloService SayHello '"world"'
 (Remember to use proper JSON for arguments. This includes the quotes for
 strings.)
 
-###### Invoke from JavaScript
+###### Invoke from JavaScript (client.js)
+
 ```javascript
 var leveros = require("leveros");
 var service = leveros.service("dev.lever", "helloService");
 service.invoke("SayHello", "world", function (error, reply) {
     console.log(reply);  // Hello, world!
 });
+```
+
+```bash
+# Without docker-machine
+$ LEVEROS_IP_PORT="127.0.0.1:8080" node client.js
+# With docher-machine
+$ LEVEROS_IP_PORT="$(docker-machine ip default):8080" node client.js
 ```
 
 Basic concepts
