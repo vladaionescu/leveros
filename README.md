@@ -12,9 +12,8 @@ API reference
 
 * For CLI reference run `lever --help` or `lever --help <command>`.
 * lever.json reference (TODO)
-* JavaScript API reference (TODO)
-* [Golang API dir](./api/)
-* [Golang API reference (godoc)](https://godoc.org/github.com/leveros/leveros/api)
+* JavaScript API (TODO)
+* [Golang API](./api/)
 
 Getting started
 ---------------
