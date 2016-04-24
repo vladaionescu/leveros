@@ -19,6 +19,13 @@ import (
 // PackageName is the name of this package.
 const PackageName = cmd.PackageName + ".leveroshost"
 
+var (
+	// Version is the version of Lever OS. This variable is set at build time.
+	Version string
+	// GitHash is the git hash of Lever OS. This variable is set at build time.
+	GitHash string
+)
+
 var logger = leverutil.GetLogger(PackageName, "main")
 
 var (
@@ -34,6 +41,11 @@ var (
 func main() {
 	config.Initialize()
 	leverutil.UpdateLoggingSettings()
+
+	logger.WithFields(
+		"version", Version,
+		"gitHash", GitHash,
+	).Info("Starting up...")
 
 	_, err := devlogger.NewDevLogger(ExternalIPFlag.Get())
 	if err != nil {
@@ -102,8 +114,8 @@ func main() {
 		"   | |   _____ _____ _ _   / _ \\/ __|\n" +
 		"   | |__/ -_) V / -_) '_| | (_) \\__ \\\n" +
 		"   |____\\___|\\_/\\___|_|    \\___/|___/\n" +
-		"\n" +
-		"           Ready to serve\n")
+		"   v" + Version + "\n" +
+		"                       Ready to serve\n")
 
 	// GRPC enter loop.
 	err = grpcServer.Serve(listener)

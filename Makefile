@@ -1,4 +1,7 @@
 
+VERSION := 0.1.0
+GIT_HASH := $(shell git rev-parse HEAD)
+
 export GO15VENDOREXPERIMENT := 1
 PROTOC := protoc
 DOCKER := docker
@@ -13,7 +16,9 @@ export LEVEROS_DEBUG ?=
 export LEVEROS_REPO_DIR ?= $(abspath repo)
 export LEVEROS_IP_PORT ?= $(shell which $(DOCKER_MACHINE) > /dev/null && test -n "$$DOCKER_MACHINE_NAME" && docker-machine ip "$$DOCKER_MACHINE_NAME" || echo 127.0.0.1):8080
 
-GO_BUILD_ARGS := $(shell test -n "$(LEVEROS_DEBUG)" && echo -race)
+GO_VERSION_ARGS := -ldflags "-X main.Version=$(VERSION) -X main.GitHash=$(GIT_HASH)"
+GO_BUILD_ARGS := $(GO_VERSION_ARGS) \
+	$(shell test -n "$(LEVEROS_DEBUG)" && echo -race)
 # Most things will run in a docker container. They need to be compiled for
 # linux/amd64.
 export GOOS ?= linux

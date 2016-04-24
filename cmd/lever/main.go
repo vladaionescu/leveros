@@ -18,6 +18,9 @@ import (
 // PackageName is the name of this package.
 const PackageName = cmd.PackageName + ".adminservice"
 
+// Version is the version of Lever OS. This variable is set at build time.
+var Version string
+
 var logger = leverutil.GetLogger(PackageName, "main")
 
 var (
@@ -36,7 +39,7 @@ func main() {
 	app.Usage = "Command line interface for Lever OS"
 	// TODO: Need proper installation logic for bash completion to work.
 	app.EnableBashCompletion = true
-	app.Version = "0.1.0"
+	app.Version = Version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "env, E",
