@@ -1,4 +1,9 @@
 /repo/
 /services/leveroshost/leveroshost
+/services/levercontainer/jsserver/
+/services/levercontainer/leverrpc.proto
 /systemtest/*/serve
 /build/
+/js/*/compiled/
+node_modules/
+npm-debug.log

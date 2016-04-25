@@ -62,6 +62,7 @@ CMD_DIR := cmd
 SYS_TEST_DIR := systemtest
 SERVICES_DIR := services
 PROTOS_DIR := protos
+JS_DIR := js
 REPO_DIR := $(LEVEROS_REPO_DIR)
 CLI_INSTALL_DIR := /usr/local/bin
 
@@ -242,9 +243,16 @@ docker-%: $(SERVICES_DIR)/%/Dockerfile FORCE
 	$(DOCKER) build -t leveros/$(@:docker-%=%) $(dir $<)
 
 docker-consul: | docker-base
-docker-leveroshost: | docker-base
-docker-levercontainer: | docker-base
-docker-leveroshost: $(SERVICES_DIR)/leveroshost/leveroshost
+docker-levercontainer: $(SERVICES_DIR)/levercontainer/leverrpc.proto $(SERVICES_DIR)/levercontainer/jsserver | docker-base
+$(SERVICES_DIR)/levercontainer/leverrpc.proto: $(PROTOS_DIR)/core/leverrpc.proto
+	cp $< $@
+$(SERVICES_DIR)/levercontainer/jsserver: $(JS_DIR)/jsserver FORCE
+	rsync -a --delete \
+		--exclude /node_modules/ \
+		--exclude /compiled/ \
+		--exclude npm-debug.log \
+		$< $(dir $@)
+docker-leveroshost: $(SERVICES_DIR)/leveroshost/leveroshost | docker-base
 $(SERVICES_DIR)/leveroshost/leveroshost: $(BIN_DIR)/leveroshost
 	cp $< $@
 

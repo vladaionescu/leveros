@@ -87,6 +87,7 @@ func (dl *DevLogger) Close() {
 
 func (dl *DevLogger) worker() {
 	for logParts := range dl.channel {
-		logger.WithFields("parts", logParts).Debug("Log line")
+		//logger.WithFields("parts", logParts).Debug("Log line")
+		logger.WithFields("msg", logParts["message"]).Debug("Log line")
 	}
 }

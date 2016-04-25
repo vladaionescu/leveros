@@ -163,11 +163,26 @@ func StartDockerContainer(
 	memoryBytes := int64(leverConfig.InstanceMemoryMB) * 1000 * 1000
 	memAndSwapBytes := memoryBytes     // No swap.
 	kernelMemBytes := memoryBytes / 10 // Allow 10% memory for kernel.
+
+	// Entry point.
+	entry := leverConfig.EntryPoint
+	if leverConfig.JSEntryPoint != "" {
+		// Trigger GC in node when garbage reaches 90% of memory.
+		maxGarbage := strconv.Itoa(
+			int(float32(leverConfig.InstanceMemoryMB) * 0.9))
+		// Set entry point for node.
+		entry = []string{
+			"node", "--optimize_for_size", "--max_old_space_size=" + maxGarbage,
+			"--gc_interval=100", "/leveros/jsserver/compiled/lib/serve.js",
+			leverConfig.JSEntryPoint,
+		}
+	}
+
 	container, err := docker.CreateContainer(dockerapi.CreateContainerOptions{
 		Name: "leveros_" + instanceID,
 		Config: &dockerapi.Config{
 			Image:        "leveros/levercontainer:latest",
-			Cmd:          leverConfig.EntryPoint,
+			Cmd:          entry,
 			Env:          env,
 			KernelMemory: kernelMemBytes,
 			Labels: map[string]string{

@@ -1,26 +1,47 @@
-FROM leveros/base:latest
+FROM ubuntu:latest
 
+LABEL com.leveros.isleveros="true"
 LABEL com.leveros.islevercontainer="true"
 
-RUN echo '@edge http://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories
-RUN echo '@community http://nl.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
+RUN apt-get update
+RUN apt-get dist-upgrade -y
 
-RUN apk add --update \
+RUN apt-get install -y \
+    build-essential \
     curl \
-    libevent \
-    make \
-    nodejs@edge \
+    dialog \
+    git \
+    libevent-dev \
+    nano \
+    net-tools \
     python \
+    python-dev \
+    python-distribute \
+    python-pip \
+    python-software-properties \
+    software-properties-common \
     tar \
     unzip \
     wget
-RUN rm -rf /var/cache/apk/*
+
+# Install NodeJS.
+RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
+RUN apt-get update
+RUN apt-get install -y nodejs
+
+# JS server.
+RUN npm install -g grunt-cli
+COPY jsserver/package.json /leveros/jsserver/
+RUN cd /leveros/jsserver && npm install
+COPY jsserver /leveros/jsserver
+RUN cd /leveros/jsserver && grunt compile
+COPY leverrpc.proto /leveros/
 
 # This is really important to avoid Lever customers from running as root.
 # Without ns remap it would mean that in case of a breakout they would have
 # root access to the host.
-RUN addgroup lever
-RUN adduser -D -G lever -s /sbin/nologin lever
+RUN groupadd -r lever
+RUN useradd -g lever -s /sbin/nologin lever
 USER lever
 
 # Port listening on for Lever RPCs.
