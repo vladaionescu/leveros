@@ -1,9 +1,11 @@
 /repo/
 /services/leveroshost/leveroshost
-/services/levercontainer/jsserver/
-/services/levercontainer/leverrpc.proto
+/services/levercontainer/js/leveros-server/
+/services/levercontainer/js/leveros-common/
 /systemtest/*/serve
 /build/
 /js/*/compiled/
+/js/*/LICENSE.md
+/js/leveros-common/leverrpc.proto
 node_modules/
 npm-debug.log

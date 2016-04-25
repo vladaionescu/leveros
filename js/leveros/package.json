@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "grpc": "^0.13.2-pre1",
+    "leveros-common": "0.0.1",
     "lodash": "^4.11.1",
     "source-map-support": "^0.4.0"
   },

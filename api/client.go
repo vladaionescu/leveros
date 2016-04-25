@@ -154,7 +154,7 @@ func (client *Client) invoke(
 	method string, args ...interface{}) (err error) {
 	if IsChanMethod(method) {
 		return fmt.Errorf(
-			"Use InvokeChan / InvokeChanResource for streaming methods")
+			"Use InvokeChan for streaming methods")
 	}
 	if env == "" && OwnEnvironment == "" {
 		return fmt.Errorf(

@@ -234,7 +234,34 @@ hostman/%.pb.go: $(PROTOS_DIR)/hostman/%.proto
 	$(GRPC_IMPORT_REPLACE_CMD)
 
 #
+# JS targets.
+
+$(JS_DIR)/leveros-common/leverrpc.proto: $(PROTOS_DIR)/core/leverrpc.proto
+	cp $< $@
+$(JS_DIR)/leveros-common/LICENSE.md: LICENSE.md
+	cp $< $@
+$(JS_DIR)/leveros-server/LICENSE.md: LICENSE.md
+	cp $< $@
+$(JS_DIR)/leveros/LICENSE.md: LICENSE.md
+	cp $< $@
+
+.PHONY: jsprep-leveros-common
+jsprep-leveros-common: $(JS_DIR)/leveros-common/leverrpc.proto
+jsprep-leveros-common: $(JS_DIR)/leveros-common/LICENSE.md
+
+.PHONY: jsprep-leveros-server
+jsprep-leveros-server: $(JS_DIR)/leveros-server/LICENSE.md
+
+.PHONY: jsprep-leveros
+jsprep-leveros: $(JS_DIR)/leveros/LICENSE.md
+
+#
 # Docker images targets.
+
+RSYNC_JS = rsync -a --delete \
+	--exclude /node_modules/ \
+	--exclude /compiled/ \
+	--exclude npm-debug.log
 
 .PHONY: docker-images
 docker-images: $(DOCKER_TARGETS)
@@ -243,15 +270,15 @@ docker-%: $(SERVICES_DIR)/%/Dockerfile FORCE
 	$(DOCKER) build -t leveros/$(@:docker-%=%) $(dir $<)
 
 docker-consul: | docker-base
-docker-levercontainer: $(SERVICES_DIR)/levercontainer/leverrpc.proto $(SERVICES_DIR)/levercontainer/jsserver | docker-base
-$(SERVICES_DIR)/levercontainer/leverrpc.proto: $(PROTOS_DIR)/core/leverrpc.proto
-	cp $< $@
-$(SERVICES_DIR)/levercontainer/jsserver: $(JS_DIR)/jsserver FORCE
-	rsync -a --delete \
-		--exclude /node_modules/ \
-		--exclude /compiled/ \
-		--exclude npm-debug.log \
-		$< $(dir $@)
+docker-levercontainer: | docker-base
+docker-levercontainer: $(SERVICES_DIR)/levercontainer/js/leveros-server
+docker-levercontainer: $(SERVICES_DIR)/levercontainer/js/leveros-common
+$(SERVICES_DIR)/levercontainer/js/leveros-server: $(JS_DIR)/leveros-server FORCE
+	$(MAKE) jsprep-leveros-server
+	$(RSYNC_JS) $< $(dir $@)
+$(SERVICES_DIR)/levercontainer/js/leveros-common: $(JS_DIR)/leveros-common FORCE
+	$(MAKE) jsprep-leveros-common
+	$(RSYNC_JS) $< $(dir $@)
 docker-leveroshost: $(SERVICES_DIR)/leveroshost/leveroshost | docker-base
 $(SERVICES_DIR)/leveroshost/leveroshost: $(BIN_DIR)/leveroshost
 	cp $< $@

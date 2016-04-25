@@ -1,7 +1,7 @@
 {
-  "name": "leveros-server",
-  "version": "0.0.0",
-  "description": "The JS server used within Lever instances. This listens for connections and triggers the customer module on requests.",
+  "name": "leveros-common",
+  "version": "0.0.1",
+  "description": "",
   "author": "Vlad Alexandru Ionescu",
   "homepage": "http://www.leveros.com",
   "bugs": "http://github.com/leveros/leveros/issues",
@@ -10,13 +10,13 @@
     "type": "git",
     "url": "https://github.com/leveros/leveros.git"
   },
+  "main": "compiled/lib/leveros-common.js",
   "directories": {
     "lib": "compiled/lib"
   },
   "dependencies": {
-    "grpc": "^0.13.2-pre1",
-    "lodash": "^4.11.1",
-    "source-map-support": "^0.4.0"
+    "collections": "^3.0.0",
+    "lodash": "^4.11.1"
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -31,5 +31,5 @@
     "grunt-eslint": "^18.1.0"
   },
   "preferGlobal": false,
-  "private": true
+  "keywords": []
 }

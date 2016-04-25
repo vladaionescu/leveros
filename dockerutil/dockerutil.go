@@ -173,7 +173,8 @@ func StartDockerContainer(
 		// Set entry point for node.
 		entry = []string{
 			"node", "--optimize_for_size", "--max_old_space_size=" + maxGarbage,
-			"--gc_interval=100", "/leveros/jsserver/compiled/lib/serve.js",
+			"--gc_interval=100",
+			"/leveros/js/leveros-server/compiled/lib/serve.js",
 			leverConfig.JSEntryPoint,
 		}
 	}

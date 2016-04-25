@@ -1,13 +1,10 @@
 
-import 'source-map-support/register'
+import 'source-map-support/register';
 
-import * as grpc from 'grpc';
-import * as path from 'path';
-import * as util from 'util';
-import * as lodash from 'lodash';
-import * as argsconv from './argsconv';
-
-const protoDesc = grpc.load('/leveros/leverrpc.proto');
+import grpc from 'grpc';
+import path from 'path';
+import lodash from 'lodash';
+import common from 'leveros-common';
 
 class Handler {
     constructor(importPath) {
@@ -27,9 +24,9 @@ class Handler {
         }
         const method = this._custHandler[rpc.method];
         const onCallback = (error, result) => {
-            callback(null, argsconv.jsToReply(error, result));
+            callback(null, common.jsToReply(error, result));
         };
-        const args = argsconv.argsToJs(rpc);
+        const args = common.argsToJs(rpc);
         method.apply(this._custHandler, lodash.concat(args, [onCallback]));
     }
 
@@ -44,14 +41,13 @@ function main() {
     }
     const handler = new Handler(process.argv[2]);
     const server = new grpc.Server();
-    server.addProtoService(protoDesc.core.LeverRPC.service, handler);
+    server.addProtoService(common.leverRPCProto.core.LeverRPC.service, handler);
     // TODO ...
-    const serviceName = 'test';
     const resourceName = '';
-    const prefix = '/' + serviceName + '/' + resourceName + '/';
-    server.handlers[prefix + 'HandleRPC'] = (
+    const prefix = `/${common.ownService}/${resourceName}/`;
+    server.handlers[`${prefix}HandleRPC`] = (
         server.handlers['/core.LeverRPC/HandleRPC']);
-    server.handlers[prefix + 'HandleStreamingRPC'] = (
+    server.handlers[`${prefix}HandleStreamingRPC`] = (
         server.handlers['/core.LeverRPC/HandleStreamingRPC']);
     server.bind("0.0.0.0:3837", grpc.ServerCredentials.createInsecure());
     server.start();

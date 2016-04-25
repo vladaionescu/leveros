@@ -31,11 +31,15 @@ RUN apt-get install -y nodejs
 
 # JS server.
 RUN npm install -g grunt-cli
-COPY jsserver/package.json /leveros/jsserver/
-RUN cd /leveros/jsserver && npm install
-COPY jsserver /leveros/jsserver
-RUN cd /leveros/jsserver && grunt compile
-COPY leverrpc.proto /leveros/
+COPY js/leveros-common/package.json /leveros/js/leveros-common/
+RUN cd /leveros/js/leveros-common && npm install
+COPY js/leveros-server/package.json /leveros/js/leveros-server/
+RUN cd /leveros/js/leveros-server && npm link ../leveros-common
+RUN cd /leveros/js/leveros-server && npm install
+COPY js/leveros-common /leveros/js/leveros-common
+RUN cd /leveros/js/leveros-common && grunt compile
+COPY js/leveros-server /leveros/js/leveros-server
+RUN cd /leveros/js/leveros-server && grunt compile
 
 # This is really important to avoid Lever customers from running as root.
 # Without ns remap it would mean that in case of a breakout they would have

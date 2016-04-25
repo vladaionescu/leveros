@@ -29,7 +29,9 @@ func ParseLeverURL(urlPeer string) (*LeverPeer, error) {
 	if err != nil {
 		return nil, err
 	}
-	if parsed.Scheme != "" && parsed.Scheme != "https" {
+	if parsed.Scheme != "" &&
+		parsed.Scheme != "https" &&
+		parsed.Scheme != "http" {
 		return nil, fmt.Errorf("Invalid scheme %v", parsed.Scheme)
 	}
 	serviceAndResource := parsed.EscapedPath()
