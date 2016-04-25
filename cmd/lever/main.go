@@ -70,7 +70,7 @@ func main() {
 			Usage: "Invoke a Lever method with provided args. If the " +
 				"first <jsonarg> is --, then args are assumed to be of type " +
 				"bytes and are read from standard input.",
-			ArgsUsage: "<url> <method> [jsonargs...]",
+			ArgsUsage: "<url> [jsonargs...]",
 			Flags: []cli.Flag{
 				cli.BoolFlag{
 					Name: "pretty",
@@ -88,7 +88,7 @@ func main() {
 				"While it is possible for the stream itself to be of type " +
 				"bytes, this command does not allow for the args of the " +
 				"invokation to be of type bytes.",
-			ArgsUsage: "<url> <method> [jsonargs...]",
+			ArgsUsage: "<url> [jsonargs...]",
 			Flags: []cli.Flag{
 				cli.BoolFlag{
 					Name: "bytes",
@@ -142,29 +142,29 @@ func actionDeploy(ctx *cli.Context) {
 }
 
 func actionInvoke(ctx *cli.Context) {
-	peer, err := leverapi.ParseLeverURL(ctx.Args().Get(0))
+	leverURL, err := core.ParseLeverURL(ctx.Args().Get(0))
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Invalid lever URL")
 	}
-	if peer.Environment == "" {
-		peer.Environment = flagEnv
+	if leverURL.Environment == "" {
+		leverURL.Environment = flagEnv
 	}
-	if peer.Environment == "" {
-		peer.Environment = core.DefaultDevEnvFlag.Get()
+	if leverURL.Environment == "" {
+		leverURL.Environment = core.DefaultDevEnvFlag.Get()
 	}
 
 	client, err := leverapi.NewClient()
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error creating client")
 	}
-	if strings.HasSuffix(peer.Environment, ".lever") {
+	if strings.HasSuffix(leverURL.Environment, ".lever") {
 		client.ForceHost = detectLeverOSIPPort()
 	}
 	if flagHost != "" {
 		client.ForceHost = flagHost
 	}
 
-	if ctx.NArg() > 2 && ctx.Args().Get(2) == "--" {
+	if ctx.NArg() > 1 && ctx.Args().Get(1) == "--" {
 		// Byte args case.
 		// TODO: Read bytes arg from stdin.
 		logger.Fatal("Bytes from stdin not yet implemented")
@@ -183,13 +183,8 @@ func actionInvoke(ctx *cli.Context) {
 		}
 		args = append(args, arg)
 	}
-	method := ctx.Args().Get(1)
-	endpoint, err := client.EndpointFromURL(peer.String())
-	if err != nil {
-		logger.WithFields("err", err).Fatal("Endpoint construction error")
-	}
 	var reply interface{}
-	err = endpoint.Invoke(&reply, method, args...)
+	err = client.InvokeURL(&reply, leverURL.String(), args...)
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Invokation error")
 	}
@@ -215,22 +210,22 @@ func actionInvoke(ctx *cli.Context) {
 }
 
 func actionStream(ctx *cli.Context) {
-	peer, err := leverapi.ParseLeverURL(ctx.Args().Get(0))
+	leverURL, err := core.ParseLeverURL(ctx.Args().Get(0))
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Invalid lever URL")
 	}
-	if peer.Environment == "" {
-		peer.Environment = flagEnv
+	if leverURL.Environment == "" {
+		leverURL.Environment = flagEnv
 	}
-	if peer.Environment == "" {
-		peer.Environment = core.DefaultDevEnvFlag.Get()
+	if leverURL.Environment == "" {
+		leverURL.Environment = core.DefaultDevEnvFlag.Get()
 	}
 
 	client, err := leverapi.NewClient()
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error creating client")
 	}
-	if strings.HasSuffix(peer.Environment, ".lever") {
+	if strings.HasSuffix(leverURL.Environment, ".lever") {
 		client.ForceHost = detectLeverOSIPPort()
 	}
 	if flagHost != "" {
@@ -238,7 +233,7 @@ func actionStream(ctx *cli.Context) {
 	}
 
 	var args []interface{}
-	for index := 2; index < ctx.NArg(); index++ {
+	for index := 1; index < ctx.NArg(); index++ {
 		rawArg := ctx.Args().Get(index)
 		var arg interface{}
 		err = json.Unmarshal([]byte(rawArg), &arg)
@@ -248,12 +243,7 @@ func actionStream(ctx *cli.Context) {
 		}
 		args = append(args, arg)
 	}
-	method := ctx.Args().Get(1)
-	endpoint, err := client.EndpointFromURL(peer.String())
-	if err != nil {
-		logger.WithFields("err", err).Fatal("Endpoint construction error")
-	}
-	stream, err := endpoint.InvokeChan(method, args...)
+	stream, err := client.InvokeChanURL(leverURL.String(), args...)
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Invokation error")
 	}

@@ -71,9 +71,7 @@ func (err *RemoteError) Error() string {
 // Endpoint represents a Lever service or a Lever resource within a service.
 // It can be used to invoke methods remotely.
 type Endpoint struct {
-	env      string
-	service  string
-	resource string
+	leverURL *core.LeverURL
 	client   *Client
 }
 
@@ -81,17 +79,27 @@ type Endpoint struct {
 // successful.
 func (endpoint *Endpoint) Invoke(
 	replyObj interface{}, method string, args ...interface{}) (err error) {
-	return endpoint.client.invoke(
-		replyObj, endpoint.env, endpoint.service, endpoint.resource, method,
-		args...)
+	invokationURL := &core.LeverURL{
+		Environment: endpoint.leverURL.Environment,
+		Service:     endpoint.leverURL.Service,
+		Resource:    endpoint.leverURL.Resource,
+		Method:      method,
+	}
+	return endpoint.client.invokeInternal(
+		replyObj, invokationURL, args...)
 }
 
 // InvokeChan invokes a remote streaming method. It returns a Stream object
 // which can be used to communicate with the Lever instance in real-time.
 func (endpoint *Endpoint) InvokeChan(
 	method string, args ...interface{}) (stream Stream, err error) {
-	return endpoint.client.invokeChan(
-		endpoint.env, endpoint.service, endpoint.resource, method, args...)
+	invokationURL := &core.LeverURL{
+		Environment: endpoint.leverURL.Environment,
+		Service:     endpoint.leverURL.Service,
+		Resource:    endpoint.leverURL.Resource,
+		Method:      method,
+	}
+	return endpoint.client.invokeChanInternal(invokationURL, args...)
 }
 
 // Client is a Lever OS client. It can be used to initiate RPC's to other
@@ -110,29 +118,16 @@ func NewClient() (*Client, error) {
 	return &Client{conns: conns}, nil
 }
 
-// EndpointFromURL returns an enpoint constructed from a Lever URL. The URL can
-// be either absolute (remote environment) or relative (same environment).
-// Example:
-//
-// /<service>[/<resource>]  (relative URL)
-//
-// https://<env>/<service>[/<resource>]  (absolute URL)
-func (client *Client) EndpointFromURL(leverURL string) (*Endpoint, error) {
-	peer, err := ParseLeverURL(leverURL)
-	if err != nil {
-		return nil, err
-	}
-	return client.Resource(peer.Environment, peer.Service, peer.Resource), nil
-}
-
 // Service returns an endpoint representing a Lever service. If env is "" then
 // the current environment is used (assuming you are running within a Lever
 // instance).
 func (client *Client) Service(env string, service string) *Endpoint {
 	return &Endpoint{
-		env:     env,
-		service: service,
-		client:  client,
+		leverURL: &core.LeverURL{
+			Environment: env,
+			Service:     service,
+		},
+		client: client,
 	}
 }
 
@@ -142,37 +137,73 @@ func (client *Client) Service(env string, service string) *Endpoint {
 func (client *Client) Resource(
 	env string, service string, resource string) *Endpoint {
 	return &Endpoint{
-		env:      env,
-		service:  service,
-		resource: resource,
-		client:   client,
+		leverURL: &core.LeverURL{
+			Environment: env,
+			Service:     service,
+			Resource:    resource,
+		},
+		client: client,
 	}
 }
 
-func (client *Client) invoke(
-	replyObj interface{}, env string, service string, resource string,
-	method string, args ...interface{}) (err error) {
-	if IsChanMethod(method) {
-		return fmt.Errorf(
-			"Use InvokeChan for streaming methods")
+// InvokeURL invokes a remote method referenced by a Lever URL. The URL can
+// be either absolute (remote environment) or relative (same environment).
+// Example:
+//
+// /<service>[/<resource>]/method  (relative URL)
+//
+// lever://<env>/<service>[/<resource>]/method  (absolute URL)
+func (client *Client) InvokeURL(
+	replyObj interface{}, leverURLStr string, args ...interface{}) (err error) {
+	leverURL, err := core.ParseLeverURL(leverURLStr)
+	if err != nil {
+		return err
 	}
-	if env == "" && OwnEnvironment == "" {
+	return client.invokeInternal(replyObj, leverURL, args...)
+}
+
+// InvokeChanURL invokes a remote streaming method referenced by a Lever URL.
+// The URL can be either absolute (remote environment) or relative
+// (same environment).
+// Example:
+//
+// /<service>[/<resource>]/method  (relative URL)
+//
+// lever://<env>/<service>[/<resource>]/method  (absolute URL)
+func (client *Client) InvokeChanURL(
+	leverURLStr string, args ...interface{}) (stream Stream, err error) {
+	leverURL, err := core.ParseLeverURL(leverURLStr)
+	if err != nil {
+		return nil, err
+	}
+	return client.invokeChanInternal(leverURL, args...)
+}
+
+func (client *Client) invokeInternal(
+	replyObj interface{}, leverURL *core.LeverURL,
+	args ...interface{}) (err error) {
+	if IsChanMethod(leverURL.Method) {
+		return fmt.Errorf(
+			"Use InvokeChan / InvokeChanURL for streaming methods")
+	}
+	if leverURL.Environment == "" && OwnEnvironment == "" {
 		return fmt.Errorf(
 			"Environment not specified and cannot be deduced")
 	}
-	if env == "" {
-		env = OwnEnvironment
+	if leverURL.Environment == "" {
+		leverURL.Environment = OwnEnvironment
 	}
 
 	var dialTo string
 	if client.ForceHost != "" {
 		dialTo = client.ForceHost
 	} else {
-		if (core.IsInternalEnvironment(env) || env == OwnEnvironment) &&
+		if (core.IsInternalEnvironment(leverURL.Environment) ||
+			leverURL.Environment == OwnEnvironment) &&
 			internalRPCGateway != "" {
 			dialTo = internalRPCGateway
 		} else {
-			dialTo = env
+			dialTo = leverURL.Environment
 		}
 	}
 	conn, err := client.conns.Dial(dialTo)
@@ -180,9 +211,7 @@ func (client *Client) invoke(
 		return err
 	}
 
-	rpc := &core.RPC{
-		Method: method,
-	}
+	rpc := &core.RPC{}
 	if len(args) == 1 {
 		byteArgs, ok := args[0].([]byte)
 		if ok {
@@ -204,7 +233,7 @@ func (client *Client) invoke(
 		}
 	}
 	reply, err := core.SendLeverRPC(
-		conn, context.Background(), env, service, resource, rpc)
+		conn, context.Background(), leverURL, rpc)
 	if err != nil {
 		return err
 	}
@@ -232,30 +261,30 @@ func (client *Client) invoke(
 	}
 }
 
-func (client *Client) invokeChan(
-	env string, service string, resource string,
-	method string, args ...interface{}) (stream Stream, err error) {
-	if !IsChanMethod(method) {
+func (client *Client) invokeChanInternal(
+	leverURL *core.LeverURL, args ...interface{}) (stream Stream, err error) {
+	if !IsChanMethod(leverURL.Method) {
 		return nil, fmt.Errorf(
-			"Use Invoke / InvokeResource for non-streaming methods")
+			"Use Invoke / InvokeURL for non-streaming methods")
 	}
-	if env == "" && OwnEnvironment == "" {
+	if leverURL.Environment == "" && OwnEnvironment == "" {
 		return nil, fmt.Errorf(
 			"Environment not specified and cannot be deduced")
 	}
-	if env == "" {
-		env = OwnEnvironment
+	if leverURL.Environment == "" {
+		leverURL.Environment = OwnEnvironment
 	}
 
 	var dialTo string
 	if client.ForceHost != "" {
 		dialTo = client.ForceHost
 	} else {
-		if (core.IsInternalEnvironment(env) || env == OwnEnvironment) &&
+		if (core.IsInternalEnvironment(leverURL.Environment) ||
+			leverURL.Environment == OwnEnvironment) &&
 			internalRPCGateway != "" {
 			dialTo = internalRPCGateway
 		} else {
-			dialTo = env
+			dialTo = leverURL.Environment
 		}
 	}
 	conn, err := client.conns.Dial(dialTo)
@@ -263,9 +292,7 @@ func (client *Client) invokeChan(
 		return nil, err
 	}
 
-	rpc := &core.RPC{
-		Method: method,
-	}
+	rpc := &core.RPC{}
 	if len(args) == 1 {
 		byteArgs, ok := args[0].([]byte)
 		if ok {
@@ -287,7 +314,7 @@ func (client *Client) invokeChan(
 		}
 	}
 	grpcStream, err := core.SendStreamingLeverRPC(
-		conn, context.Background(), env, service, resource)
+		conn, context.Background(), leverURL)
 	if err != nil {
 		return nil, err
 	}

@@ -33,7 +33,8 @@ func (proxy *LeverProxy) serveIn() (err error) {
 func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 	headers := stream.GetHeaders()
 	err := expectHeaders(
-		headers, ":path", "host",
+		headers,
+		"lever-url",
 		"x-lever-src-env",
 		"x-lever-dest-instance-id",
 		"x-lever-dest-container-id",
@@ -50,19 +51,19 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 		return
 	}
 
-	serviceName, resourceName, err := parsePath(headers[":path"][0])
+	leverURL, err := core.ParseLeverURL(headers["lever-url"][0])
 	if err != nil {
 		proxy.inLogger.WithFields(
-			"err", err, "path", headers[":path"][0]).Error(
-			"Unable to parse request path")
-		stream.Write(&http2stream.MsgError{Err: err})
-		return
+			"err", err, "leverURL", headers["lever-url"][0]).Error(
+			"Unable to parse Lever URL")
 	}
 
-	destEnv := core.ProcessEnvAlias(headers["host"][0])
-	if !core.IsInternalEnvironment(destEnv) {
+	if !core.IsInternalEnvironment(leverURL.Environment) {
 		err = fmt.Errorf("Cannot route to dest env")
-		proxy.inLogger.WithFields("err", err, "leverEnv", destEnv).Error("")
+		proxy.inLogger.WithFields(
+			"err", err,
+			"leverEnv", leverURL.Environment,
+		).Error("")
 		stream.Write(&http2stream.MsgError{Err: err})
 		return
 	}
@@ -86,8 +87,10 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 	if instanceID == "" {
 		instanceID, err = proxy.manager.RandomInstaceID(servingID)
 		if err != nil {
-			proxy.inLogger.WithFields("err", err, "leverEnv", destEnv).Error(
-				"Could not find an instanceID for provided servingID")
+			proxy.inLogger.WithFields(
+				"err", err,
+				"leverEnv", leverURL.Environment,
+			).Error("Could not find an instanceID for provided servingID")
 			stream.Write(&http2stream.MsgError{Err: err})
 			return
 		}
@@ -95,9 +98,7 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 
 	streamID := leverutil.RandomID()
 	proxy.inLogger.WithFields(
-		"leverEnv", destEnv,
-		"leverService", serviceName,
-		"leverResource", resourceName,
+		"leverURL", leverURL.String(),
 		"srcEnv", srcEnv,
 		"leverInstanceID", instanceID,
 		"containerID", containerID,
@@ -108,17 +109,20 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 	).Debug("Receiving stream")
 	streamLogger := proxy.inLogger.WithFields("streamID", streamID)
 
-	if !core.IsInternalEnvironment(destEnv) {
+	if !core.IsInternalEnvironment(leverURL.Environment) {
 		err = fmt.Errorf("Environment not routable internally")
-		streamLogger.WithFields("err", err, "leverEnv", destEnv).Error("")
+		streamLogger.WithFields(
+			"err", err,
+			"leverEnv", leverURL.Environment,
+		).Error("")
 		stream.Write(&http2stream.MsgError{Err: err})
 		return
 	}
 
 	networkIP, ownIP, instanceAddr, keepAliveFun, err :=
 		proxy.manager.EnsureInfrastructureInitialized(&hostman.InstanceInfo{
-			Environment:       destEnv,
-			Service:           serviceName,
+			Environment:       leverURL.Environment,
+			Service:           leverURL.Service,
 			InstanceID:        instanceID,
 			ContainerID:       containerID,
 			ServingID:         servingID,
@@ -132,7 +136,7 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 		return
 	}
 
-	err = proxy.serveOut(destEnv, networkIP)
+	err = proxy.serveOut(leverURL.Environment, networkIP)
 	if err != nil {
 		streamLogger.WithFields("err", err).Error(
 			"Error listening on env network")
@@ -167,9 +171,6 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 	if srcEnv != "" {
 		addHeaders["x-lever-src-env"] = []string{srcEnv}
 	}
-	if resourceName != "" {
-		addHeaders["x-lever-resource"] = []string{resourceName}
-	}
 	addHeaders["x-lever-internal-rpc-gateway"] = []string{ownIP}
 
 	startTime := time.Now()
@@ -179,13 +180,13 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 		func(msg http2stream.MsgItem) []http2stream.MsgItem {
 			proxy.client.KeepAlive(instanceAddr)
 			keepAliveFun(
-				resourceName, levResResourceID, levResSessionID)
+				leverURL.Resource, levResResourceID, levResSessionID)
 			return proxy.filterTo(&firstHeaders, addHeaders, msg)
 		},
 		func(msg http2stream.MsgItem) []http2stream.MsgItem {
 			proxy.client.KeepAlive(instanceAddr)
 			keepAliveFun(
-				resourceName, levResResourceID, levResSessionID)
+				leverURL.Resource, levResResourceID, levResSessionID)
 			return noFilter(msg)
 		})
 	// Wait for RPC to finish.
@@ -198,11 +199,11 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 	//       RPC. They should be batched and sent say... every ~50ms
 	//       (well below tracker tick interval).
 	err = fleettracker.OnRPC(proxy.grpcPool, &fleettracker.RPCEvent{
-		Environment: destEnv,
-		Service:     serviceName,
+		Environment: leverURL.Environment,
+		Service:     leverURL.Service,
 		ServingID:   servingID,
 		CodeVersion: codeVersion,
-		IsAdmin:     core.IsAdmin(destEnv, serviceName),
+		IsAdmin:     core.IsAdmin(leverURL),
 		RpcNanos:    rpcNanos,
 	})
 	if err != nil {

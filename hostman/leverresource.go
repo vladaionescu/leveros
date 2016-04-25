@@ -120,10 +120,13 @@ func (resource *LeverResource) construct() error {
 			"Failed to dial in Lever instance")
 		return err
 	}
+	leverURL := &core.LeverURL{
+		Environment: resource.leverEnv,
+		Service:     resource.leverService,
+		Method:      "NewResource",
+	}
 	_, err = core.SendLeverRPC(
-		conn, context.Background(), resource.leverEnv, resource.leverService,
-		"", &core.RPC{
-			Method: "NewResource",
+		conn, context.Background(), leverURL, &core.RPC{
 			ArgsOneof: &core.RPC_Args{
 				Args: &core.JSONArray{
 					Element: []*core.JSON{{
@@ -176,10 +179,13 @@ func (resource *LeverResource) closeInternal(soft bool) {
 			go resource.onCloseFun(resource.leverResource, err)
 			return
 		}
+		leverURL := &core.LeverURL{
+			Environment: resource.leverEnv,
+			Service:     resource.leverService,
+			Method:      "CloseResource",
+		}
 		_, err = core.SendLeverRPC(
-			conn, context.Background(), resource.leverEnv,
-			resource.leverService, "", &core.RPC{
-				Method: "CloseResource",
+			conn, context.Background(), leverURL, &core.RPC{
 				ArgsOneof: &core.RPC_Args{
 					Args: &core.JSONArray{
 						Element: []*core.JSON{{

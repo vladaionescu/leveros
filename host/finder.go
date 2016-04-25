@@ -3,12 +3,10 @@ package host
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"time"
 
 	aerospike "github.com/aerospike/aerospike-client-go"
 	dockerapi "github.com/fsouza/go-dockerclient"
-	leverapi "github.com/leveros/leveros/api"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
 	"github.com/leveros/leveros/dockerutil"
@@ -59,11 +57,7 @@ type LevInstTarget struct {
 }
 
 func makeLevInstResourceID(env, service string, version int64) string {
-	peer := leverapi.LeverPeer{
-		Environment: env,
-		Service:     service + "/" + strconv.Itoa(int(version)),
-	}
-	return peer.String()
+	return fmt.Sprintf("%s/%s/%d", env, service, version)
 }
 
 // LevResTarget is the information associated that is stored with the LevRes
@@ -83,12 +77,7 @@ func makeLevResResourceID(
 	//       in two instances (old code and new code). This can have serious
 	//       implications if the customer assumes only 1 instance at a time.
 	//       A proper fix for this involves logic for an upgrade coordinator.
-	peer := leverapi.LeverPeer{
-		Environment: env,
-		Service:     service + "/" + strconv.Itoa(int(version)),
-		Resource:    resource,
-	}
-	return peer.String()
+	return fmt.Sprintf("%s/%s/%d/%s", env, service, version, resource)
 }
 
 // RegisterThisHost registers the current swarm node against the current
@@ -422,7 +411,11 @@ func (finder *Finder) newInstance(
 	//       Idea: Poll docker every ~30s for instances that we are not
 	//       handling and register those.
 	instanceID := leverutil.RandomID() // TODO: Collisions possible.
-	isAdmin := core.IsAdmin(env, service)
+	leverURL := &core.LeverURL{
+		Environment: env,
+		Service:     service,
+	}
+	isAdmin := core.IsAdmin(leverURL)
 	containerID, node, err := dockerutil.StartDockerContainer(
 		finder.docker, env, service, instanceID, version, isAdmin, leverConfig)
 	if err != nil {

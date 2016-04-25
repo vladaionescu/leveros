@@ -52,8 +52,7 @@ func NewServer() (server *Server, err error) {
 		return nil, err
 	}
 	server.grpcServer = grpc.NewServer()
-	server.grpcServer.RegisterService(
-		core.NewServiceDesc(OwnService, ""), server)
+	core.RegisterLeverRPCServer(server.grpcServer, server)
 	return server, nil
 }
 
@@ -176,17 +175,19 @@ func (server *Server) HandleRPC(
 	if err != nil {
 		return nil, err
 	}
-
+	leverURL, err := extractLeverURL(ctx)
+	if err != nil {
+		return nil, err
+	}
 	if rpc.GetArgsOneof() == nil {
 		return nil, fmt.Errorf("RPC has no args oneof")
 	}
 
-	resource := extractResource(ctx)
 	server.lock.RLock()
-	entry, handlerOK := server.handlers[rpc.Method]
+	entry, handlerOK := server.handlers[leverURL.Method]
 	resourceOK := true
-	if resource != "" {
-		_, resourceOK = server.resources[resource]
+	if leverURL.Resource != "" {
+		_, resourceOK = server.resources[leverURL.Resource]
 	}
 	server.lock.RUnlock()
 	if !handlerOK {
@@ -196,14 +197,14 @@ func (server *Server) HandleRPC(
 		return nil, fmt.Errorf("Resource not found")
 	}
 
-	if resource == "" {
-		err = server.maybeHandleResourceLifecycle(rpc)
+	if leverURL.Resource == "" {
+		err = server.maybeHandleResourceLifecycle(leverURL, rpc)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return callHandler(ctx, resource, entry, rpc, nil)
+	return callHandler(ctx, leverURL.Resource, entry, rpc, nil)
 }
 
 // HandleStreamingRPC is an internal method. Do not use!
@@ -211,6 +212,10 @@ func (server *Server) HandleStreamingRPC(
 	grpcStream core.LeverRPC_HandleStreamingRPCServer) error {
 	ctx := grpcStream.Context()
 	err := setInternalRPCGateway(ctx)
+	if err != nil {
+		return err
+	}
+	leverURL, err := extractLeverURL(ctx)
 	if err != nil {
 		return err
 	}
@@ -228,12 +233,11 @@ func (server *Server) HandleStreamingRPC(
 		return fmt.Errorf("RPC has no args oneof")
 	}
 
-	resource := extractResource(ctx)
 	server.lock.RLock()
-	entry, handlerOK := server.streamingHandlers[rpc.Method]
+	entry, handlerOK := server.streamingHandlers[leverURL.Method]
 	resourceOK := true
-	if resource != "" {
-		_, resourceOK = server.resources[resource]
+	if leverURL.Resource != "" {
+		_, resourceOK = server.resources[leverURL.Resource]
 	}
 	server.lock.RUnlock()
 	if !handlerOK {
@@ -243,7 +247,7 @@ func (server *Server) HandleStreamingRPC(
 		return fmt.Errorf("Resource not found")
 	}
 
-	_, err = callHandler(ctx, resource, entry, rpc, grpcStream)
+	_, err = callHandler(ctx, leverURL.Resource, entry, rpc, grpcStream)
 	return err
 }
 
@@ -369,8 +373,9 @@ func callHandler(
 	}, nil
 }
 
-func (server *Server) maybeHandleResourceLifecycle(rpc *core.RPC) error {
-	switch rpc.Method {
+func (server *Server) maybeHandleResourceLifecycle(
+	leverURL *core.LeverURL, rpc *core.RPC) error {
+	switch leverURL.Method {
 	case "NewResource":
 		resource, err := extractResourceFromArgs(rpc)
 		if err != nil {
@@ -385,10 +390,6 @@ func (server *Server) maybeHandleResourceLifecycle(rpc *core.RPC) error {
 		}
 
 		server.resources[resource] = struct{}{}
-		// Bind to the same instance. We will differentiate between resources
-		// at serving time by extracting the resource name from headers.
-		server.grpcServer.RegisterService(
-			core.NewServiceDesc(OwnService, resource), server)
 	case "CloseResource":
 		resource, err := extractResourceFromArgs(rpc)
 		if err != nil {
@@ -403,23 +404,21 @@ func (server *Server) maybeHandleResourceLifecycle(rpc *core.RPC) error {
 		}
 
 		delete(server.resources, resource)
-		grpcServiceName := OwnService + "/" + resource
-		server.grpcServer.DeregisterService(grpcServiceName)
 	default:
 	}
 	return nil
 }
 
-func extractResource(ctx context.Context) (resource string) {
+func extractLeverURL(ctx context.Context) (*core.LeverURL, error) {
 	md, ok := metadata.FromContext(ctx)
 	if !ok {
-		return ""
+		return nil, fmt.Errorf("Metadata not found")
 	}
-	resourceHeader, ok := md["x-lever-resource"]
-	if !ok || len(resourceHeader) == 0 {
-		return ""
+	leverURLStr, ok := md["lever-url"]
+	if !ok || len(leverURLStr) == 0 {
+		return nil, fmt.Errorf("Lever URL header not found")
 	}
-	return resourceHeader[0]
+	return core.ParseLeverURL(leverURLStr[0])
 }
 
 func extractResourceFromArgs(rpc *core.RPC) (resource string, err error) {

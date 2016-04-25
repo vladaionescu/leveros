@@ -71,52 +71,45 @@ func (proxy *LeverProxy) handleExtOutStream(
 	}
 
 	headers := stream.GetHeaders()
-	err := expectHeaders(headers, ":path", "host")
+	err := expectHeaders(headers, "lever-url")
 	if err != nil {
 		streamLogger.WithFields("err", err).Error("")
 		stream.Write(&http2stream.MsgError{Err: err})
 		return
 	}
 
-	service, resource, err := parsePath(headers[":path"][0])
+	leverURL, err := core.ParseLeverURL(headers["lever-url"][0])
 	if err != nil {
-		streamLogger.WithFields(
-			"err", err,
-			"path", headers[":path"][0],
-		).Error("Unable to parse request path")
-		stream.Write(&http2stream.MsgError{Err: err})
-		return
+		proxy.inLogger.WithFields(
+			"err", err, "leverURL", headers["lever-url"][0]).Error(
+			"Unable to parse Lever URL")
 	}
 
-	destEnv := headers["host"][0]
-	if isExtStream {
-		destEnv = core.ProcessEnvAlias(destEnv)
-	}
-	if !core.IsInternalEnvironment(destEnv) {
+	if !core.IsInternalEnvironment(leverURL.Environment) {
 		err = fmt.Errorf("Cannot route to dest env")
-		streamLogger.WithFields("err", err, "leverEnv", destEnv).Error("")
+		streamLogger.WithFields(
+			"err", err,
+			"leverEnv", leverURL.Environment,
+		).Error("")
 		stream.Write(&http2stream.MsgError{Err: err})
 		return
 	}
 
 	streamID := leverutil.RandomID()
 	streamLogger.WithFields(
-		"leverEnv", destEnv,
-		"leverService", service,
-		"leverResource", resource,
+		"leverURL", leverURL.String(),
 		"srcEnv", srcEnv,
 		"streamID", streamID,
 	).Debug("Receiving stream")
 	streamLogger = streamLogger.WithFields("streamID", streamID)
 
 	isFromExt := core.IsInternalEnvironment(srcEnv)
-	hostInfo, err := proxy.finder.GetHost(destEnv, service, resource, isFromExt)
+	hostInfo, err := proxy.finder.GetHost(
+		leverURL.Environment, leverURL.Service, leverURL.Resource, isFromExt)
 	if err != nil {
 		streamLogger.WithFields(
 			"err", err,
-			"leverEnv", destEnv,
-			"leverService", service,
-			"leverResource", resource,
+			"leverURL", leverURL.String(),
 		).Error("Error trying to find / allocate host for request")
 		stream.Write(&http2stream.MsgError{Err: err})
 		return

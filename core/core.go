@@ -4,7 +4,6 @@ import (
 	"os"
 	"strings"
 
-	grpc "github.com/leveros/grpc-go"
 	"github.com/leveros/leveros/config"
 )
 
@@ -28,11 +27,6 @@ var (
 	// host name to which RPCs can be routed to directly (via internal proxies).
 	InternalEnvironmentSuffixFlag = config.DeclareString(
 		PackageName, "internalEnvSufix", ".lever")
-	// EnvAliasMapFlag is a comma-separated mapping of incoming envs to
-	// translated env names that will be used internally for routing. Useful
-	// in development, when we want to test against a localhost server.
-	EnvAliasMapFlag = config.DeclareString(
-		PackageName, "envAliasMap", getDefaultLeverOSIPPort()+",dev.lever")
 
 	// DefaultDevAliasFlag is the actual address of the default Lever
 	// environment used for local development.
@@ -66,54 +60,7 @@ func IsInternalEnvironment(environment string) bool {
 }
 
 // IsAdmin returns true iff the env + service represent the admin service.
-func IsAdmin(environment string, service string) bool {
-	return environment == AdminEnvFlag.Get() && service == "admin"
-}
-
-// ProcessEnvAlias returns the environment name after looking through the env
-// alias map.
-func ProcessEnvAlias(env string) (translatedEnv string) {
-	// Parse map.
-	// TODO: Cache this for faster execution.
-	envMapSlice := strings.Split(EnvAliasMapFlag.Get(), ",")
-	envMap := make(map[string]string)
-	var key string
-	expectKey := true
-	for _, part := range envMapSlice {
-		if expectKey {
-			key = part
-		} else {
-			envMap[key] = part
-		}
-		expectKey = !expectKey
-	}
-
-	translatedEnv, ok := envMap[env]
-	if ok {
-		return translatedEnv
-	}
-	return env
-}
-
-// NewServiceDesc creates a GRPC service desc with custom ServiceName set as
-// Lever <service>/<resource> format.
-func NewServiceDesc(service string, resource string) *grpc.ServiceDesc {
-	return &grpc.ServiceDesc{
-		ServiceName: service + "/" + resource,
-		HandlerType: (*LeverRPCServer)(nil),
-		Methods: []grpc.MethodDesc{
-			{
-				MethodName: "HandleRPC",
-				Handler:    _LeverRPC_HandleRPC_Handler,
-			},
-		},
-		Streams: []grpc.StreamDesc{
-			{
-				StreamName:    "HandleStreamingRPC",
-				Handler:       _LeverRPC_HandleStreamingRPC_Handler,
-				ServerStreams: true,
-				ClientStreams: true,
-			},
-		},
-	}
+func IsAdmin(leverURL *LeverURL) bool {
+	return leverURL.Environment == AdminEnvFlag.Get() &&
+		leverURL.Service == "admin"
 }

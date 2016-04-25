@@ -211,7 +211,11 @@ func (manager *Manager) EnsureInfrastructureInitialized(
 	}
 	instanceAddr = instanceIPv4 + ":" + core.InstanceListenPortFlag.Get()
 
-	if core.IsAdmin(info.Environment, info.Service) {
+	leverURL := &core.LeverURL{
+		Environment: info.Environment,
+		Service:     info.Service,
+	}
+	if core.IsAdmin(leverURL) {
 		// Admin environment. Also connect it to the regional network.
 		_, err := dockerutil.ConnectToDockerEnvNetwork(
 			manager.docker, info.ContainerID, RegionalNetworkFlag.Get())
