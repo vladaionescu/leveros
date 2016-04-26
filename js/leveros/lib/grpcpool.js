@@ -1,5 +1,5 @@
 
-import common from 'leveros-common';
+import * as common from 'leveros-common';
 import grpc from 'grpc';
 import lodash from 'lodash';
 import SortedMap from 'collections/sorted-map';
@@ -53,7 +53,7 @@ class Cache {
         this._lastUsedMap = new SortedMap();  // lastUsed (ms) -> array of keys
     }
 
-    function get(key, callback) {
+    get(key, callback) {
         if (this._data.hasOwnProperty(key)) {
             this.keepAlive(key);
             setImmediate(callback.bind(null, null, this._data[key].element));
@@ -79,10 +79,10 @@ class Cache {
         });
     }
 
-    function _destroyEntry(entry) {
+    _destroyEntry(entry) {
         if (entry.element !== null) {
             try {
-                this._destr(element);
+                this._destr(entry.element);
             } catch (ex) {
                 // Do nothing.
             }
@@ -91,7 +91,7 @@ class Cache {
         }
     }
 
-    function keepAlive(key) {
+    keepAlive(key) {
         if (!this._data.hasOwnProperty(key)) {
             return false;
         }
@@ -103,8 +103,8 @@ class Cache {
         return true;
     }
 
-    function _maybeScheduleExpire(lastUsed) {
-        if (this._lastUsedMap.store.min()[0] != lastUsed) {
+    _maybeScheduleExpire(lastUsed) {
+        if (this._lastUsedMap.store.min()[0] !== lastUsed) {
             // Already scheduled.
             return;
         }
@@ -116,7 +116,7 @@ class Cache {
         this._doExpire();
     }
 
-    function _doExpire() {
+    _doExpire() {
         while (this._lastUsedMap.length !== 0) {
             const lastUsed = this._lastUsedMap.store.min()[0];
             const expiryTime = lastUsed + this._expiryMs;

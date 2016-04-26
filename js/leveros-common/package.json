@@ -15,7 +15,7 @@
     "lib": "compiled/lib"
   },
   "dependencies": {
-    "collections": "^3.0.0",
+    "grpc": "^0.13.2-pre1",
     "lodash": "^4.11.1"
   },
   "devDependencies": {

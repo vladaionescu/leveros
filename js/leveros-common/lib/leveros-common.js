@@ -1,15 +1,20 @@
 
+import grpc from 'grpc';
 import lodash from 'lodash';
 import path from 'path';
+
+export * from './leverurl';
+export * from './stream';
 
 export const ownEnvironment = process.env.LEVEROS_ENVIRONMENT;
 export const ownService = process.env.LEVEROS_SERVICE;
 export const ownInstanceID = process.env.LEVEROS_INSTANCE_ID;
+export const internalEnvSuffix = process.env.LEVEROS_INTERNAL_ENV_SUFFIX;
 
 export const leverRPCProto = grpc.load(
     path.join(__dirname, '..', '..', 'leverrpc.proto'));
 
-export function argsToJs(rpc) {
+export function rpcToJs(rpc) {
     if (rpc.args_oneof === 'args') {
         const ret = [];
         lodash.forEach(rpc.args.element, (arg) => {
@@ -105,17 +110,15 @@ export function jsToArg(value) {
     return arg;
 }
 
-export function jsToRpc(method, args) {
-    const rpc = {
-        method,
-    };
+export function jsToRpc(args) {
+    const rpc = {};
     if (args.length === 1 && lodash.isBuffer(args[0])) {
         rpc.byte_args = args[0];
     } else {
         rpc.args = {element: []};
         lodash.forEach(args, (arg) => {
             rpc.args.element.push(jsToArg(arg));
-        })
+        });
     }
     return rpc;
 }

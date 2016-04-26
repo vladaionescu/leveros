@@ -197,11 +197,9 @@ func (server *Server) HandleRPC(
 		return nil, fmt.Errorf("Resource not found")
 	}
 
-	if leverURL.Resource == "" {
-		err = server.maybeHandleResourceLifecycle(leverURL, rpc)
-		if err != nil {
-			return nil, err
-		}
+	err = server.maybeHandleResourceLifecycle(leverURL, rpc)
+	if err != nil {
+		return nil, err
 	}
 
 	return callHandler(ctx, leverURL.Resource, entry, rpc, nil)
@@ -375,6 +373,9 @@ func callHandler(
 
 func (server *Server) maybeHandleResourceLifecycle(
 	leverURL *core.LeverURL, rpc *core.RPC) error {
+	if leverURL.Resource != "" {
+		return nil
+	}
 	switch leverURL.Method {
 	case "NewResource":
 		resource, err := extractResourceFromArgs(rpc)

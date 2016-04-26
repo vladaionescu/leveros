@@ -173,7 +173,7 @@ func actionInvoke(ctx *cli.Context) {
 
 	// JSON args case.
 	var args []interface{}
-	for index := 2; index < ctx.NArg(); index++ {
+	for index := 1; index < ctx.NArg(); index++ {
 		rawArg := ctx.Args().Get(index)
 		var arg interface{}
 		err = json.Unmarshal([]byte(rawArg), &arg)
@@ -353,8 +353,6 @@ func detectLeverOSIPPort() (ipPort string) {
 		return ipPort
 	}
 	ipPort = "127.0.0.1:8080"
-	logger.WithFields("ipPort", ipPort).Warning(
-		"Could not detect Lever OS ip+port. Using a hardcoded value.")
 	return ipPort
 }
 
@@ -373,8 +371,5 @@ func detectLeverOSIPPortOnDockerMachine() (ipPort string) {
 	if ipStr == "" {
 		return ""
 	}
-	ipPort = ipStr + ":8080"
-	logger.WithFields("ipPort", ipPort).Info(
-		"Using Lever OS IP+port inferred from docker-machine IP")
-	return ipPort
+	return ipStr + ":8080"
 }

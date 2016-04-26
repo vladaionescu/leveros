@@ -255,8 +255,8 @@ jsprep-leveros: $(JS_DIR)/leveros/LICENSE.md
 # Docker images targets.
 
 RSYNC_JS = rsync -a --delete \
-	--exclude /node_modules/ \
-	--exclude /compiled/ \
+	--exclude node_modules/ \
+	--exclude compiled/ \
 	--exclude npm-debug.log
 
 .PHONY: docker-images

@@ -86,7 +86,7 @@ $ lever deploy dev.lever
 ###### Invoke via CLI
 
 ```bash
-$ lever invoke https://dev.lever/helloService SayHello '"world"'
+$ lever invoke lever://dev.lever/helloService/SayHello '"world"'
 "Hello, world!"
 ```
 
