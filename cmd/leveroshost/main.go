@@ -3,7 +3,7 @@ package main
 import (
 	"net"
 
-	grpc "github.com/leveros/grpc-go"
+	"google.golang.org/grpc"
 	"github.com/leveros/leveros/cmd"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/devlogger"

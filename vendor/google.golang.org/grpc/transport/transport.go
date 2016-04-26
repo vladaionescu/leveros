@@ -48,9 +48,9 @@ import (
 
 	"golang.org/x/net/context"
 	"golang.org/x/net/trace"
-	"github.com/leveros/grpc-go/codes"
-	"github.com/leveros/grpc-go/credentials"
-	"github.com/leveros/grpc-go/metadata"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/metadata"
 )
 
 // recvMsg represents the received msg from the transport. All transport

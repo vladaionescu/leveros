@@ -40,8 +40,8 @@ import (
 
 	"golang.org/x/net/context"
 	"golang.org/x/net/trace"
-	"github.com/leveros/grpc-go/codes"
-	"github.com/leveros/grpc-go/transport"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/transport"
 )
 
 // recvResponse receives and parses an RPC response.

@@ -20,7 +20,7 @@ import math "math"
 
 import (
 	context "golang.org/x/net/context"
-	grpc "github.com/leveros/grpc-go"
+	"google.golang.org/grpc"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.

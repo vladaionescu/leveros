@@ -39,7 +39,7 @@ import (
 	"net"
 
 	"golang.org/x/net/context"
-	"github.com/leveros/grpc-go/credentials"
+	"google.golang.org/grpc/credentials"
 )
 
 // Peer contains the information of the peer for an RPC.

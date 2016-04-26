@@ -45,9 +45,9 @@ import (
 
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/hpack"
-	"github.com/leveros/grpc-go/codes"
-	"github.com/leveros/grpc-go/grpclog"
-	"github.com/leveros/grpc-go/metadata"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/grpclog"
+	"google.golang.org/grpc/metadata"
 )
 
 const (

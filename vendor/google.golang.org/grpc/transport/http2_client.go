@@ -46,11 +46,11 @@ import (
 	"golang.org/x/net/context"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/hpack"
-	"github.com/leveros/grpc-go/codes"
-	"github.com/leveros/grpc-go/credentials"
-	"github.com/leveros/grpc-go/grpclog"
-	"github.com/leveros/grpc-go/metadata"
-	"github.com/leveros/grpc-go/peer"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/grpclog"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/peer"
 )
 
 // http2Client implements the ClientTransport interface with HTTP2.
@@ -140,29 +140,6 @@ func newHTTP2Client(addr string, opts *ConnectOptions) (_ ClientTransport, err e
 			conn.Close()
 		}
 	}()
-	// Send connection preface to server.
-	n, err := conn.Write(clientPreface)
-	if err != nil {
-		return nil, ConnectionErrorf("transport: %v", err)
-	}
-	if n != len(clientPreface) {
-		return nil, ConnectionErrorf("transport: preface mismatch, wrote %d bytes; want %d", n, len(clientPreface))
-	}
-	framer := newFramer(conn)
-	if initialWindowSize != defaultWindowSize {
-		err = framer.writeSettings(true, http2.Setting{http2.SettingInitialWindowSize, uint32(initialWindowSize)})
-	} else {
-		err = framer.writeSettings(true)
-	}
-	if err != nil {
-		return nil, ConnectionErrorf("transport: %v", err)
-	}
-	// Adjust the connection flow control window if needed.
-	if delta := uint32(initialConnWindowSize - defaultWindowSize); delta > 0 {
-		if err := framer.writeWindowUpdate(true, 0, delta); err != nil {
-			return nil, ConnectionErrorf("transport: %v", err)
-		}
-	}
 	ua := primaryUA
 	if opts.UserAgent != "" {
 		ua = opts.UserAgent + " " + ua
@@ -178,7 +155,7 @@ func newHTTP2Client(addr string, opts *ConnectOptions) (_ ClientTransport, err e
 		writableChan:    make(chan int, 1),
 		shutdownChan:    make(chan struct{}),
 		errorChan:       make(chan struct{}),
-		framer:          framer,
+		framer:          newFramer(conn),
 		hBuf:            &buf,
 		hEnc:            hpack.NewEncoder(&buf),
 		controlBuf:      newRecvBuffer(),
@@ -191,13 +168,38 @@ func newHTTP2Client(addr string, opts *ConnectOptions) (_ ClientTransport, err e
 		maxStreams:      math.MaxInt32,
 		streamSendQuota: defaultWindowSize,
 	}
+	// Start the reader goroutine for incoming message. Each transport has
+	// a dedicated goroutine which reads HTTP2 frame from network. Then it
+	// dispatches the frame to the corresponding stream entity.
+	go t.reader()
+	// Send connection preface to server.
+	n, err := t.conn.Write(clientPreface)
+	if err != nil {
+		t.Close()
+		return nil, ConnectionErrorf("transport: %v", err)
+	}
+	if n != len(clientPreface) {
+		t.Close()
+		return nil, ConnectionErrorf("transport: preface mismatch, wrote %d bytes; want %d", n, len(clientPreface))
+	}
+	if initialWindowSize != defaultWindowSize {
+		err = t.framer.writeSettings(true, http2.Setting{http2.SettingInitialWindowSize, uint32(initialWindowSize)})
+	} else {
+		err = t.framer.writeSettings(true)
+	}
+	if err != nil {
+		t.Close()
+		return nil, ConnectionErrorf("transport: %v", err)
+	}
+	// Adjust the connection flow control window if needed.
+	if delta := uint32(initialConnWindowSize - defaultWindowSize); delta > 0 {
+		if err := t.framer.writeWindowUpdate(true, 0, delta); err != nil {
+			t.Close()
+			return nil, ConnectionErrorf("transport: %v", err)
+		}
+	}
 	go t.controller()
 	t.writableChan <- 0
-	// Start the reader goroutine for incoming message. The threading model
-	// on receiving is that each transport has a dedicated goroutine which
-	// reads HTTP2 frame from network. Then it dispatches the frame to the
-	// corresponding stream entity.
-	go t.reader()
 	return t, nil
 }
 
@@ -427,6 +429,9 @@ func (t *http2Client) CloseStream(s *Stream, err error) {
 // accessed any more.
 func (t *http2Client) Close() (err error) {
 	t.mu.Lock()
+	if t.state == reachable {
+		close(t.errorChan)
+	}
 	if t.state == closing {
 		t.mu.Unlock()
 		return errors.New("transport: Close() was already called")

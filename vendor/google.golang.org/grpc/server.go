@@ -46,15 +46,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/leveros/grpc-go/codes"
-	"github.com/leveros/grpc-go/credentials"
-	"github.com/leveros/grpc-go/grpclog"
-	"github.com/leveros/grpc-go/internal"
-	"github.com/leveros/grpc-go/metadata"
-	"github.com/leveros/grpc-go/transport"
 	"golang.org/x/net/context"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/trace"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/grpclog"
+	"google.golang.org/grpc/internal"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/transport"
 )
 
 type methodHandler func(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor UnaryServerInterceptor) (interface{}, error)
@@ -90,10 +90,8 @@ type Server struct {
 	mu     sync.Mutex // guards following
 	lis    map[net.Listener]bool
 	conns  map[io.Closer]bool
+	m      map[string]*service // service name -> service info
 	events trace.EventLog
-
-	smu sync.RWMutex        // guards following
-	m   map[string]*service // service name -> service info
 }
 
 type options struct {
@@ -101,6 +99,8 @@ type options struct {
 	codec                Codec
 	cp                   Compressor
 	dc                   Decompressor
+	unaryInt             UnaryServerInterceptor
+	streamInt            StreamServerInterceptor
 	maxConcurrentStreams uint32
 	useHandlerImpl       bool // use http.Handler-based server
 }
@@ -139,6 +139,29 @@ func MaxConcurrentStreams(n uint32) ServerOption {
 func Creds(c credentials.Credentials) ServerOption {
 	return func(o *options) {
 		o.creds = c
+	}
+}
+
+// UnaryInterceptor returns a ServerOption that sets the UnaryServerInterceptor for the
+// server. Only one unary interceptor can be installed. The construction of multiple
+// interceptors (e.g., chaining) can be implemented at the caller.
+func UnaryInterceptor(i UnaryServerInterceptor) ServerOption {
+	return func(o *options) {
+		if o.unaryInt != nil {
+			panic("The unary server interceptor has been set.")
+		}
+		o.unaryInt = i
+	}
+}
+
+// StreamInterceptor returns a ServerOption that sets the StreamServerInterceptor for the
+// server. Only one stream interceptor can be installed.
+func StreamInterceptor(i StreamServerInterceptor) ServerOption {
+	return func(o *options) {
+		if o.streamInt != nil {
+			panic("The stream server interceptor has been set.")
+		}
+		o.streamInt = i
 	}
 }
 
@@ -183,7 +206,8 @@ func (s *Server) errorf(format string, a ...interface{}) {
 }
 
 // RegisterService register a service and its implementation to the gRPC
-// server. Called from the IDL generated code.
+// server. Called from the IDL generated code. This must be called before
+// invoking Serve.
 func (s *Server) RegisterService(sd *ServiceDesc, ss interface{}) {
 	ht := reflect.TypeOf(sd.HandlerType).Elem()
 	st := reflect.TypeOf(ss)
@@ -194,8 +218,8 @@ func (s *Server) RegisterService(sd *ServiceDesc, ss interface{}) {
 }
 
 func (s *Server) register(sd *ServiceDesc, ss interface{}) {
-	s.smu.Lock()
-	defer s.smu.Unlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	s.printf("RegisterService(%q)", sd.ServiceName)
 	if _, ok := s.m[sd.ServiceName]; ok {
 		grpclog.Fatalf("grpc: Server.RegisterService found duplicate service registration for %q", sd.ServiceName)
@@ -214,16 +238,6 @@ func (s *Server) register(sd *ServiceDesc, ss interface{}) {
 		srv.sd[d.StreamName] = d
 	}
 	s.m[sd.ServiceName] = srv
-}
-
-// DeregisterService deregisters a service so that it is no longer served.
-func (s *Server) DeregisterService(serviceName string) {
-	s.smu.Lock()
-	defer s.smu.Unlock()
-	if _, ok := s.m[serviceName]; !ok {
-		grpclog.Fatalf("grpc: Server.DeregisterService service %q not found", serviceName)
-	}
-	delete(s.m, serviceName)
 }
 
 var (
@@ -505,7 +519,7 @@ func (s *Server) processUnaryRPC(t transport.ServerTransport, stream *transport.
 			}
 			return nil
 		}
-		reply, appErr := md.Handler(srv.server, stream.Context(), df, nil)
+		reply, appErr := md.Handler(srv.server, stream.Context(), df, s.opts.unaryInt)
 		if appErr != nil {
 			if err, ok := appErr.(rpcError); ok {
 				statusCode = err.code
@@ -583,7 +597,18 @@ func (s *Server) processStreamingRPC(t transport.ServerTransport, stream *transp
 			ss.mu.Unlock()
 		}()
 	}
-	if appErr := sd.Handler(srv.server, ss); appErr != nil {
+	var appErr error
+	if s.opts.streamInt == nil {
+		appErr = sd.Handler(srv.server, ss)
+	} else {
+		info := &StreamServerInfo{
+			FullMethod:     stream.Method(),
+			IsClientStream: sd.ClientStreams,
+			IsServerStream: sd.ServerStreams,
+		}
+		appErr = s.opts.streamInt(srv.server, ss, info, sd.Handler)
+	}
+	if appErr != nil {
 		if err, ok := appErr.(rpcError); ok {
 			ss.statusCode = err.code
 			ss.statusDesc = err.desc
@@ -634,9 +659,7 @@ func (s *Server) handleStream(t transport.ServerTransport, stream *transport.Str
 	}
 	service := sm[:pos]
 	method := sm[pos+1:]
-	s.smu.RLock()
 	srv, ok := s.m[service]
-	s.smu.RUnlock()
 	if !ok {
 		if trInfo != nil {
 			trInfo.tr.LazyLog(&fmtStringer{"Unknown service %v", []interface{}{service}}, true)

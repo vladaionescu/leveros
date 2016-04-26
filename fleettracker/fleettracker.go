@@ -7,7 +7,7 @@ import (
 
 	dockerapi "github.com/fsouza/go-dockerclient"
 	consulapi "github.com/hashicorp/consul/api"
-	grpc "github.com/leveros/grpc-go"
+	"google.golang.org/grpc"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
 	"github.com/leveros/leveros/dockerutil"

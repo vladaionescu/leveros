@@ -3,7 +3,7 @@ package scale
 import (
 	"time"
 
-	grpc "github.com/leveros/grpc-go"
+	"google.golang.org/grpc"
 )
 
 // InternalRPCConn creates a GRPC connection to an internal service.

@@ -39,9 +39,9 @@ import (
 	"sync"
 
 	"golang.org/x/net/context"
-	"github.com/leveros/grpc-go/grpclog"
-	"github.com/leveros/grpc-go/naming"
-	"github.com/leveros/grpc-go/transport"
+	"google.golang.org/grpc/grpclog"
+	"google.golang.org/grpc/naming"
+	"google.golang.org/grpc/transport"
 )
 
 // Picker picks a Conn for RPC requests.

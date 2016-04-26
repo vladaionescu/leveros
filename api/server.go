@@ -8,10 +8,10 @@ import (
 	"strings"
 	"sync"
 
-	grpc "github.com/leveros/grpc-go"
-	"github.com/leveros/grpc-go/metadata"
 	"github.com/leveros/leveros/core"
 	"golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 type handlerEntry struct {

@@ -217,21 +217,17 @@ fmtcheck:
 # Source generation targets.
 
 PROTOC_CMD = $(PROTOC) -I $(dir $<) --go_out=plugins=grpc:$(dir $@) $<
-GRPC_IMPORT_REPLACE_CMD = sed -i 's|grpc "google.golang.org/grpc"|grpc "github.com/leveros/grpc-go"|g' $@
 
 .SECONDARY: $(PROTO_TARGETS)
 
 core/%.pb.go: $(PROTOS_DIR)/core/%.proto
 	$(PROTOC_CMD)
-	$(GRPC_IMPORT_REPLACE_CMD)
 
 fleettracker/%.pb.go: $(PROTOS_DIR)/fleettracker/%.proto
 	$(PROTOC_CMD)
-	$(GRPC_IMPORT_REPLACE_CMD)
 
 hostman/%.pb.go: $(PROTOS_DIR)/hostman/%.proto
 	$(PROTOC_CMD)
-	$(GRPC_IMPORT_REPLACE_CMD)
 
 #
 # JS targets.

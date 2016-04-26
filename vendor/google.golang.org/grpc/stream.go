@@ -42,9 +42,9 @@ import (
 
 	"golang.org/x/net/context"
 	"golang.org/x/net/trace"
-	"github.com/leveros/grpc-go/codes"
-	"github.com/leveros/grpc-go/metadata"
-	"github.com/leveros/grpc-go/transport"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/transport"
 )
 
 // StreamHandler defines the handler called by gRPC server to complete the
