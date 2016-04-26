@@ -44,12 +44,11 @@ func ParseLeverURL(urlStr string) (*LeverURL, error) {
 	if firstSep == -1 {
 		return nil, fmt.Errorf("Invalid Lever URL")
 	}
+	leverURL.Service = path[:firstSep]
 	if firstSep == lastSep {
 		// Resource not mentioned.
-		leverURL.Service = path[:firstSep]
 		leverURL.Resource = ""
 	} else {
-		leverURL.Service = path[:firstSep]
 		leverURL.Resource = path[firstSep+1 : lastSep]
 	}
 	leverURL.Method = path[lastSep+1:]
