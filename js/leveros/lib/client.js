@@ -149,8 +149,8 @@ class Client {
 
             const call = sendStreamingLeverRPC(connection, leverURL);
             call.write({rpc: common.jsToRpc(args)});
-            const onError = (error) => {
-                callback(error);
+            const onError = (err) => {
+                callback(err);
             };
             call.on('error', onError);
             call.once('data', (streamMsg) => {

@@ -113,9 +113,9 @@ $ npm install leveros
 ```
 
 ```javascript
-var leveros = require("leveros");
-var service = leveros.service("dev.lever", "helloService");
-service.invoke("SayHello", "world", function (error, reply) {
+var leveros = require('leveros');
+var service = leveros.service('dev.lever', 'helloService');
+service.invoke('SayHello', "world", function (error, reply) {
     console.log(reply);  // Hello, world!
 });
 ```
