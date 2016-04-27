@@ -1,5 +1,9 @@
 
 import 'source-map-support/register';
 
-export * from './client';
-export * from 'leveros-common';
+import * as client from './client';
+import * as common from 'leveros-common';
+import lodash from 'lodash';
+
+const exported = lodash.extend({}, common, client);
+module.exports = exported;
