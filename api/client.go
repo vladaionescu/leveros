@@ -328,5 +328,13 @@ func (client *Client) invokeChanInternal(
 		grpcStream.CloseSend()
 		return nil, err
 	}
+	// First message received must be empty.
+	fstMsg, err := grpcStream.Recv()
+	if err != nil {
+		return nil, err
+	}
+	if fstMsg.GetMessageOneof() != nil {
+		return nil, fmt.Errorf("First server message needs to be empty")
+	}
 	return newClientStream(grpcStream), nil
 }

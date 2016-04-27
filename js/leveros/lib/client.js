@@ -149,7 +149,22 @@ class Client {
 
             const call = sendStreamingLeverRPC(connection, leverURL);
             call.write({rpc: common.jsToRpc(args)});
-            callback(null, new common.Stream(call));
+            const onError = (error) => {
+                callback(error);
+            };
+            call.on('error', onError);
+            call.once('data', (streamMsg) => {
+                call.removeListener('error', onError);
+                if (streamMsg.message_oneof !== null) {
+                    const errorStr = "First message must be empty";
+                    call.write({error: errorStr});
+                    call.end();
+                    callback(new Error(errorStr));
+                    return;
+                }
+
+                callback(null, new common.Stream(call));
+            });
         });
     }
 }

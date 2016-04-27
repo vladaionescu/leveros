@@ -14,8 +14,6 @@ class Handler {
     }
 
     handleRpc(call, callback) {
-        // TODO RPC gateway
-        //call.metadata.get('x-lever-internal-rpc-gateway')[0];
         setInternalRPCGateway(call.metadata);
         let leverURL;
         try {
@@ -50,8 +48,6 @@ class Handler {
     }
 
     handleStreamingRpc(call) {
-        // TODO RPC gateway
-        //call.metadata.get('x-lever-internal-rpc-gateway')[0];
         setInternalRPCGateway(call.metadata);
         let leverURL;
         try {
@@ -66,7 +62,7 @@ class Handler {
         };
         call.on('error', onError);
         call.once('data', (streamMsg) => {
-            call.removeListener(onError);
+            call.removeListener('error', onError);
             if (streamMsg.message_oneof !== 'rpc') {
                 call.write({error: "First message was not rpc"});
                 call.end();
@@ -80,6 +76,10 @@ class Handler {
                 return;
             }
             const method = this._custHandler[leverURL.method];
+
+            // First message sent back must be empty.
+            call.write({});
+
             const args = [new common.Stream(call)];
             if (leverURL.resource !== "") {
                 args.push(leverURL.resource);

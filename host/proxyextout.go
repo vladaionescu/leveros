@@ -10,7 +10,6 @@ import (
 )
 
 func (proxy *LeverProxy) serveExt() (err error) {
-	// TODO: Restrict to external network.
 	listenAddr := ":" + EnvExtListenPortFlag.Get()
 	proxy.extLogger.WithFields("listenAddr", listenAddr).Info("Listening")
 	proxy.extListener, _, err = proxy.inServer.Serve(

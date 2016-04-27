@@ -30,10 +30,13 @@ message StreamMessage {
     // Note that the invokation details (rpc field) are part of the very first
     // message sent by the client. It is an error for any other message to have
     // that field set.
+    // Also, the very first message sent by the server must be an empty
+    // message. This is a workaround for some reverse-proxies which do funny
+    // things if there's no data frame.
     oneof message_oneof {
         // First message, client-to-server only.
         RPC rpc = 1;
-        // Other messages (all server-to-client and non-first client-to-server).
+        // Non-first messages.
         // These are passed to the Lever application's handlers.
         JSON message = 2;
         bytes byte_message = 3;

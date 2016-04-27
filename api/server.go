@@ -226,10 +226,11 @@ func (server *Server) HandleStreamingRPC(
 	if rpc == nil {
 		return fmt.Errorf("First message needs to have RPC field set")
 	}
-
 	if rpc.GetArgsOneof() == nil {
 		return fmt.Errorf("RPC has no args oneof")
 	}
+	// Reply with an empty msg (first response message must be empty).
+	grpcStream.Send(&core.StreamMessage{})
 
 	server.lock.RLock()
 	entry, handlerOK := server.streamingHandlers[leverURL.Method]

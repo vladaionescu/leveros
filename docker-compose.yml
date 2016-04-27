@@ -12,7 +12,6 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:z
             - ${LEVEROS_REPO_DIR}:/leveros/custcodetree:Z
         ports:
-            - ${LEVEROS_IP_PORT}:8080
             - 127.0.0.1:6514:6514  # Dev logger.
         command: >-
             --config leveroshost
@@ -22,6 +21,22 @@ services:
             --dockerutil.disableRemoveContainer ${LEVEROS_DEBUG}
         environment:
             LEVEROS_IP_PORT: ${LEVEROS_IP_PORT}
+
+    nghttpxext:
+        image: leveros/nghttpx:latest
+        container_name: leverosnghttpxext
+        ports:
+            - ${LEVEROS_IP_PORT}:8080
+        command: >-
+            --frontend=*,8080;no-tls
+            --backend=leveroshost,3502;/core.LeverRPC/;proto=h2
+            --backend=leveroshost,3503
+            --backend-address-family=IPv4
+            --backend-keep-alive-timeout=30s
+            --strip-incoming-x-forwarded-for
+            --add-x-forwarded-for
+            --backend-http2-max-concurrent-streams=10000
+            --workers=4
 
     consul:
         image: leveros/consul:latest

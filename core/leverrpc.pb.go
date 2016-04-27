@@ -25,7 +25,7 @@ import math "math"
 
 import (
 	context "golang.org/x/net/context"
-	"google.golang.org/grpc"
+	grpc "google.golang.org/grpc"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -161,6 +161,9 @@ type StreamMessage struct {
 	// Note that the invokation details (rpc field) are part of the very first
 	// message sent by the client. It is an error for any other message to have
 	// that field set.
+	// Also, the very first message sent by the server must be an empty
+	// message. This is a workaround for some reverse-proxies which do funny
+	// things if there's no data frame.
 	//
 	// Types that are valid to be assigned to MessageOneof:
 	//	*StreamMessage_Rpc

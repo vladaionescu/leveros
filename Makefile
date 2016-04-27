@@ -128,7 +128,7 @@ runcommon:
 	$(MAKE) \
 		upload-config \
 		init-db-tables
-	$(DOCKER_COMPOSE) up --force-recreate leveroshost
+	$(DOCKER_COMPOSE) up --force-recreate leveroshost nghttpxext
 
 .PHONY: install-cli
 install-cli: $(BIN_DIR)/lever
@@ -266,6 +266,7 @@ docker-%: $(SERVICES_DIR)/%/Dockerfile FORCE
 	$(DOCKER) build -t leveros/$(@:docker-%=%) $(dir $<)
 
 docker-consul: | docker-base
+docker-nghttpx: | docker-base
 docker-levercontainer: | docker-base
 docker-levercontainer: $(SERVICES_DIR)/levercontainer/js/leveros-server
 docker-levercontainer: $(SERVICES_DIR)/levercontainer/js/leveros-common
