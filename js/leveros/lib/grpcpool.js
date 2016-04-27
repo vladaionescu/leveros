@@ -22,8 +22,8 @@ export class GRPCPool {
     _newConn(target, callback) {
         callback(
             null,
-            new common.leverRPCProto.LeverRPC(
-                target, grpc.Credentials.createInsecure()));
+            new common.leverRPCProto.core.LeverRPC(
+                target, grpc.credentials.createInsecure()));
     }
 
     _destroyConn(conn) {

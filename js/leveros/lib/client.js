@@ -1,7 +1,7 @@
 
 import * as common from 'leveros-common';
 import grpc from 'grpc';
-import grpcpool from './grpcpool';
+import { GRPCPool } from './grpcpool';
 import lodash from 'lodash';
 
 class Endpoint {
@@ -31,9 +31,9 @@ class Endpoint {
     }
 }
 
-class Client {
+export class Client {
     constructor() {
-        this._connections = new grpcpool.GRPCPool();
+        this._connections = new GRPCPool();
         this.forceHost = "";
     }
 
@@ -149,8 +149,8 @@ class Client {
 
             const call = sendStreamingLeverRPC(connection, leverURL);
             call.write({rpc: common.jsToRpc(args)});
-            const onError = (error) => {
-                callback(error);
+            const onError = (err) => {
+                callback(err);
             };
             call.on('error', onError);
             call.once('data', (streamMsg) => {
@@ -186,15 +186,11 @@ function isInternalEnvironment(env) {
 function sendLeverRPC(connection, leverURL, rpc, callback) {
     const metadata = new grpc.Metadata();
     metadata.set('lever-url', leverURL.toString());
-    /* eslint new-cap: "off" */
-    connection.HandleRPC(rpc, callback, metadata);
+    connection.handleRpc(rpc, callback, metadata);
 }
 
 function sendStreamingLeverRPC(connection, leverURL) {
     const metadata = new grpc.Metadata();
     metadata.set('lever-url', leverURL.toString());
-    /* eslint new-cap: "off" */
-    return connection.HandleStreamingRPC(metadata);
+    return connection.handleStreamingRpc(metadata);
 }
-
-export default new Client();
