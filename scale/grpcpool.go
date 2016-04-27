@@ -3,9 +3,9 @@ package scale
 import (
 	"time"
 
-	"google.golang.org/grpc"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/leverutil"
+	"google.golang.org/grpc"
 )
 
 var (

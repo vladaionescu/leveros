@@ -3,7 +3,7 @@ package main
 import (
 	"net"
 
-	"google.golang.org/grpc"
+	"github.com/leveros/leveros/apiserver"
 	"github.com/leveros/leveros/cmd"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/devlogger"
@@ -14,6 +14,7 @@ import (
 	"github.com/leveros/leveros/leverutil"
 	"github.com/leveros/leveros/scale"
 	"github.com/leveros/leveros/store"
+	"google.golang.org/grpc"
 )
 
 // PackageName is the name of this package.
@@ -107,6 +108,12 @@ func main() {
 		grpcServer, grpcPool, dockerSwarm, grpcAddr)
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error starting fleettracker")
+	}
+
+	// Start API server.
+	_, err = apiserver.NewServer()
+	if err != nil {
+		logger.WithFields("err", err).Fatal("Error starting API server")
 	}
 
 	logger.Info("\n" +

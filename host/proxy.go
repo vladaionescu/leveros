@@ -36,13 +36,13 @@ var (
 	// EnvOutListenPortFlag is the environment listen port for outward
 	// connections. This port is accessible only from within the env network.
 	EnvOutListenPortFlag = config.DeclareString(
-		PackageName, "envOutListenPortFlag", "3838")
+		PackageName, "envOutListenPort", "3838")
 	// EnvInListenPortFlag is the listen port for inward connections.
 	EnvInListenPortFlag = config.DeclareString(
-		PackageName, "envInListenPortFlag", "3500")
+		PackageName, "envInListenPort", "3500")
 	// EnvExtListenPortFlag is the listen port for external connections.
 	EnvExtListenPortFlag = config.DeclareString(
-		PackageName, "envExtListenPortFlag", "3502")
+		PackageName, "envExtListenPort", "3502")
 )
 
 // LeverProxy is a proxy server that mediates Lever RPCs from the outside world

@@ -93,7 +93,24 @@ $ lever invoke lever://dev.lever/helloService/SayHello '"world"'
 (Remember to use proper JSON for arguments. This includes the quotes for
 strings.)
 
+###### Invoke via HTTP POST request
+
+```bash
+# Without docker-machine
+$ curl -H "Content-Type: application/json" -X POST -d '["world"]' \
+http://127.0.0.1:8080/helloService/SayHello?forceenv=dev.lever
+"Hello, world!"
+# With docher-machine
+$ curl -H "Content-Type: application/json" -X POST -d '["world"]' \
+http://$(docker-machine ip default):8080/helloService/SayHello?forceenv=dev.lever
+"Hello, world!"
+```
+
 ###### Invoke from JavaScript (client.js)
+
+```bash
+$ npm install leveros
+```
 
 ```javascript
 var leveros = require("leveros");
@@ -109,6 +126,10 @@ $ LEVEROS_IP_PORT="127.0.0.1:8080" node client.js
 # With docher-machine
 $ LEVEROS_IP_PORT="$(docker-machine ip default):8080" node client.js
 ```
+
+Setting LEVEROS_IP_PORT is necessary so that you can invoke the `dev.lever`
+environment without adding an entry for it in `/etc/hosts` and setting the
+listen port to `80`.
 
 Basic concepts
 --------------
