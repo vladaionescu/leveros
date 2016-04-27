@@ -24,7 +24,7 @@ class Handler {
         }
         const rpc = call.request;
         if (lodash.startsWith(leverURL.method, '_') ||
-            !this._custHandler.hasOwnProperty(leverURL.method) ||
+            !(leverURL.method in this._custHandler) ||
             !lodash.isFunction(this._custHandler[leverURL.method])) {
             callback(new Error("Invalid method"));
             return;
@@ -69,7 +69,7 @@ class Handler {
             }
             const rpc = streamMsg.rpc;
             if (lodash.startsWith(leverURL.method, '_') ||
-                !this._custHandler.hasOwnProperty(leverURL.method) ||
+                !(leverURL.method in this._custHandler) ||
                 !lodash.isFunction(this._custHandler[leverURL.method])) {
                 call.write({error: "Invalid method"});
                 call.end();
