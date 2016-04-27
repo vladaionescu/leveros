@@ -106,7 +106,7 @@ http://$(docker-machine ip default):8080/helloService/SayHello?forceenv=dev.leve
 "Hello, world!"
 ```
 
-###### Invoke from JavaScript (client.js)
+###### Invoke from JavaScript
 
 ```bash
 $ npm install leveros
