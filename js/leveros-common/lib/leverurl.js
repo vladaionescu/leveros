@@ -15,7 +15,7 @@ export class LeverURL {
             return `/${this.service}/${this.resource}/${this.method}`;
         }
         return (
-            `${this.environment}/${this.service}/` +
+            `lever://${this.environment}/${this.service}/` +
             `${this.resource}/${this.method}`);
     }
 }
