@@ -119,7 +119,7 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 		return
 	}
 
-	networkIP, ownIP, instanceAddr, keepAliveFun, err :=
+	_, ownIP, instanceAddr, keepAliveFun, err :=
 		proxy.manager.EnsureInfrastructureInitialized(&hostman.InstanceInfo{
 			Environment:       leverURL.Environment,
 			Service:           leverURL.Service,
@@ -136,7 +136,7 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 		return
 	}
 
-	err = proxy.serveOut(leverURL.Environment, networkIP)
+	err = proxy.serveOut(leverURL.Environment, ownIP)
 	if err != nil {
 		streamLogger.WithFields("err", err).Error(
 			"Error listening on env network")
@@ -171,7 +171,8 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 	if srcEnv != "" {
 		addHeaders["x-lever-src-env"] = []string{srcEnv}
 	}
-	addHeaders["x-lever-internal-rpc-gateway"] = []string{ownIP}
+	addHeaders["x-lever-internal-rpc-gateway"] = []string{
+		ownIP + ":" + EnvOutListenPortFlag.Get()}
 
 	startTime := time.Now()
 	firstHeaders := true
