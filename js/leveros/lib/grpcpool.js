@@ -34,7 +34,7 @@ export class GRPCPool {
 class CacheEntry {
     constructor() {
         this.element = null;
-        this.error = null;
+        this.error = new Error("Not yet constructed");
         this.lastUsed = null;
         this.keepAlive();
     }
@@ -56,7 +56,8 @@ class Cache {
     get(key, callback) {
         if (this._data.hasOwnProperty(key)) {
             this.keepAlive(key);
-            setImmediate(callback.bind(null, null, this._data[key].element));
+            const entry = this._data[key];
+            setImmediate(callback.bind(null, entry.error, entry.element));
             return;
         }
 
