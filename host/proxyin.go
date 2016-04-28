@@ -153,6 +153,11 @@ func (proxy *LeverProxy) handleInStream(stream *http2stream.HTTP2Stream) {
 					// Retry.
 					return nil, err, nil
 				}
+				if err == leverutil.ErrNotYetConstructed ||
+					err == leverutil.ErrWasDestructed {
+					// Retry.
+					return nil, err, nil
+				}
 				return nil, nil, err
 			}
 			return clientStream, nil, nil

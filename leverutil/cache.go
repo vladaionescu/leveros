@@ -12,6 +12,14 @@ var (
 	cacheLogger = GetLogger(PackageName, "cache")
 )
 
+var (
+	// ErrNotYetConstructed is returned when the cache element has not yet been
+	// initialized.
+	ErrNotYetConstructed = fmt.Errorf("Not yet constructed")
+	// ErrWasDestructed is returned if the element has just been destructed.
+	ErrWasDestructed = fmt.Errorf("Was destructed")
+)
+
 // Cache is a data structure that keeps in-memory instances of objects for
 // a specified amount of time after their last use.
 type Cache struct {
@@ -55,20 +63,21 @@ func (cache *Cache) Get(key string) (interface{}, error) {
 		cache.lock.Unlock()
 		entry.lock.RLock() // Will block if currently constructing.
 		defer entry.lock.RUnlock()
-		return entry.element, nil
+		return entry.element, entry.err
 	}
 
 	// Add entry to cache (before constructing).
 	entry = &cacheEntry{
+		err:      ErrNotYetConstructed,
 		lastUsed: time.Now().UnixNano(),
 	}
 	treemapInsert(cache.lastUsedMap, entry.lastUsed, key)
 	cache.data[key] = entry
 	cache.maybeScheduleExpire(entry.lastUsed)
-	cache.lock.Unlock()
 
 	// Construct outside cache's lock.
 	entry.lock.Lock()
+	cache.lock.Unlock()
 	element, err := cache.constructor(key)
 	entry.element = element
 	entry.err = err
@@ -82,7 +91,7 @@ func (cache *Cache) Get(key string) (interface{}, error) {
 		cache.lock.Unlock()
 	}
 
-	return entry.element, entry.err
+	return element, err
 }
 
 // GetExisting returns a cached instance with provided key, if it exists.
@@ -94,6 +103,9 @@ func (cache *Cache) GetExisting(key string) (interface{}, bool) {
 		cache.keepAliveInternal(key)
 		entry.lock.RLock() // Will block if currently constructing.
 		defer entry.lock.RUnlock()
+		if entry.err != nil {
+			return nil, false
+		}
 		return entry.element, true
 	}
 	return nil, false
@@ -129,7 +141,7 @@ func (cache *Cache) destroyEntry(entry *cacheEntry) {
 	if entry.element != nil {
 		cache.destructor(entry.element)
 		entry.element = nil
-		entry.err = fmt.Errorf("Was destructed")
+		entry.err = ErrWasDestructed
 	}
 }
 
