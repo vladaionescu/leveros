@@ -27,9 +27,7 @@ export class GRPCPool {
     }
 
     _destroyConn(conn) {
-        if (conn) {
-            conn.$channel.close();
-        }
+        conn.$channel.close();
     }
 }
 

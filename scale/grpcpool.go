@@ -30,9 +30,6 @@ func NewGRPCPool() (*GRPCPool, error) {
 			return grpc.Dial(addr, grpc.WithInsecure())
 		},
 		func(conn interface{}) {
-			if conn == nil {
-				return
-			}
 			conn.(*grpc.ClientConn).Close()
 		},
 	)

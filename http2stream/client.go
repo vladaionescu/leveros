@@ -38,9 +38,6 @@ func NewHTTP2Client(
 			return conn, nil
 		},
 		func(element interface{}) {
-			if element == nil {
-				return
-			}
 			clientLogger.Debug("Closing connection")
 			element.(*http2Connection).close(nil)
 		})
