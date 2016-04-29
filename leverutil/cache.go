@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/emirpasic/gods/maps/treemap"
+	"github.com/leveros/gods/maps/treemap"
 )
 
 var (

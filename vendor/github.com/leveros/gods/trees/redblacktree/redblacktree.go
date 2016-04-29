@@ -33,9 +33,9 @@ package redblacktree
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/stacks/linkedliststack"
-	"github.com/emirpasic/gods/trees"
-	"github.com/emirpasic/gods/utils"
+	"github.com/leveros/gods/stacks/linkedliststack"
+	"github.com/leveros/gods/trees"
+	"github.com/leveros/gods/utils"
 )
 
 func assertInterfaceImplementation() {

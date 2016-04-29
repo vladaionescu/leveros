@@ -32,9 +32,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package treemap
 
 import (
-	"github.com/emirpasic/gods/maps"
-	rbt "github.com/emirpasic/gods/trees/redblacktree"
-	"github.com/emirpasic/gods/utils"
+	"github.com/leveros/gods/maps"
+	rbt "github.com/leveros/gods/trees/redblacktree"
+	"github.com/leveros/gods/utils"
 )
 
 func assertInterfaceImplementation() {

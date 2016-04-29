@@ -32,8 +32,8 @@ package singlylinkedlist
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/lists"
-	"github.com/emirpasic/gods/utils"
+	"github.com/leveros/gods/lists"
+	"github.com/leveros/gods/utils"
 	"strings"
 )
 

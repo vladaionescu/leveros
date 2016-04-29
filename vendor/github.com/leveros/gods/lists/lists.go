@@ -19,8 +19,8 @@ with this distribution for more information.
 package lists
 
 import (
-	"github.com/emirpasic/gods/containers"
-	"github.com/emirpasic/gods/utils"
+	"github.com/leveros/gods/containers"
+	"github.com/leveros/gods/utils"
 )
 
 type Interface interface {
