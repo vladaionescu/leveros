@@ -97,6 +97,13 @@ func (p *Parser) Parse() error {
 	p.structuredData = sd
 	p.cursor++
 
+	// An extra field before message.
+	_, err = parseUpToLen(p.buff, &p.cursor, p.l, 128, ErrExtraFieldInvalid)
+	if err != nil {
+		return err
+	}
+	p.cursor++
+
 	if p.cursor < p.l {
 		p.message = string(p.buff[p.cursor:])
 	}

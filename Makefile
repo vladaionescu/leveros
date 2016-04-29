@@ -251,6 +251,13 @@ jsprep-leveros-server: $(JS_DIR)/leveros-server/LICENSE.md
 .PHONY: jsprep-leveros
 jsprep-leveros: $(JS_DIR)/leveros/LICENSE.md
 
+.PHONY: npm-publish
+npm-publish: jsprep-leveros-common jsprep-leveros
+	cd $(JS_DIR)/leveros-common && grunt lint && grunt
+	cd $(JS_DIR)/leveros && grunt lint && grunt
+	cd $(JS_DIR)/leveros-common && npm publish
+	cd $(JS_DIR)/leveros && npm publish
+
 #
 # Docker images targets.
 

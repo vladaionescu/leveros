@@ -1,6 +1,8 @@
 package devlogger
 
 import (
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/leveros/go-syslog"
@@ -87,7 +89,23 @@ func (dl *DevLogger) Close() {
 
 func (dl *DevLogger) worker() {
 	for logParts := range dl.channel {
-		//logger.WithFields("parts", logParts).Debug("Log line")
-		logger.WithFields("msg", logParts["message"]).Debug("Log line")
+		// TODO: Do something useful with the log lines.
+		var prefix string
+		tag, ok := logParts["app_name"].(string)
+		if ok {
+			tagParts := strings.Split(tag, "/")
+			if len(tagParts) == 5 {
+				env, service, codeVersion :=
+					tagParts[1], tagParts[2], tagParts[3]
+				prefix = fmt.Sprintf(
+					"lever://%s/%s v%s", env, service, codeVersion)
+			} else {
+				logger.WithFields("parts", logParts).Debug(
+					"Could not parse tag")
+			}
+		} else {
+			logger.WithFields("parts", logParts).Debug("Could not parse tag")
+		}
+		logger.WithFields("prefix", prefix).Info(logParts["message"].(string))
 	}
 }
