@@ -27,6 +27,8 @@ var (
 	flagEnv  string
 	flagHost string
 
+	flagAdminEnv string
+
 	flagPrettyPrint bool
 	flagBytes       bool
 )
@@ -42,11 +44,10 @@ func main() {
 	app.Version = Version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:   "env, E",
-			Value:  "",
-			EnvVar: "LEVEROS_ENVIRONMENT",
-			Usage: "The name of the environment the client interacts " +
-				"with.",
+			Name:        "env, E",
+			Value:       "dev.lever",
+			EnvVar:      "LEVEROS_ENV",
+			Usage:       "The name of the environment to act on.",
 			Destination: &flagEnv,
 		},
 		cli.StringFlag{
@@ -54,7 +55,9 @@ func main() {
 			Value:  "",
 			EnvVar: "LEVEROS_IP_PORT",
 			Usage: "The address to direct the client to, if different from " +
-				"the env name.",
+				"the env name. The CLI attempts to auto-detect the host when " +
+				"env name ends with .lever, as it is assumed that a local " +
+				"installation is trying to be contacted.",
 			Destination: &flagHost,
 		},
 	}
@@ -62,8 +65,16 @@ func main() {
 		{
 			Name:      "deploy",
 			Usage:     "Deploy a directory as a Lever service.",
-			ArgsUsage: "<env> [<dir>]",
-			Action:    actionDeploy,
+			ArgsUsage: "[<dir>]",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "admin",
+					Value:       "admin.lever",
+					Usage:       "The admin environment to call.",
+					Destination: &flagAdminEnv,
+				},
+			},
+			Action: actionDeploy,
 		},
 		{
 			Name: "invoke",
@@ -115,10 +126,7 @@ func main() {
 
 func actionDeploy(ctx *cli.Context) {
 	host := ""
-	adminEnv := core.AdminEnvFlag.Get()
-	if flagEnv != "" {
-		adminEnv = flagEnv
-	}
+	adminEnv := flagAdminEnv
 	if strings.HasSuffix(adminEnv, ".lever") {
 		host = detectLeverOSIPPort()
 	}
@@ -126,11 +134,8 @@ func actionDeploy(ctx *cli.Context) {
 		host = flagHost
 	}
 
-	destEnv := ctx.Args().First()
-	if destEnv == "" {
-		logger.Fatal("Destination environment not specified")
-	}
-	serviceDir := ctx.Args().Get(1)
+	destEnv := flagEnv
+	serviceDir := ctx.Args().Get(0)
 	if serviceDir == "" {
 		serviceDir = "."
 	}
@@ -148,9 +153,6 @@ func actionInvoke(ctx *cli.Context) {
 	}
 	if leverURL.Environment == "" {
 		leverURL.Environment = flagEnv
-	}
-	if leverURL.Environment == "" {
-		leverURL.Environment = core.DefaultDevEnvFlag.Get()
 	}
 
 	client, err := leverapi.NewClient()
@@ -216,9 +218,6 @@ func actionStream(ctx *cli.Context) {
 	}
 	if leverURL.Environment == "" {
 		leverURL.Environment = flagEnv
-	}
-	if leverURL.Environment == "" {
-		leverURL.Environment = core.DefaultDevEnvFlag.Get()
 	}
 
 	client, err := leverapi.NewClient()
