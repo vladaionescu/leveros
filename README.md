@@ -15,7 +15,8 @@ For complete documentation and API reference, please visit [Lever OS on ReadMe.i
 * [CLI reference](https://leveros.readme.io/docs/cli)
 * [lever.json reference](https://leveros.readme.io/docs/lever-json)
 * [HTTP API](https://leveros.readme.io/docs/http-api)
-* [Node API](https://leveros.readme.io/docs/node-api)
+* [Node Client API](https://leveros.readme.io/docs/node-client-api)
+* [Node Server API](https://leveros.readme.io/docs/node-server-api)
 * [Go API](https://godoc.org/github.com/leveros/leveros)
 
 Getting started
@@ -108,6 +109,25 @@ http://$(docker-machine ip default):8080/helloService/sayHello?forceenv=dev.leve
 "Hello, world!"
 ```
 
+Notice the `forceenv` query param at the end of the command. This is a convenience feature that allows you to access Lever's HTTP API without having `dev.lever` assigned to the listening IP (and also configuring Lever to serve on port `80`).
+
+###### Invoke from browser (via HTTP API)
+
+```javascript
+$.ajax({
+    'type': 'POST',
+    'url': 'http://127.0.0.1:8080/helloService/sayHello?forceenv=dev.lever',
+    'contentType': 'application/json',
+    'data': JSON.stringify(["world"]),
+    'dataType': 'json',
+    'success': function (data) {
+        console.log(data);  // Hello, world!
+    },
+});
+```
+
+Note that when using docker-machine, you need to replace `127.0.0.1` with the output of the command `docker-machine ip default`.
+
 ###### Invoke from Node
 
 ```bash
@@ -116,6 +136,7 @@ $ npm install leveros
 
 ```javascript
 var leveros = require('leveros');
+
 var client = new leveros.Client();
 client.forceHost = process.env.LEVEROS_IP_PORT;
 var service = client.service('dev.lever', 'helloService');
@@ -132,7 +153,7 @@ $ LEVEROS_IP_PORT="127.0.0.1:8080" node client.js
 $ LEVEROS_IP_PORT="$(docker-machine ip default):8080" node client.js
 ```
 
-Setting LEVEROS_IP_PORT is necessary so that you can invoke the `dev.lever` environment without adding an entry for it in `/etc/hosts` and setting the listen port to `80`.
+Setting `LEVEROS_IP_PORT` is necessary so that you can invoke the `dev.lever` environment without adding an entry for it in `/etc/hosts` and setting the listen port to `80`.
 
 ### What's next?
 

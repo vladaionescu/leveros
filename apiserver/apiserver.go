@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync"
 
 	leverapi "github.com/leveros/leveros/api"
@@ -213,7 +214,6 @@ func (server *Server) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		errCh <- false
 		<-workerDoneCh
 	} else {
-		var args []interface{}
 		buffer := bufferPool.Get().([]byte)
 		defer bufferPool.Put(buffer)
 		var size int
@@ -234,14 +234,24 @@ func (server *Server) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 			}
 			return
 		}
-		if req.Header.Get("Content-Type") == "application/json" {
+		var args []interface{}
+		contentType := req.Header.Get("Content-Type")
+		contentTypeSplit := strings.Split(contentType, ";")
+		switch contentTypeSplit[0] {
+		case "application/json":
 			err = json.Unmarshal(buffer[:size], &args)
 			if err != nil {
 				resp.WriteHeader(http.StatusBadRequest)
 				logger.WithFields("err", err).Debug("JSON unmarshal error")
 				return
 			}
-		} else {
+		case "application/x-www-form-urlencoded":
+			// TODO
+			resp.WriteHeader(http.StatusBadRequest)
+			logger.WithFields("contentType", contentType).Error(
+				"Content type not yet supported")
+			return
+		default:
 			args = make([]interface{}, 1)
 			args[0] = buffer[:size]
 		}
