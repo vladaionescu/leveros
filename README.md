@@ -86,6 +86,10 @@ This takes the whole current directory, archives it and deploys it onto Lever, i
 ```bash
 $ lever invoke lever://dev.lever/helloService/sayHello '"world"'
 "Hello, world!"
+
+# Or even shorter (only for dev.lever)...
+$ lever invoke /helloService/sayHello '"world"'
+"Hello, world!"
 ```
 
 Remember to use proper JSON for arguments. This includes the quotes for strings.
@@ -97,6 +101,7 @@ Remember to use proper JSON for arguments. This includes the quotes for strings.
 $ curl -H "Content-Type: application/json" -X POST -d '["world"]' \
 http://127.0.0.1:8080/helloService/sayHello?forceenv=dev.lever
 "Hello, world!"
+
 # With docher-machine
 $ curl -H "Content-Type: application/json" -X POST -d '["world"]' \
 http://$(docker-machine ip default):8080/helloService/sayHello?forceenv=dev.lever
@@ -122,6 +127,7 @@ service.invoke('sayHello', "world", function (error, reply) {
 ```bash
 # Without docker-machine
 $ LEVEROS_IP_PORT="127.0.0.1:8080" node client.js
+
 # With docher-machine
 $ LEVEROS_IP_PORT="$(docker-machine ip default):8080" node client.js
 ```
