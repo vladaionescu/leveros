@@ -12,18 +12,19 @@ GO := go
 # docker image. Note: Installing go is strongly recommended for contributing.
 HAVE_GO := $(shell which $(GO))
 
-export LEVEROS_DEBUG ?=
+export LEVEROS_DEBUG ?= 0
 export LEVEROS_REPO_DIR ?= $(abspath repo)
 export LEVEROS_IP_PORT ?= $(shell which $(DOCKER_MACHINE) > /dev/null && test -n "$$DOCKER_MACHINE_NAME" && docker-machine ip "$$DOCKER_MACHINE_NAME" || echo 127.0.0.1):8080
+export LEVEROS_LOG_LEVEL ?= info
 
 GO_VERSION_ARGS := -ldflags "-X main.Version=$(VERSION) -X main.GitHash=$(GIT_HASH)"
 GO_BUILD_ARGS := $(GO_VERSION_ARGS) \
-	$(shell test -n "$(LEVEROS_DEBUG)" && echo -race)
+	$(shell test "$(LEVEROS_DEBUG)" -eq 1 && echo -race)
 # Most things will run in a docker container. They need to be compiled for
 # linux/amd64.
 export GOOS ?= linux
 export GOARCH ?= amd64
-export CGO_ENABLED ?= $(shell test -n "$(LEVEROS_DEBUG)" && echo 1 || echo 0)
+export CGO_ENABLED ?= $(LEVEROS_DEBUG)
 
 ifdef MSVC
     UNAME_S := Windows
@@ -54,7 +55,6 @@ GODEPS_CONFIG := Godeps/Godeps.json
 DBDATA_VOL := leveros_dbdata
 ADMIN_ENV := admin.lever
 MISC_PROCESSES := consul aerospike
-LEVEROSHOST_CONFIG := services/leveroshost/dev.config.json
 
 BUILD_DIR := build
 BIN_DIR := $(BUILD_DIR)/bin
@@ -125,9 +125,7 @@ runcommon:
 		admin-env
 	$(DOCKER_COMPOSE) up -d --force-recreate $(MISC_PROCESSES)
 	sleep 1
-	$(MAKE) \
-		upload-config \
-		init-db-tables
+	$(MAKE) init-db-tables
 	$(DOCKER_COMPOSE) up --force-recreate leveroshost nghttpxext
 
 .PHONY: install-cli
@@ -315,13 +313,6 @@ clean-dbdata:
 .PHONY: init-db-tables
 init-db-tables: $(BIN_DIR)/inittables
 	./runasdocker.sh $<
-
-.PHONY: upload-config
-upload-config: $(BIN_DIR)/uploadconfig
-	EXTRA_DOCKER_ARGS="-v $(abspath $(LEVEROSHOST_CONFIG)):/leveros/$(notdir $(LEVEROSHOST_CONFIG)):ro" \
-		./runasdocker.sh $< \
-		--file "/leveros/$(notdir $(LEVEROSHOST_CONFIG))" \
-	    --service leveroshost
 
 #
 # Admin bootstrap targets.

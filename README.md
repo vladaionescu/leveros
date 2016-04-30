@@ -76,7 +76,7 @@ module.exports.sayHello = function (name, callback) {
 Deploy your service locally
 
 ```bash
-$ lever deploy dev.lever
+$ lever deploy
 ```
 
 This takes the whole current directory, archives it and deploys it onto Lever, in an environment that was created by default: `dev.lever`.

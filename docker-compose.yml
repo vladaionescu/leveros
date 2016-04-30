@@ -14,11 +14,11 @@ services:
         ports:
             - 127.0.0.1:6514:6514  # Dev logger.
         command: >-
-            --config leveroshost
             --service leveroshost
             --containerName leveroshost
             --dockerutil.leverCodeHostDir ${LEVEROS_REPO_DIR}
             --dockerutil.disableRemoveContainer ${LEVEROS_DEBUG}
+            --leverutil.loggingLevel ${LEVEROS_LOG_LEVEL}
         environment:
             LEVEROS_IP_PORT: ${LEVEROS_IP_PORT}
 

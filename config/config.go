@@ -214,7 +214,7 @@ func parseArgs() {
 			var err error
 			entry.commandLineValue, err = parseFromString(arg, entry.flagType)
 			if err != nil {
-				log.Fatalf("Unable to parse flag %s\n", arg)
+				log.Fatalf("Unable to parse flag value for %s\n", arg)
 			}
 			expectValue = false
 			continue

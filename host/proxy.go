@@ -24,14 +24,14 @@ var (
 	ConnectionConnectTimeoutFlag = config.DeclareDuration(
 		PackageName, "connectionConnectTimeout", 20*time.Second)
 
-	// ListenProxyExtFlag enables listening to the external interface
+	// DisableProxyExtFlag enables listening to the external interface
 	// (regional LB).
-	ListenProxyExtFlag = config.DeclareBool(
-		PackageName, "listenProxyExt")
-	// ListenProxyInOutFlag enables listening to requests going to or coming
+	DisableProxyExtFlag = config.DeclareBool(
+		PackageName, "disableProxyExt")
+	// DisableProxyInOutFlag enables listening to requests going to or coming
 	// from a local environment.
-	ListenProxyInOutFlag = config.DeclareBool(
-		PackageName, "listenProxyInOut")
+	DisableProxyInOutFlag = config.DeclareBool(
+		PackageName, "disableProxyInOut")
 
 	// EnvOutListenPortFlag is the environment listen port for outward
 	// connections. This port is accessible only from within the env network.
@@ -104,13 +104,13 @@ func NewLeverProxy(
 	proxy.inLogger = proxy.logger.WithFields("listener", "in")
 	proxy.outLogger = proxy.logger.WithFields("listener", "out")
 	proxy.extLogger = proxy.logger.WithFields("listener", "ext")
-	if ListenProxyExtFlag.Get() {
+	if !DisableProxyExtFlag.Get() {
 		err = proxy.serveExt()
 		if err != nil {
 			return nil, err
 		}
 	}
-	if ListenProxyInOutFlag.Get() {
+	if !DisableProxyInOutFlag.Get() {
 		err = proxy.serveIn()
 		if err != nil {
 			return nil, err
