@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"strconv"
+	"strings"
 
 	aerospike "github.com/aerospike/aerospike-client-go"
 	"github.com/leveros/leveros/leverutil"
@@ -170,7 +171,10 @@ func serviceNameOk(service string) error {
 	if len(service) < 3 {
 		return fmt.Errorf("Service name too short")
 	}
-	if service != url.QueryEscape(service) {
+	if len(service) > 255 {
+		return fmt.Errorf("Service name too long")
+	}
+	if service != url.QueryEscape(service) || strings.Contains(service, "/") {
 		return fmt.Errorf("Service name not allowed")
 	}
 	return nil
