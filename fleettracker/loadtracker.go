@@ -167,7 +167,7 @@ func (tracker *LoadTracker) tick(
 	//       RPC / stream has finished). Need another strategy for those cases.
 
 	// Assume RPC rate and time are the worst possible (max in confidence
-	// interval). This gives us a theoretical 97.5% certainity (in reality
+	// interval). This gives us a theoretical 97.5% certainty (in reality
 	// we are much less sure, due to many other factors not modeled here).
 	RPCNanosCI := 1.96 * math.Sqrt(rpcNanosVariance)
 	maxRPCNanos := float64(avgRPCNanos) + RPCNanosCI

@@ -79,7 +79,7 @@ type HTTP2Stream struct {
 	flowControl   *inFlow
 	sendQuotaPool *quotaPool
 	shutdownChan  chan struct{}
-	// The headers initally received by a server.
+	// The headers initially received by a server.
 	serverHeaders map[string][]string
 
 	// This is guarded by the connection lock.
