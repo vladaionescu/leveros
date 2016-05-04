@@ -1,6 +1,8 @@
 ![Lever OS](https://raw.githubusercontent.com/leveros/leveros/master/doc/images/leveros-logo-full-white-bg-v0.2.png "Lever OS")
 ============================================================================
 
+[![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros/js/leveros?pixel)](https://github.com/igrigorik/ga-beacon)
+
 leveros - Node client library for Lever OS
 ==========================================
 

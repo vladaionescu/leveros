@@ -1,6 +1,8 @@
 ![Lever OS](doc/images/leveros-logo-full-white-bg-v0.2.png "Lever OS")
 ======================================================================
 
+[![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros?pixel)](https://github.com/igrigorik/ga-beacon)
+
 **Serverless + Microservices = ♥**
 
 *The cloud platform that allows fast-moving teams to build and deploy microservice-oriented backends in the blink of an eye*
