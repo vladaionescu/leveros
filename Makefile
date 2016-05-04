@@ -347,6 +347,7 @@ $(BIN_DIR):
 
 $(REPO_DIR):
 	mkdir -p $@
+	chmod o+rwx $@
 
 #
 # Targets related to compiling go sources. Automatically detects dependencies
