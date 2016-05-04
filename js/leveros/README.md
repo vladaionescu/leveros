@@ -1,12 +1,12 @@
 ![Lever OS](https://raw.githubusercontent.com/leveros/leveros/master/doc/images/leveros-logo-full-white-bg-v0.2.png "Lever OS")
 ============================================================================
 
-[![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros/js/leveros?pixel)](https://github.com/igrigorik/ga-beacon)
-
 leveros - Node client library for Lever OS
 ==========================================
 
 The `leveros` Node client library can be used to invoke Lever methods either from within a Lever service or from outside Lever altogether.
+
+[![ReadMe.io](https://img.shields.io/badge/ReadMe.io-docs-blue.svg)](https://leveros.readme.io/) [![npm version](https://badge.fury.io/js/leveros.svg)](https://badge.fury.io/js/leveros) [![Join the chat at https://gitter.im/leveros/leveros](https://badges.gitter.im/leveros/leveros.svg)](https://gitter.im/leveros/leveros?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros/js/leveros?pixel)](https://github.com/igrigorik/ga-beacon)
 
 Documentation
 -------------

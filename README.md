@@ -1,15 +1,13 @@
 ![Lever OS](doc/images/leveros-logo-full-white-bg-v0.2.png "Lever OS")
 ======================================================================
 
-[![Join the chat at https://gitter.im/leveros/leveros](https://badges.gitter.im/leveros/leveros.svg)](https://gitter.im/leveros/leveros?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros?pixel)](https://github.com/igrigorik/ga-beacon)
-
 **Serverless + Microservices = ♥**
 
 *The cloud platform that allows fast-moving teams to build and deploy microservice-oriented backends in the blink of an eye*
 
 Lever OS is in **beta**. Please report bugs via [GitHub issues](https://github.com/leveros/leveros/issues)!
+
+[![ReadMe.io](https://img.shields.io/badge/ReadMe.io-docs-blue.svg)](https://leveros.readme.io/) [![Go Report Card](https://goreportcard.com/badge/github.com/leveros/leveros)](https://goreportcard.com/report/github.com/leveros/leveros) [![Join the chat at https://gitter.im/leveros/leveros](https://badges.gitter.im/leveros/leveros.svg)](https://gitter.im/leveros/leveros?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros?pixel)](https://github.com/igrigorik/ga-beacon)
 
 Documentation
 -------------
