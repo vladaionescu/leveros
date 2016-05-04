@@ -1,5 +1,5 @@
 
-VERSION := 0.0.3
+VERSION := 0.0.4
 GIT_HASH := $(shell git rev-parse HEAD)
 
 export GO15VENDOREXPERIMENT := 1
