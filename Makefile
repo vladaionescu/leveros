@@ -49,6 +49,9 @@ endif
 
 GO_TEST := GOOS=$(HOST_OS) GOARCH=$(HOST_ARCH) $(GO) test
 
+RUN_BACKGROUND := 0
+COMPOSE_BACKGROUND_ARGS := $(shell test "$(RUN_BACKGROUND)" -eq 1 && echo -d)
+
 VENDOR_DIR := vendor
 GODEPS_CONFIG := Godeps/Godeps.json
 
@@ -126,7 +129,8 @@ runcommon:
 	$(DOCKER_COMPOSE) up -d --force-recreate $(MISC_PROCESSES)
 	sleep 1
 	$(MAKE) init-db-tables
-	$(DOCKER_COMPOSE) up --force-recreate leveroshost nghttpxext
+	$(DOCKER_COMPOSE) up $(COMPOSE_BACKGROUND_ARGS) --force-recreate \
+		leveroshost nghttpxext
 
 .PHONY: install-cli
 install-cli: $(BIN_DIR)/lever
