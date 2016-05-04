@@ -1,6 +1,6 @@
 {
   "name": "leveros-server",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The JS server used within Lever instances. This listens for connections and triggers the customer module on requests.",
   "author": "Vlad Alexandru Ionescu",
   "homepage": "http://www.leveros.com",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "grpc": "^0.13.2-pre1",
-    "leveros-common": "0.0.2",
+    "leveros-common": "0.0.3",
     "lodash": "^4.11.1",
     "source-map-support": "^0.4.0"
   },

@@ -17,7 +17,7 @@ For complete documentation and API reference, please visit [Lever OS on ReadMe.i
 * [HTTP API](https://leveros.readme.io/docs/http-api)
 * [Node Client API](https://leveros.readme.io/docs/node-client-api)
 * [Node Server API](https://leveros.readme.io/docs/node-server-api)
-* [Go API](https://godoc.org/github.com/leveros/leveros)
+* [Go API](https://godoc.org/github.com/leveros/leveros/api)
 
 Getting started
 ---------------
