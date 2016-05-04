@@ -10,6 +10,7 @@ cache:
     directories:
         - js/leveros/node_modules
         - js/leveros-common/node_modules
+        - ~/docker
 
 language: go
 
@@ -26,6 +27,7 @@ before_install:
     - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
     - chmod +x docker-compose
     - sudo mv docker-compose /usr/local/bin/
+    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
 
 install:
     - npm install -g grunt-cli
@@ -46,3 +48,7 @@ script:
     - docker logs leverosaerospikedev
     - docker logs leverosnghttpx
     - docker logs leveroshost
+
+before_cache:
+    - mkdir -p ~/docker
+    - docker save leveros/{levercontainer,leveroshost,base,aerospikedev,consul,nghttpx} > ~/docker/image.tar
