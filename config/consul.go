@@ -14,21 +14,13 @@ var (
 )
 
 var (
-	consulClient     *consulapi.Client
-	consulClientLock sync.RWMutex
+	initOnce     sync.Once
+	consulClient *consulapi.Client
 )
 
 // GetConsulClient returns a readily-configured consul client.
 func GetConsulClient() *consulapi.Client {
-	consulClientLock.RLock()
-	if consulClient == nil {
-		consulClientLock.RUnlock()
-		consulClientLock.Lock()
-		if consulClient != nil {
-			consulClientLock.Unlock()
-			return GetConsulClient()
-		}
-
+	initOnce.Do(func() {
 		apiConfig := consulapi.DefaultConfig()
 		apiConfig.Address = ConsulAddressFlag.Get()
 		var err error
@@ -36,9 +28,6 @@ func GetConsulClient() *consulapi.Client {
 		if err != nil {
 			panic(err)
 		}
-		defer consulClientLock.Unlock()
-		return consulClient
-	}
-	defer consulClientLock.RUnlock()
+	})
 	return consulClient
 }
