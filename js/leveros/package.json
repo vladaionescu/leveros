@@ -1,7 +1,7 @@
 {
   "name": "leveros",
   "version": "0.0.4",
-  "description": "",
+  "description": "The Lever OS Node client library",
   "author": "Vlad Alexandru Ionescu",
   "homepage": "http://www.leveros.com",
   "bugs": "http://github.com/leveros/leveros/issues",
