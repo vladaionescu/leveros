@@ -1,6 +1,6 @@
 {
   "name": "leveros",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "author": "Vlad Alexandru Ionescu",
   "homepage": "http://www.leveros.com",
@@ -17,7 +17,7 @@
   "dependencies": {
     "collections": "^3.0.0",
     "grpc": "^0.13.2-pre1",
-    "leveros-common": "0.0.3",
+    "leveros-common": "0.0.4",
     "lodash": "^4.11.1",
     "source-map-support": "^0.4.0"
   },
