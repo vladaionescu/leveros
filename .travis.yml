@@ -13,13 +13,13 @@ go:
 
 install:
     - npm install -g grunt-cli
-    - cd js/leveros-common && npm install
-    - cd js/leveros && npm link ../leveros-common && npm install
+    - cd js/leveros-common && npm install && cd ../..
+    - cd js/leveros && npm link ../leveros-common && npm install && cd ../..
 
 script:
     - make test
-    - cd js/leveros-common && grunt lint && grunt
-    - cd js/leveros && grunt lint && grunt
+    - cd js/leveros-common && grunt lint && grunt && cd ../..
+    - cd js/leveros && grunt lint && grunt && cd ../..
     - make clean-all all
     - |
         make run &
