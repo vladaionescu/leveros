@@ -95,7 +95,7 @@ func main() {
 		{
 			Name: "stream",
 			Usage: "Invoke a Lever streaming method with provided args. " +
-				"The stream communication takes place via standard IO. " +
+				"The stream communication takes place via standard I/O. " +
 				"While it is possible for the stream itself to be of type " +
 				"bytes, this command does not allow for the args of the " +
 				"invokation to be of type bytes.",

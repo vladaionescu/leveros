@@ -1,8 +1,17 @@
 ![Lever OS](../doc/images/leveros-logo-full-white-bg-v0.2.png "Lever OS")
 =========================================================================
 
-API libraries for Go
-====================
+Go library for Lever OS
+=======================
+
+The Go library can be used for both implementing Lever services in Go and invoking Lever methods, as a client.
+
+In addition, the Go library contains convenience functions for accessing the admin service, which is used to manage Lever itself.
+
+Documentation
+-------------
+
+See [Godoc](https://godoc.org/github.com/leveros/leveros/api).
 
 Installation
 ------------
@@ -15,13 +24,10 @@ go get -u github.com/leveros/leveros/api
 import leverapi "github.com/leveros/leveros/api"
 ```
 
-Reference
----------
-
-See [Godoc](https://godoc.org/github.com/leveros/leveros/api).
-
 Quick example
 -------------
+
+### Server
 
 ###### server.go
 
@@ -61,7 +67,7 @@ func (*Handler) SayHello(name string) (result string, err error) {
 {
     "name": "helloService",
     "description": "A hello service.",
-    "entry": ["serve"]
+    "entry": ["./serve"]
 }
 ```
 
@@ -79,6 +85,8 @@ If you have problems building, you may need to reinstall go to include
 cross-compilation support. On a Mac, you can achieve this with
 `brew install go --with-cc-common`.
 
+### Client
+
 ###### client.go
 
 ```go
@@ -86,6 +94,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	leverapi "github.com/leveros/leveros/api"
 )
@@ -95,6 +104,7 @@ func main() {
     if err != nil {
 		log.Fatalf("Error: %v\n", err)
 	}
+	client.ForceHost = os.Getenv("LEVEROS_IP_PORT")
     leverService := client.Service("dev.lever", "helloService")
     var reply string
     err = leverService.Invoke(&reply, "SayHello", "world")
@@ -110,6 +120,9 @@ Run
 ```bash
 # Without docker-machine
 $ LEVEROS_IP_PORT="127.0.0.1:8080" go run client.go
+
 # With docher-machine
 $ LEVEROS_IP_PORT="$(docker-machine ip default):8080" go run client.go
 ```
+
+Setting `LEVEROS_IP_PORT` is necessary so that you can invoke the `dev.lever` environment without adding an entry for it in `/etc/hosts` and setting the listen port to `80`.
