@@ -1,0 +1,28 @@
+sudo: required
+
+services:
+    - docker
+
+git:
+    depth: 3
+
+language: go
+
+go:
+    - 1.6
+
+install:
+    - npm install -g grunt-cli
+    - cd js/leveros-common && npm install
+    - cd js/leveros && npm link ../leveros-common && npm install
+
+script:
+    - make test
+    - cd js/leveros-common && grunt lint && grunt
+    - cd js/leveros && grunt lint && grunt
+    - make clean-all all
+    - |
+        make run &
+        RUN_PID=$!
+        sleep 10
+        make systest && kill $RUN_PID
