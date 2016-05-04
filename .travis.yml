@@ -15,6 +15,10 @@ install:
     - npm install -g grunt-cli
     - cd js/leveros-common && npm install && cd ../..
     - cd js/leveros && npm link ../leveros-common && npm install && cd ../..
+    - go get -u github.com/golang/lint/golint
+    - go get -u github.com/golang/protobuf/protoc-gen-go
+    - go get -u github.com/tools/godep
+    - wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-linux-x86_64.zip && unzip protoc-3.0.0-beta-2-linux-x86_64.zip protoc -d /usr/local/bin/
 
 script:
     - make test
