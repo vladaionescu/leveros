@@ -345,7 +345,7 @@ $(BUILD_DIR):
 $(BIN_DIR):
 	mkdir -p $@
 
-$(REPO_DIR):
+$(REPO_DIR): FORCE
 	mkdir -p $@
 	chmod o+rwx $@
 
