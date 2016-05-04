@@ -40,8 +40,8 @@ var (
 var logger = leverutil.GetLogger(PackageName, "dockerutil")
 
 var (
-	containerIDLock sync.RWMutex
-	ownContainerID  = ""
+	ownContainerIDOnce sync.Once
+	ownContainerID     = ""
 )
 
 // HostCodeDirPath returns the path on the docker host that the code for a given
@@ -63,41 +63,36 @@ func CodeDirPath(environment, service string, codeVersion int64) string {
 // GetOwnContainerID returns the container ID of the currently running
 // container. This assumes access to the local docker.
 func GetOwnContainerID() string {
-	containerIDLock.RLock()
-	if ownContainerID != "" {
-		containerIDLock.RUnlock()
-		return ownContainerID
-	}
-	containerIDLock.RUnlock()
-	containerIDLock.Lock()
-	docker := NewDockerLocal()
-	containers, err := docker.ListContainers(dockerapi.ListContainersOptions{
-		Filters: map[string][]string{
-			"status": {"running"},
-			"label":  {"com.leveros.isleveros"},
-		},
-	})
-	if err != nil {
-		logger.WithFields("err", err).Fatal("Cannot get own container ID")
-	}
+	ownContainerIDOnce.Do(func() {
+		docker := NewDockerLocal()
+		containers, err := docker.ListContainers(
+			dockerapi.ListContainersOptions{
+				Filters: map[string][]string{
+					"status": {"running"},
+					"label":  {"com.leveros.isleveros"},
+				},
+			})
+		if err != nil {
+			logger.WithFields("err", err).Fatal("Cannot get own container ID")
+		}
 
-	ownName := "/" + leverutil.ContainerNameFlag.Get()
-	for _, container := range containers {
-		for _, name := range container.Names {
-			if name == ownName {
-				ownContainerID = container.ID
-				containerIDLock.Unlock()
-				logger.WithFields(
-					"containerID", ownContainerID,
-				).Info("Detected own container ID")
-				return ownContainerID
+		ownName := "/" + leverutil.ContainerNameFlag.Get()
+		for _, container := range containers {
+			for _, name := range container.Names {
+				if name == ownName {
+					ownContainerID = container.ID
+					logger.WithFields(
+						"containerID", ownContainerID,
+					).Info("Detected own container ID")
+					return
+				}
 			}
 		}
-	}
 
-	logger.WithFields("err", err, "containerName", ownName).Fatal(
-		"Cannot find own container ID by name")
-	return ""
+		logger.WithFields("err", err, "containerName", ownName).Fatal(
+			"Cannot find own container ID by name")
+	})
+	return ownContainerID
 }
 
 // NewDockerSwarm returns a client for the docker swarm.
