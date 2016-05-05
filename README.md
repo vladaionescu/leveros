@@ -3,17 +3,25 @@
 
 **Serverless + Microservices = ♥**
 
-*The cloud platform that allows fast-moving teams to build and deploy microservice-oriented backends in the blink of an eye*
-
 Lever OS is in **beta**. Please report bugs via [GitHub issues](https://github.com/leveros/leveros/issues)!
 
 [![ReadMe.io](https://img.shields.io/badge/ReadMe.io-docs-blue.svg)](https://leveros.readme.io/) [![Build Status](https://travis-ci.org/leveros/leveros.svg?branch=master)](https://travis-ci.org/leveros/leveros) [![Go Report Card](https://goreportcard.com/badge/github.com/leveros/leveros)](https://goreportcard.com/report/github.com/leveros/leveros) [![Join the chat at https://gitter.im/leveros/leveros](https://badges.gitter.im/leveros/leveros.svg)](https://gitter.im/leveros/leveros?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros?pixel)](https://github.com/igrigorik/ga-beacon)
 
+Lever OS is the open-source cloud platform that allows fast-moving teams to build and deploy microservice-oriented backends in the blink of an eye. It abstracts away complicated infrastructure and leaves developers with very simple, but powerful building blocks that handle scale transparently.
+
+How does it work?
+-----------------
+
+With Lever OS, you don't think about servers. You think about services. Lever takes care of distributing your code on multiple servers and bringing up as many instances as necessary, depending on real-time demand. It routes and load-balances traffic transparently so you don't need to configure complicated reverse proxies or service discovery. It's all built-in.
+
+The [services](https://leveros.readme.io/docs/services) are made out of a few exported functions that you develop and then deploy onto Lever. In JavaScript, for example, you export the functions as part of a `.js` file and then point Lever to that file. The functions become the API of your service and you can trigger them using an HTTP API, a Lever client library (Node and Go supported for now), or even the `lever` command-line tool.
+
 Documentation
 -------------
 
-For complete documentation and API reference, please visit [Lever OS on ReadMe.io](https://leveros.readme.io).
+For complete documentation and API reference, see [Lever OS on ReadMe.io](https://leveros.readme.io).
 
+* [Concepts](https://leveros.readme.io/docs/basic-concepts)
 * [CLI reference](https://leveros.readme.io/docs/cli)
 * [lever.json reference](https://leveros.readme.io/docs/lever-json)
 * [HTTP API](https://leveros.readme.io/docs/http-api)
@@ -26,7 +34,7 @@ Getting started
 
 ### Prerequisites
 
-* [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/). On a Mac you can install [Docker Toolbox](https://docs.docker.com/toolbox/overview/) to get what you need.
+* [Docker](https://docs.docker.com/engine/installation/) 1.10+ and [Docker Compose](https://docs.docker.com/compose/install/) 1.7+. On a Mac you can install [Docker Toolbox](https://docs.docker.com/toolbox/overview/) to get what you need.
 * Make
 * Linux or Mac (Windows should work too but it was never tested)
 

@@ -43,7 +43,8 @@ func main() {
 	if err != nil {
 		logger.WithFields("err", err).Warning("Failed to create admin service")
 	}
-	err = store.SetServiceLiveCodeVersion(as, core.AdminEnvFlag.Get(), "admin", 1)
+	err = store.SetServiceLiveCodeVersion(
+		as, core.AdminEnvFlag.Get(), "admin", 1)
 	if err != nil {
 		logger.WithFields("err", err).Warning(
 			"Failed to set admin live code version")
