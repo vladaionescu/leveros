@@ -13,8 +13,12 @@ cache:
 
 language: go
 
-go:
-    - 1.6
+matrix:
+    include:
+        - env: USE_GO=0
+        - env: USE_GO=1
+
+go: 1.6
 
 env:
     DOCKER_COMPOSE_VERSION: 1.7.1
@@ -38,8 +42,10 @@ script:
     - make test
     - cd js/leveros-common && grunt lint && grunt && cd ../..
     - cd js/leveros && grunt lint && grunt && cd ../..
-    - make clean-all all
-    - make RUN_BACKGROUND=1 run && sleep 3 && make systest
+    - make clean-all
+    - if [ "$USE_GO" -eq "1" ]; then make RUN_BACKGROUND=1 run ; else make RUN_BACKGROUND=1 fastrun ; fi && sleep 3 && make systest
+
+after_script:
     - docker logs leverosconsul
     - docker logs leverosaerospike
     - docker logs leverosnghttpxext
