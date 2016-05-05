@@ -125,6 +125,7 @@ runcommon:
 	$(MAKE) \
 		clean-containers \
 		init-dbdata \
+		$(REPO_DIR) \
 		admin-env
 	$(DOCKER_COMPOSE) up -d --force-recreate $(MISC_PROCESSES)
 	sleep 1
@@ -330,8 +331,9 @@ $(ADMIN_DIR)/serve: $(BIN_DIR)/adminservice | $(ADMIN_DIR)
 $(ADMIN_DIR)/lever.json: $(CMD_DIR)/adminservice/lever.json | $(ADMIN_DIR)
 	cp $< $@
 
-$(ADMIN_DIR):
+$(ADMIN_DIR): $(REPO_DIR) FORCE
 	mkdir -p $@
+	chmod o+rwx $@
 
 #
 # Misc targets.
