@@ -6,7 +6,7 @@ Go library for Lever OS
 
 The Go library can be used for both implementing Lever services in Go and invoking Lever methods, as a client. In addition, the Go library contains convenience functions for accessing the admin service, which is used to manage Lever itself.
 
-[![GoDoc](https://godoc.org/github.com/leveros/leveros/api?status.svg)](https://godoc.org/github.com/leveros/leveros/api) [![ReadMe.io](https://img.shields.io/badge/ReadMe.io-docs-blue.svg)](https://leveros.readme.io/) [![Join the chat at https://gitter.im/leveros/leveros](https://badges.gitter.im/leveros/leveros.svg)](https://gitter.im/leveros/leveros?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros/api?pixel)](https://github.com/igrigorik/ga-beacon)
+[![GoDoc](https://godoc.org/github.com/leveros/leveros/api?status.svg)](https://godoc.org/github.com/leveros/leveros/api) [![ReadMe.io](https://img.shields.io/badge/ReadMe.io-docs-blue.svg)](https://leveros.readme.io/) [![Build Status](https://travis-ci.org/leveros/leveros.svg?branch=master)](https://travis-ci.org/leveros/leveros) [![Join the chat at https://gitter.im/leveros/leveros](https://badges.gitter.im/leveros/leveros.svg)](https://gitter.im/leveros/leveros?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros/api?pixel)](https://github.com/igrigorik/ga-beacon)
 
 Documentation
 -------------
