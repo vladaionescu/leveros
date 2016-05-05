@@ -28,7 +28,7 @@ before_install:
     - sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y docker-engine
     - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
     - chmod +x docker-compose && sudo mv docker-compose /usr/local/bin/
-    - wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-osx-x86_64.zip && sudo unzip protoc-3.0.0-beta-2-$TRAVIS_OS_NAME-x86_64.zip protoc -d /usr/local/bin/ && sudo chmod +x /usr/local/bin/protoc
+    - wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-$TRAVIS_OS_NAME-x86_64.zip && sudo unzip protoc-3.0.0-beta-2-$TRAVIS_OS_NAME-x86_64.zip protoc -d /usr/local/bin/ && sudo chmod +x /usr/local/bin/protoc
 
 install:
     - npm install -g grunt-cli
