@@ -25,7 +25,6 @@ env:
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install make ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install go --with-cc-common ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install dockertoolbox ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then docker-machine create --driver virtualbox default ; fi
