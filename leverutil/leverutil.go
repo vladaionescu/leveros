@@ -1,3 +1,5 @@
+// Package leverutil provides general utility functions that are not specific to
+// Lever.
 package leverutil
 
 import (

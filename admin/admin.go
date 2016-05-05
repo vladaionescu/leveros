@@ -1,3 +1,5 @@
+// Package admin provides as implementation for Lever OS's admin service. It is
+// used to manage the Lever OS system.
 package admin
 
 import (

@@ -1,3 +1,5 @@
+// Package core provides common utilities to be used throughout various Lever
+// binaries and libraries. These utilities are very specific to Lever.
 package core
 
 import (

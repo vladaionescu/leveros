@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/leveros/leveros/api"
+	"github.com/leveros/leveros/api/admin"
 	"github.com/leveros/leveros/config"
 	"github.com/leveros/leveros/core"
 	"github.com/leveros/leveros/leverutil"
@@ -26,7 +27,7 @@ func TestMain(m *testing.M) {
 	leverutil.UpdateLoggingSettings()
 
 	logger.Info("Deploying...")
-	err := api.DeployServiceDir(
+	err := admin.DeployServiceDir(
 		core.AdminEnvFlag.Get(), core.DefaultDevAliasFlag.Get(),
 		core.DefaultDevEnvFlag.Get(), serviceName)
 	if err != nil {

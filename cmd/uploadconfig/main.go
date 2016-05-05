@@ -1,3 +1,4 @@
+// Package main uploads a config file to consul.
 package main
 
 import (

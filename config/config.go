@@ -1,3 +1,5 @@
+// Package config provides configuration flags. These can be configured via
+// command line flags, environment variables or via Consul.
 package config
 
 import (

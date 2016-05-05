@@ -1,3 +1,5 @@
+// Package dockerutil provides Docker-related utility functions. These are
+// very specific to Lever.
 package dockerutil
 
 import (

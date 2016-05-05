@@ -1,3 +1,4 @@
+// Package main initializes Lever OS's database.
 package main
 
 import (
@@ -46,18 +47,5 @@ func main() {
 	if err != nil {
 		logger.WithFields("err", err).Warning(
 			"Failed to set admin live code version")
-	}
-
-	// TODO: Remove this.
-	err = store.NewService(
-		as, core.DefaultDevEnvFlag.Get(), "testservice", "A test service", true)
-	if err != nil {
-		logger.WithFields("err", err).Warning("Failed to create test service")
-	}
-	err = store.SetServiceLiveCodeVersion(
-		as, core.DefaultDevEnvFlag.Get(), "testservice", 1)
-	if err != nil {
-		logger.WithFields("err", err).Warning(
-			"Failed to set test service live code version")
 	}
 }

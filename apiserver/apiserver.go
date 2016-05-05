@@ -1,3 +1,5 @@
+// Package apiserver provides a HTTP gateway for invoking Lever methods without
+// the use of a gRPC client.
 package apiserver
 
 import (

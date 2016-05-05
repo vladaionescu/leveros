@@ -10,6 +10,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	leverapi "github.com/leveros/leveros/api"
+	admin "github.com/leveros/leveros/api/admin"
 	"github.com/leveros/leveros/cmd"
 	"github.com/leveros/leveros/core"
 	"github.com/leveros/leveros/leverutil"
@@ -139,7 +140,7 @@ func actionDeploy(ctx *cli.Context) {
 	if serviceDir == "" {
 		serviceDir = "."
 	}
-	err := leverapi.DeployServiceDir(
+	err := admin.DeployServiceDir(
 		adminEnv, host, destEnv, serviceDir)
 	if err != nil {
 		logger.WithFields("err", err).Fatal("Error trying to deploy service")

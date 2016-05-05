@@ -1,3 +1,5 @@
+// Package devlogger provides an implementation of a syslog server to be used
+// for dev environments.
 package devlogger
 
 import (

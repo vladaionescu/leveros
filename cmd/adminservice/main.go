@@ -1,3 +1,4 @@
+// Package main runs the admin service.
 package main
 
 import (

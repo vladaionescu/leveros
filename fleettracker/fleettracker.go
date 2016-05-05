@@ -1,3 +1,7 @@
+// Package fleettracker provides an implementation of a service that receives
+// live usage metrics of Lever services and automatically adjusts the number
+// of instances for the service. In other words, it provides auto-scaling
+// capabilities to Lever.
 package fleettracker
 
 import (

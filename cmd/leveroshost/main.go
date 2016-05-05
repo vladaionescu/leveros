@@ -1,3 +1,6 @@
+// Package main runs a Lever OS host. A Lever OS host is the main process in
+// a Lever deployment. It manages traffic through the Lever network and manages
+// Lever instances.
 package main
 
 import (

@@ -1,4 +1,6 @@
-package api
+// Package admin provides convenience function for interacting with the admin
+// service. The admin service is used for managing Lever OS itself.
+package admin
 
 import (
 	"bufio"
@@ -6,6 +8,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/leveros/leveros/api"
 	"github.com/leveros/leveros/core"
 	"github.com/leveros/leveros/leverutil"
 )
@@ -13,7 +16,7 @@ import (
 // DeployServiceDir deploys provided dir onto Lever, as a Lever service.
 func DeployServiceDir(
 	adminEnv string, host string, env string, srcDir string) error {
-	client, err := NewClient()
+	client, err := api.NewClient()
 	if err != nil {
 		return err
 	}
