@@ -42,7 +42,7 @@ script:
     - cd js/leveros-common && grunt lint && grunt && cd ../..
     - cd js/leveros && grunt lint && grunt && cd ../..
     - make clean-all
-    - if [ "$USE_GO" -eq "1" ]; then make RUN_BACKGROUND=1 run ; else make RUN_BACKGROUND=1 fastrun ; fi && sleep 3 && make systest
+    - if [ "$USE_GO" -eq "1" ]; then make RUN_BACKGROUND=1 run ; else make RUN_BACKGROUND=1 all fastrun ; fi && sleep 3 && make systest
 
 after_script:
     - docker logs leverosconsul
