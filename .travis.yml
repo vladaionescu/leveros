@@ -13,15 +13,14 @@ cache:
 
 language: go
 
-matrix:
-    include:
-        - env: USE_GO=0
-        - env: USE_GO=1
+- env:
+    global:
+        - DOCKER_COMPOSE_VERSION=1.7.1
+    matrix:
+        - USE_GO=0
+        - USE_GO=1
 
 go: 1.6
-
-env:
-    DOCKER_COMPOSE_VERSION: 1.7.1
 
 before_install:
     - sudo apt-get -qq update
