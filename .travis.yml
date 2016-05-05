@@ -25,8 +25,8 @@ env:
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew upgrade ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install protoc ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install make ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install go --with-cc-common ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install dockertoolbox ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then docker-machine create --driver virtualbox default ; fi
@@ -37,6 +37,7 @@ before_install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x docker-compose ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo mv docker-compose /usr/local/bin/ ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-linux-x86_64.zip && sudo unzip protoc-3.0.0-beta-2-linux-x86_64.zip protoc -d /usr/local/bin/ && sudo chmod +x /usr/local/bin/protoc ; fi
 
 install:
     - npm install -g grunt-cli
@@ -45,7 +46,6 @@ install:
     - go get -u github.com/golang/lint/golint
     - go get -u github.com/golang/protobuf/protoc-gen-go
     - go get -u github.com/tools/godep
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-linux-x86_64.zip && sudo unzip protoc-3.0.0-beta-2-linux-x86_64.zip protoc -d /usr/local/bin/ && sudo chmod +x /usr/local/bin/protoc ; fi
 
 script:
     - make test
