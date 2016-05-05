@@ -25,7 +25,6 @@ env:
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install protoc ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install make ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install go --with-cc-common ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install dockertoolbox ; fi
@@ -38,6 +37,7 @@ before_install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x docker-compose ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo mv docker-compose /usr/local/bin/ ; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-linux-x86_64.zip && sudo unzip protoc-3.0.0-beta-2-linux-x86_64.zip protoc -d /usr/local/bin/ && sudo chmod +x /usr/local/bin/protoc ; fi
+    - wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-osx-x86_64.zip && sudo unzip protoc-3.0.0-beta-2-$TRAVIS_OS_NAME-x86_64.zip protoc -d /usr/local/bin/ && sudo chmod +x /usr/local/bin/protoc
 
 install:
     - npm install -g grunt-cli
