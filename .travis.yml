@@ -25,6 +25,7 @@ env:
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask uninstall --force virtualbox ; brew cask install virtualbox ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install dockertoolbox ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then docker-machine create --driver virtualbox default ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then eval $(docker-machine env default) ; fi
