@@ -13,6 +13,10 @@ cache:
 
 language: go
 
+os:
+    - linux
+    - osx
+
 go:
     - 1.6
 
@@ -20,12 +24,19 @@ env:
     DOCKER_COMPOSE_VERSION: 1.7.1
 
 before_install:
-    - sudo apt-get -qq update
-    - sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y docker-engine
-    - sudo rm /usr/local/bin/docker-compose
-    - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-    - chmod +x docker-compose
-    - sudo mv docker-compose /usr/local/bin/
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew upgrade ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install protoc ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install go --with-cc-common ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew cask install dockertoolbox ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then docker-machine create --driver virtualbox default ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then eval $(docker-machine env default) ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install -y docker-engine ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo rm /usr/local/bin/docker-compose ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then chmod +x docker-compose ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo mv docker-compose /usr/local/bin/ ; fi
 
 install:
     - npm install -g grunt-cli
@@ -34,7 +45,7 @@ install:
     - go get -u github.com/golang/lint/golint
     - go get -u github.com/golang/protobuf/protoc-gen-go
     - go get -u github.com/tools/godep
-    - wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-linux-x86_64.zip && sudo unzip protoc-3.0.0-beta-2-linux-x86_64.zip protoc -d /usr/local/bin/ && sudo chmod +x /usr/local/bin/protoc
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget https://github.com/google/protobuf/releases/download/v3.0.0-beta-2/protoc-3.0.0-beta-2-linux-x86_64.zip && sudo unzip protoc-3.0.0-beta-2-linux-x86_64.zip protoc -d /usr/local/bin/ && sudo chmod +x /usr/local/bin/protoc ; fi
 
 script:
     - make test
