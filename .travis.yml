@@ -49,3 +49,11 @@ script:
     - docker logs leverosaerospike
     - docker logs leverosnghttpxext
     - docker logs leveroshost
+
+notifications:
+  webhooks:
+    urls:
+      - ${GITTER_WEBHOOK_URL}
+    on_success: change
+    on_failure: always
+    on_start: never
