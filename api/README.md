@@ -4,7 +4,7 @@
 Go library for Lever OS
 =======================
 
-The Go library can be used for both implementing Lever services in Go and invoking Lever methods, as a client. In addition, the Go library contains convenience functions for accessing the admin service, which is used to manage Lever itself.
+The Go library can be used for both implementing Lever services in Go and invoking Lever methods, as a client.
 
 [![GoDoc](https://godoc.org/github.com/leveros/leveros/api?status.svg)](https://godoc.org/github.com/leveros/leveros/api) [![ReadMe.io](https://img.shields.io/badge/ReadMe.io-docs-blue.svg)](https://leveros.readme.io/) [![Build Status](https://travis-ci.org/leveros/leveros.svg?branch=master)](https://travis-ci.org/leveros/leveros) [![Join the chat at https://gitter.im/leveros/leveros](https://badges.gitter.im/leveros/leveros.svg)](https://gitter.im/leveros/leveros?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Analytics](https://ga-beacon.appspot.com/UA-77293003-2/github.com/leveros/leveros/api?pixel)](https://github.com/igrigorik/ga-beacon)
 
@@ -75,15 +75,12 @@ Compile and deploy
 
 ```bash
 $ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ./serve server.go
-$ lever deploy dev.lever
+$ lever deploy
 ```
 
-Note the env vars for compiling for Lever OS. These need to be
-`GOOS=linux GOARCH=amd64 CGO_ENABLED=0` even when running on Mac or Windows.
+Note the env vars for compiling for Lever OS. These need to be `GOOS=linux GOARCH=amd64 CGO_ENABLED=0` even when running on Mac or Windows.
 
-If you have problems building, you may need to reinstall go to include
-cross-compilation support. On a Mac, you can achieve this with
-`brew install go --with-cc-common`.
+If you have problems building, you may need to reinstall go to include cross-compilation support. On a Mac, you can achieve this with `brew install go --with-cc-common`.
 
 ### Client
 
