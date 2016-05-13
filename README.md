@@ -113,7 +113,7 @@ $ curl -H "Content-Type: application/json" -X POST -d '["world"]' \
 http://127.0.0.1:8080/helloService/sayHello?forceenv=dev.lever
 "Hello, world!"
 
-# With docher-machine
+# With docker-machine
 $ curl -H "Content-Type: application/json" -X POST -d '["world"]' \
 http://$(docker-machine ip default):8080/helloService/sayHello?forceenv=dev.lever
 "Hello, world!"
@@ -159,7 +159,7 @@ service.invoke('sayHello', "world", function (error, reply) {
 # Without docker-machine
 $ LEVEROS_IP_PORT="127.0.0.1:8080" node client.js
 
-# With docher-machine
+# With docker-machine
 $ LEVEROS_IP_PORT="$(docker-machine ip default):8080" node client.js
 ```
 
