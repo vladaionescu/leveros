@@ -34,7 +34,7 @@ Getting started
 
 ### Prerequisites
 
-* [Docker](https://docs.docker.com/engine/installation/) 1.10+ and [Docker Compose](https://docs.docker.com/compose/install/) 1.7+. On a Mac you can install [Docker Toolbox](https://docs.docker.com/toolbox/overview/) to get what you need.
+* [Docker](https://docs.docker.com/engine/installation/) 1.11+ and [Docker Compose](https://docs.docker.com/compose/install/) 1.7+. On a Mac you can install [Docker Toolbox](https://docs.docker.com/toolbox/overview/) to get what you need.
 * Make
 * Linux or Mac (Windows should work too but it was never tested)
 
@@ -52,8 +52,8 @@ You will need to run the second command for every new terminal window.
 ```bash
 $ git clone https://github.com/leveros/leveros
 $ cd leveros
-$ make cli pull-docker-images
-$ sudo make install-cli
+$ make HAVE_GO="" cli pull-docker-images
+$ sudo make HAVE_GO="" install-cli
 $ make fastrun
 ```
 

@@ -11,6 +11,7 @@ GO := go
 # Autodetect if go exists. If it does not exist, we will compile within a
 # docker image. Note: Installing go is strongly recommended for contributing.
 HAVE_GO := $(shell which $(GO))
+HAVE_PROTOC := $(shell which $(PROTOC))
 
 export LEVEROS_DEBUG ?= 0
 export LEVEROS_REPO_DIR ?= $(abspath repo)
@@ -219,7 +220,12 @@ fmtcheck:
 #
 # Source generation targets.
 
-PROTOC_CMD = $(PROTOC) -I $(dir $<) --go_out=plugins=grpc:$(dir $@) $<
+PROTOC_CMD = \
+	if [ -n "$(HAVE_PROTOC)" ]; then \
+		$(PROTOC) -I $(dir $<) --go_out=plugins=grpc:$(dir $@) $< ;\
+	else \
+		echo "Warning! protoc not found. Should be ok if not modifying protos." ;\
+	fi
 
 .SECONDARY: $(PROTO_TARGETS)
 
