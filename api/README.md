@@ -87,6 +87,14 @@ Note the env vars for compiling for Lever OS. These need to be `GOOS=linux GOARC
 
 If you have problems building, you may need to reinstall go to include cross-compilation support. On a Mac, you can achieve this with `brew install go --with-cc-common`.
 
+To try it out, invoke it with the CLI:
+
+```bash
+$ lever invoke /helloService/SayHello '"world"'
+
+"Hello, world!"
+```
+
 ### Client
 
 ###### client.go

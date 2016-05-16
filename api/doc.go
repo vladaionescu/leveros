@@ -58,6 +58,12 @@ If you have problems building, you may need to reinstall go to include
 cross-compilation support. On a Mac, you can achieve this with
 brew install go --with-cc-common.
 
+To try it out, invoke it with the CLI:
+
+    $ lever invoke /helloService/SayHello '"world"'
+
+    "Hello, world!"
+
 Quick example of a Lever client
 
     package main

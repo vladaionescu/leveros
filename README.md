@@ -96,10 +96,12 @@ This takes the whole current directory, archives it and deploys it onto Lever, i
 
 ```bash
 $ lever invoke lever://dev.lever/helloService/sayHello '"world"'
+
 "Hello, world!"
 
 # Or even shorter (only for dev.lever)...
 $ lever invoke /helloService/sayHello '"world"'
+
 "Hello, world!"
 ```
 
@@ -111,11 +113,13 @@ Remember to use proper JSON for arguments. This includes the quotes for strings.
 # Without docker-machine
 $ curl -H "Content-Type: application/json" -X POST -d '["world"]' \
 http://127.0.0.1:8080/helloService/sayHello?forceenv=dev.lever
+
 "Hello, world!"
 
 # With docker-machine
 $ curl -H "Content-Type: application/json" -X POST -d '["world"]' \
 http://$(docker-machine ip default):8080/helloService/sayHello?forceenv=dev.lever
+
 "Hello, world!"
 ```
 
