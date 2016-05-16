@@ -29,6 +29,11 @@ Quick example
 
 ### Server
 
+```bash
+$ mkdir hello
+$ cd hello
+```
+
 ###### server.go
 
 ```go

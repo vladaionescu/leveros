@@ -5,6 +5,11 @@ Go and invoking Lever methods, as a client.
 
 Quick example of a Lever service implementation
 
+    $ mkdir hello
+    $ cd hello
+
+server.go
+
     package main
 
     import (
@@ -33,7 +38,7 @@ Quick example of a Lever service implementation
     	return fmt.Sprintf("Hello, %s!", name), nil
     }
 
-The lever.json for this service
+lever.json
 
     {
         "name": "helloService",
