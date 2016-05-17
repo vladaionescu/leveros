@@ -54,7 +54,7 @@ Compile and deploy
 Note the env vars for compiling for Lever OS. These need to be
 GOOS=linux GOARCH=amd64 CGO_ENABLED=0 even when running on Mac or Windows.
 
-If you have problems building, you may need to reinstall go to include
+If you have problems building, you may need to reinstall Go to include
 cross-compilation support. On a Mac, you can achieve this with
 brew install go --with-cc-common.
 
