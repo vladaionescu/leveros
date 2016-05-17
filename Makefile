@@ -91,10 +91,18 @@ ALL_LEVER_CONTAINERS = $(shell $(DOCKER) ps -a -q --filter="label=com.leveros.is
 ADMIN_DIR := $(REPO_DIR)/$(ADMIN_ENV)/admin/1
 
 .PHONY: all
-all: cli docker-images
+all: fastcli pull-docker-images
 
 .PHONY: cli
-cli: $(BIN_DIR)/lever
+cli:
+	$(MAKE) clicommon
+
+.PHONY: fastcli
+fastcli:
+	$(MAKE) HAVE_GO="" HAVE_PROTOC="" clicommon
+
+.PHONY: clicommon
+clicommon: $(BIN_DIR)/lever
 
 .PHONY: cmd
 cmd: $(CMD_TARGETS)
@@ -112,14 +120,14 @@ systest: $(TEST_SERVICES_TARGETS)
 
 .PHONY: run
 run:
-	$(MAKE) all
+	$(MAKE) cli docker-images
 	$(MAKE) runcommon
 
 # This uses pre-built docker images as much as possible and compiles within
 # docker.
 .PHONY: fastrun
 fastrun:
-	$(MAKE) HAVE_GO="" runcommon
+	$(MAKE) HAVE_GO="" HAVE_PROTOC="" runcommon
 
 .PHONY: runcommon
 runcommon:
@@ -135,7 +143,7 @@ runcommon:
 		leveroshost nghttpxext
 
 .PHONY: install-cli
-install-cli: $(BIN_DIR)/lever
+install-cli:
 	cp $< $(CLI_INSTALL_DIR)
 
 .PHONY: uninstall-cli
@@ -224,7 +232,8 @@ PROTOC_CMD = \
 	if [ -n "$(HAVE_PROTOC)" ]; then \
 		$(PROTOC) -I $(dir $<) --go_out=plugins=grpc:$(dir $@) $< ;\
 	else \
-		echo "Warning! protoc not found. Should be ok if not modifying protos." ;\
+		echo "Warning! protoc not found." \
+			"Should be ok if not modifying protos." ;\
 	fi
 
 .SECONDARY: $(PROTO_TARGETS)

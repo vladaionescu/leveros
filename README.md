@@ -52,8 +52,8 @@ You will need to run the second command for every new terminal window.
 ```bash
 $ git clone https://github.com/leveros/leveros
 $ cd leveros
-$ make HAVE_GO="" cli pull-docker-images
-$ sudo make HAVE_GO="" install-cli
+$ make
+$ sudo make install-cli
 $ make fastrun
 ```
 
