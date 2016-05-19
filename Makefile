@@ -144,7 +144,7 @@ runcommon:
 
 .PHONY: install-cli
 install-cli:
-	cp $< $(CLI_INSTALL_DIR)
+	cp $(BIN_DIR)/lever $(CLI_INSTALL_DIR)
 
 .PHONY: uninstall-cli
 uninstall-cli:
