@@ -87,7 +87,7 @@ export function jsToArg(value) {
         arg.json_string = value;
     } else if (lodash.isNumber(value)) {
         arg.json_number = value;
-    } else if (lodash.isBool(value)) {
+    } else if (lodash.isBoolean(value)) {
         arg.json_bool = value;
     } else if (lodash.isNull(value) || lodash.isUndefined(value)) {
         // Set nothing.
