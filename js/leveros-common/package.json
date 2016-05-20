@@ -1,6 +1,6 @@
 {
   "name": "leveros-common",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Common code for Lever OS client and server",
   "author": "Vlad Alexandru Ionescu",
   "homepage": "http://www.leveros.com",
