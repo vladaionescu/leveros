@@ -58,9 +58,12 @@ func main() {
 	server.Serve()
 }
 
+// Handler is the service handler. Its exported methods become the service's
+// methods.
 type Handler struct {
 }
 
+// SayHello returns a salutation for the given name.
 func (*Handler) SayHello(name string) (result string, err error) {
 	return fmt.Sprintf("Hello, %s!", name), nil
 }

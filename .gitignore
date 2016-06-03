@@ -1,4 +1,5 @@
 /repo/
+/examples/*/serve
 /services/leveroshost/leveroshost
 /services/levercontainer/js/leveros-server/
 /services/levercontainer/js/leveros-common/
