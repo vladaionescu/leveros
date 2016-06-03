@@ -22,7 +22,7 @@ import math "math"
 
 import (
 	context "golang.org/x/net/context"
-	"google.golang.org/grpc"
+	grpc "google.golang.org/grpc"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -32,7 +32,9 @@ var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
-const _ = proto.ProtoPackageIsVersion1
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type InstanceInfo struct {
 	Environment       string `protobuf:"bytes,1,opt,name=environment" json:"environment,omitempty"`
