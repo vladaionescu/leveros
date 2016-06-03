@@ -285,6 +285,10 @@
 			"Rev": "c4c3ea71919de159c9e246d7be66deb7f0a39a58"
 		},
 		{
+			"ImportPath": "golang.org/x/net/lex/httplex",
+			"Rev": "c4c3ea71919de159c9e246d7be66deb7f0a39a58"
+		},
+		{
 			"ImportPath": "golang.org/x/net/trace",
 			"Rev": "c4c3ea71919de159c9e246d7be66deb7f0a39a58"
 		},
