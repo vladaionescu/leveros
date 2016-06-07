@@ -102,7 +102,7 @@ func (proxy *LeverProxy) handleExtOutStream(
 	).Debug("Receiving stream")
 	streamLogger = streamLogger.WithFields("streamID", streamID)
 
-	isFromExt := core.IsInternalEnvironment(srcEnv)
+	isFromExt := !core.IsInternalEnvironment(srcEnv)
 	hostInfo, err := proxy.finder.GetHost(
 		leverURL.Environment, leverURL.Service, leverURL.Resource, isFromExt)
 	if err != nil {

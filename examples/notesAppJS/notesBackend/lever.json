@@ -1,0 +1,4 @@
+{
+    "name": "notesBackend",
+    "jsEntry": "backend.js"
+}
