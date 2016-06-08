@@ -6,7 +6,7 @@ const lodash = require('lodash');
 
 const mongoUrl = 'mongodb://172.17.0.1:27017/notesApp'
 
-module.exports.addNote = (note, callback) => {
+function addNote(note, callback) {
     getDb((err, db) => {
         if (err) {
             callback(err);
@@ -25,9 +25,10 @@ module.exports.addNote = (note, callback) => {
             callback(null, null);
         });
     });
-};
+}
+module.exports.addNote = addNote;
 
-module.exports.getNotes = (callback) => {
+function getNotes(callback) {
     getDb((err, db) => {
         if (err) {
             callback(err);
@@ -47,7 +48,8 @@ module.exports.getNotes = (callback) => {
             callback(null, notes);
         });
     });
-};
+}
+module.exports.getNotes = getNotes;
 
 let cachedDb = null;
 function getDb(callback) {

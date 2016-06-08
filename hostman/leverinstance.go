@@ -63,17 +63,18 @@ func NewLeverInstance(
 		"leverInstanceID", info.InstanceID,
 	)
 	instance := &LeverInstance{
-		leverEnv:     info.Environment,
-		instanceID:   info.InstanceID,
-		leverService: info.Service,
-		containerID:  info.ContainerID,
-		servingID:    info.ServingID,
-		instanceAddr: instanceAddr,
-		conns:        conns,
-		docker:       docker,
-		expiryDur:    expiryDur,
-		onCloseFun:   onCloseFun,
-		logger:       logger,
+		leverEnv:       info.Environment,
+		instanceID:     info.InstanceID,
+		leverService:   info.Service,
+		containerID:    info.ContainerID,
+		servingID:      info.ServingID,
+		instanceAddr:   instanceAddr,
+		conns:          conns,
+		docker:         docker,
+		expiryDur:      expiryDur,
+		onCloseFun:     onCloseFun,
+		logger:         logger,
+		leverResources: make(map[string]*LeverResource),
 	}
 	instance.expiryTimer = time.AfterFunc(expiryDur, instance.onExpired)
 	instance.registerAsService(proxyInAddr)
