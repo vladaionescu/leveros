@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/leveros/gods/maps/treemap"
+	"github.com/emirpasic/gods/maps/treemap"
 )
 
 var (
@@ -158,7 +158,8 @@ func (cache *Cache) keepAliveInternal(key string) bool {
 }
 
 func (cache *Cache) maybeScheduleExpire(lastUsed int64) {
-	if cache.lastUsedMap.Left().(int64) != lastUsed {
+	lastUsedMinKey, _ := cache.lastUsedMap.Min()
+	if lastUsedMinKey.(int64) != lastUsed {
 		// Already scheduled.
 		return
 	}
@@ -172,7 +173,8 @@ func (cache *Cache) maybeScheduleExpire(lastUsed int64) {
 
 func (cache *Cache) doExpire() {
 	for !cache.lastUsedMap.Empty() {
-		lastUsed := cache.lastUsedMap.Left().(int64)
+		lastUsedMinKey, _ := cache.lastUsedMap.Min()
+		lastUsed := lastUsedMinKey.(int64)
 		expiryTime := time.Unix(0, lastUsed).Add(cache.expiry)
 		if expiryTime.Before(time.Now()) {
 			// Entry expired.

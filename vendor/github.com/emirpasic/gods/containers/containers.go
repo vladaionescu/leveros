@@ -24,14 +24,27 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package trees
+// All data structures must implement the container structure
 
-import "github.com/leveros/gods/containers"
+package containers
+
+import "github.com/emirpasic/gods/utils"
 
 type Interface interface {
-	containers.Interface
-	// Empty() bool
-	// Size() int
-	// Clear()
-	// Values() []interface{}
+	Empty() bool
+	Size() int
+	Clear()
+	Values() []interface{}
+}
+
+// Returns sorted container's elements with respect to the passed comparator.
+// Does not effect the ordering of elements within the container.
+// Uses timsort.
+func GetSortedValues(container Interface, comparator utils.Comparator) []interface{} {
+	values := container.Values()
+	if len(values) < 2 {
+		return values
+	}
+	utils.Sort(values, comparator)
+	return values
 }

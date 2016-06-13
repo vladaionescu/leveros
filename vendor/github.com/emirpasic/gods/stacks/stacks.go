@@ -24,14 +24,18 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Util methods for sorting a slice of values with respect to the comparator
+package stacks
 
-package utils
+import "github.com/emirpasic/gods/containers"
 
-import "github.com/leveros/gods/utils/timsort"
+type Interface interface {
+	Push(value interface{})
+	Pop() (value interface{}, ok bool)
+	Peek() (value interface{}, ok bool)
 
-// Sorts values (in-place) using timsort
-func Sort(values []interface{}, comparator Comparator) {
-	less := func(a, b interface{}) bool { return comparator(a, b) < 0 }
-	timsort.Sort(values, less)
+	containers.Interface
+	// Empty() bool
+	// Size() int
+	// Clear()
+	// Values() []interface{}
 }

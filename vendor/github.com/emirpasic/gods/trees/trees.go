@@ -24,15 +24,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package stacks
+package trees
 
-import "github.com/leveros/gods/containers"
+import "github.com/emirpasic/gods/containers"
 
 type Interface interface {
-	Push(value interface{})
-	Pop() (value interface{}, ok bool)
-	Peek() (value interface{}, ok bool)
-
 	containers.Interface
 	// Empty() bool
 	// Size() int

@@ -24,19 +24,14 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package maps
+// Util methods for sorting a slice of values with respect to the comparator
 
-import "github.com/leveros/gods/containers"
+package utils
 
-type Interface interface {
-	Put(key interface{}, value interface{})
-	Get(key interface{}) (value interface{}, found bool)
-	Remove(key interface{})
-	Keys() []interface{}
+import "github.com/emirpasic/gods/utils/timsort"
 
-	containers.Interface
-	// Empty() bool
-	// Size() int
-	// Clear()
-	// Values() []interface{}
+// Sorts values (in-place) using timsort
+func Sort(values []interface{}, comparator Comparator) {
+	less := func(a, b interface{}) bool { return comparator(a, b) < 0 }
+	timsort.Sort(values, less)
 }

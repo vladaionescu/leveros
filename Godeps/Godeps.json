@@ -1,7 +1,7 @@
 {
 	"ImportPath": "github.com/leveros/leveros",
 	"GoVersion": "go1.6",
-	"GodepVersion": "v62",
+	"GodepVersion": "v74",
 	"Packages": [
 		"./..."
 	],
@@ -74,6 +74,50 @@
 		{
 			"ImportPath": "github.com/davecgh/go-spew/spew",
 			"Rev": "5215b55f46b2b919f50a1df0eaa5886afe4e3b3d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/containers",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/lists",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/lists/singlylinkedlist",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/maps",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/maps/treemap",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/stacks",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/stacks/linkedliststack",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/trees",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/trees/redblacktree",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/utils",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
+		},
+		{
+			"ImportPath": "github.com/emirpasic/gods/utils/timsort",
+			"Rev": "888e7f29b1da1fb83837064691790253872c040d"
 		},
 		{
 			"ImportPath": "github.com/fsouza/go-dockerclient",
@@ -174,50 +218,6 @@
 			"ImportPath": "github.com/leveros/go-syslog/format",
 			"Comment": "v2.1.1-2-g615bd85",
 			"Rev": "615bd85a6d969999e9258ba90eed9a3c475ccd6e"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/containers",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/lists",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/lists/singlylinkedlist",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/maps",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/maps/treemap",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/stacks",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/stacks/linkedliststack",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/trees",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/trees/redblacktree",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/utils",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
-		},
-		{
-			"ImportPath": "github.com/leveros/gods/utils/timsort",
-			"Rev": "fc7439aedf9287a5aa007e67f6c461fb41e0b087"
 		},
 		{
 			"ImportPath": "github.com/leveros/syslogparser",

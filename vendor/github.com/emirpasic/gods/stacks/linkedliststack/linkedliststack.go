@@ -33,8 +33,8 @@ package linkedliststack
 
 import (
 	"fmt"
-	"github.com/leveros/gods/lists/singlylinkedlist"
-	"github.com/leveros/gods/stacks"
+	"github.com/emirpasic/gods/lists/singlylinkedlist"
+	"github.com/emirpasic/gods/stacks"
 	"strings"
 )
 
