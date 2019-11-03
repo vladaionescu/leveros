@@ -1,3 +1,9 @@
+
+# Important!
+# This project is no longer maintained. Use at own risk!
+
+--------------------------------
+
 ![Lever OS](doc/images/leveros-logo-full-white-bg-v0.2.png "Lever OS")
 ======================================================================
 
